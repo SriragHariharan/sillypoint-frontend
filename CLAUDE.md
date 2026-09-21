@@ -47,7 +47,9 @@ working on this app:
 - `src/main.jsx` — entry point, mounts `<App />`
 - `src/App.jsx` — the router shell only (`BrowserRouter` + `Routes`); no page content lives here
 - `src/pages/` — one file per **route** (`LandingPage`, `LoginPage`, `SignupPage`,
-  `VerifyOtpPage`). A page composes components and/or forms and is what a `<Route element={...}>`
+  `VerifyOtpPage`, `NotFoundPage`). `NotFoundPage` is wired up as the catch-all
+  `<Route path="*" element={<NotFoundPage />} />` in `App.jsx` — keep it last in the `<Routes>`
+  list so it only matches unmatched paths. A page composes components and/or forms and is what a `<Route element={...}>`
   points to.
 - `src/components/` — reusable/presentational pieces, both landing-page sections (`Navbar`,
   `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
