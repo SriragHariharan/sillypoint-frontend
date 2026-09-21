@@ -23,24 +23,38 @@ working on this app:
   happens ball-by-ball" (scoring) if backend/domain code is added to this repo later.
 - **Live scoring** is ball-by-ball and mobile-first; the intended architecture pushes updates to
   spectators over WebSocket without page refreshes.
-- This repository currently contains only the **marketing landing page** for the product — there
-  is no application/dashboard functionality here yet.
+- This repository contains the **marketing landing page** plus a UI-only **authentication flow**
+  (login/signup/OTP). There is no real dashboard/app, no backend integration, and no route
+  protection yet — see Auth below.
 
 ## Tech stack
 
 - **Vite** + **React 19** (JSX, no TypeScript in this repo)
 - **Tailwind CSS v4**, wired in via `@tailwindcss/vite` — utility classes only, no separate CSS
   files per component
+- **react-router-dom** for routing (`BrowserRouter`/`Routes`/`Route`, `Link`, `useNavigate`)
+- **zustand** for state management — one small store per domain in `src/store/` (e.g.
+  `authStore.js`), created with `create((set) => ({ ... }))`. Don't reach for React context or
+  prop-drilling for cross-page/cross-step state; add a store instead.
+- **react-hook-form** for form validation — `useForm`/`register` for plain inputs, `Controller`
+  for custom controlled components (like `PinInput`). Shared validation rules live in
+  `src/lib/validators.js`, not duplicated per form.
 - `oxlint` for linting (`npm run lint`)
-- No routing, state management, or backend integration yet — the app is a single static page
+- No backend integration yet — auth actions are local/no-op (see Auth below).
 
 ## Structure
 
 - `src/main.jsx` — entry point, mounts `<App />`
-- `src/App.jsx` — composes the landing page from section components, in page order
-- `src/components/` — one file per landing-page section (`Navbar`, `Hero`, `Features`, `Formats`,
-  `HowItWorks`, `Roles`, `CTASection`, `Footer`, etc.). Each is a small, static, presentational
-  component — no props, content defined inline or as local const arrays at the top of the file.
+- `src/App.jsx` — the router shell only (`BrowserRouter` + `Routes`); no page content lives here
+- `src/pages/` — one file per **route** (`LandingPage`, `LoginPage`, `SignupPage`,
+  `VerifyOtpPage`). A page composes components and/or forms and is what a `<Route element={...}>`
+  points to.
+- `src/components/` — reusable/presentational pieces, both landing-page sections (`Navbar`,
+  `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
+  (`AuthLayout`, `PinInput`). Landing sections take no props and keep content as local const
+  arrays; shared UI components (like `PinInput`) do take props since they're reused across pages.
+- `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
+- `src/lib/` — framework-agnostic helpers shared across pages, e.g. `validators.js`.
 - `src/index.css` — `@import "tailwindcss";` plus a `@theme` block overriding the `red-*` color
   palette (see Theme below). Don't add component-scoped CSS files; use Tailwind utilities.
 - `src/assets/` — image assets (e.g. `app_logo.png`, used as the logo/favicon)
@@ -59,6 +73,36 @@ and related shades), so normal `red-*` utility classes (`bg-red-600`, `text-red-
 etc.) automatically pick up the custom tone — don't hardcode hex colors in components, use `red-*`
 utilities so the palette stays centralized in one place.
 
+## Auth
+
+Login and signup are **mobile number + 4-digit PIN only** — no email/password, ever.
+
+- **Login** (`/login`): one form, mobile number + existing 4-digit PIN, submitted together.
+- **Signup** (`/signup` → `/verify-otp`): enter mobile number → "Request OTP" navigates to
+  `/verify-otp`. That page has two local stages in one component: enter the 4-digit OTP, then
+  (on the same page) set + confirm a new 4-digit PIN to finish creating the account.
+- Mobile numbers are Indian 10-digit numbers (`INDIAN_MOBILE_REGEX` in `src/lib/validators.js`,
+  `[6-9]\d{9}`), always shown with a fixed `+91` prefix chip. OTP and PIN are always exactly 4
+  digits (`OTP_REGEX`/`PIN_REGEX`, both `\d{4}`).
+- `useAuthStore` (`src/store/authStore.js`) holds `mobile` (set by `SignupPage`, read by
+  `VerifyOtpPage` so the mobile number doesn't need to be passed via query params) and
+  `isAuthenticated`/`login`/`reset`. `login()` is a **local state flip only** — there is no
+  backend call, no token, no session persistence. Treat every auth action in this repo as a UI
+  stub to be wired to a real API later.
+- There is **no route protection** — all routes are open. Don't add a `PrivateRoute`/redirect
+  guard until there's an actual backend session to check against.
+- No dashboard/home route exists after login/signup completes; both `LoginPage` and
+  `VerifyOtpPage` just render an inline success state rather than navigating anywhere further.
+- `PinInput` (`src/components/PinInput.jsx`) is the shared 4-box segmented digit input used for
+  PIN and OTP alike (`masked` prop toggles dot-masking for PIN vs plain digits for OTP). It's a
+  controlled component (`value`/`onChange`) meant to be used via `react-hook-form`'s `Controller`,
+  not `register`. It selects a box's existing content on focus so re-typing over a filled box
+  overwrites it instead of silently no-op'ing against the native `maxLength=1` — don't remove that
+  `onFocus` handler.
+- `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared centered-card shell for all three
+  auth pages (logo, heading, subheading, back-to-home link) — reuse it for any future auth-related
+  page rather than rebuilding the card chrome.
+
 ## Conventions
 
 - Mobile-first layout: base (unprefixed) Tailwind classes target mobile; use `sm:`/`md:`/`lg:` to
@@ -66,7 +110,8 @@ utilities so the palette stays centralized in one place.
   column and expand via `sm:grid-cols-*`/`lg:grid-cols-*`. Button groups stack (`flex-col`) on
   mobile and switch to a row (`sm:flex-row`) on larger screens.
 - Keep new landing-page sections as separate components in `src/components/`, composed from
-  `App.jsx`, matching the existing pattern.
+  `src/pages/LandingPage.jsx`; keep new routes as separate pages in `src/pages/`, wired up in
+  `src/App.jsx`.
 - No comments in JSX/config for self-explanatory code; keep components free of unused
   boilerplate from the original Vite template.
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
 
 const links = [
@@ -30,12 +31,19 @@ function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <a
-            href="#get-started"
+          <Link
+            to="/login"
+            className="hidden text-sm font-semibold text-gray-700 transition hover:text-red-600 sm:block"
+          >
+            Log in
+          </Link>
+
+          <Link
+            to="/signup"
             className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
           >
             Get Started
-          </a>
+          </Link>
 
           <button
             type="button"
@@ -71,6 +79,15 @@ function Navbar() {
               </a>
             </li>
           ))}
+          <li className="sm:hidden">
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
+            >
+              Log in
+            </Link>
+          </li>
         </ul>
       )}
     </header>

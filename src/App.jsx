@@ -1,24 +1,19 @@
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Features from './components/Features'
-import Formats from './components/Formats'
-import HowItWorks from './components/HowItWorks'
-import Roles from './components/Roles'
-import CTASection from './components/CTASection'
-import Footer from './components/Footer'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import VerifyOtpPage from './pages/VerifyOtpPage'
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
-      <Hero />
-      <HowItWorks />
-      <Features />
-      <Formats />
-      <Roles />
-      <CTASection />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/verify-otp" element={<VerifyOtpPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
