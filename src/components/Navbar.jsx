@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
+import { useAuthStore } from '../store/authStore'
 
 const links = [
   { label: 'Features', href: '#features' },
@@ -9,6 +10,7 @@ const links = [
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const authenticated = useAuthStore((state) => state.status === 'authenticated')
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
@@ -31,19 +33,30 @@ function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <Link
-            to="/login"
-            className="hidden text-sm font-semibold text-gray-700 transition hover:text-red-600 sm:block"
-          >
-            Log in
-          </Link>
+          {authenticated ? (
+            <Link
+              to="/home"
+              className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="hidden text-sm font-semibold text-gray-700 transition hover:text-red-600 sm:block"
+              >
+                Log in
+              </Link>
 
-          <Link
-            to="/signup"
-            className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
-          >
-            Get Started
-          </Link>
+              <Link
+                to="/signup"
+                className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
 
           <button
             type="button"
@@ -79,15 +92,17 @@ function Navbar() {
               </a>
             </li>
           ))}
-          <li className="sm:hidden">
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
-            >
-              Log in
-            </Link>
-          </li>
+          {!authenticated && (
+            <li className="sm:hidden">
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
+              >
+                Log in
+              </Link>
+            </li>
+          )}
         </ul>
       )}
     </header>

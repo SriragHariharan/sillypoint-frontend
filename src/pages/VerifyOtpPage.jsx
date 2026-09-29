@@ -1,20 +1,31 @@
 import { useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
 import OtpInput from '../components/OtpInput'
 import { useCountdown } from '../hooks/useCountdown'
+import { getErrorMessage } from '../lib/api'
+import { resendOtp, verifyOtp } from '../lib/authApi'
 import { formatTime } from '../lib/formatTime'
+import { setSessionFlag } from '../lib/sessionFlag'
 import { useAuthStore } from '../store/authStore'
 import { otpValidation } from '../lib/validators'
 
 function VerifyOtpPage() {
+  const navigate = useNavigate()
   const mobile = useAuthStore((state) => state.mobile)
+  const userId = useAuthStore((state) => state.userId)
+  const purpose = useAuthStore((state) => state.purpose)
   const otpExpiresAt = useAuthStore((state) => state.otpExpiresAt)
   const resendAvailableAt = useAuthStore((state) => state.resendAvailableAt)
-  const login = useAuthStore((state) => state.login)
+  const status = useAuthStore((state) => state.status)
+  const setSession = useAuthStore((state) => state.setSession)
   const restartOtpTimers = useAuthStore((state) => state.restartOtpTimers)
-  const [verified, setVerified] = useState(false)
+
+  const [serverError, setServerError] = useState('')
+  const [info, setInfo] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [resending, setResending] = useState(false)
 
   const expirySeconds = useCountdown(otpExpiresAt)
   const resendSeconds = useCountdown(resendAvailableAt)
@@ -27,27 +38,46 @@ function VerifyOtpPage() {
     formState: { errors },
   } = useForm({ defaultValues: { otp: '' } })
 
-  const onSubmit = () => {
-    login({ mobile })
-    setVerified(true)
+  const onSubmit = async ({ otp }) => {
+    setServerError('')
+    setInfo('')
+    setSubmitting(true)
+
+    try {
+      const data = await verifyOtp({ userId, otp, purpose })
+      setSessionFlag()
+      setSession({ user: data.user, accessToken: data.accessToken })
+      navigate('/home', { replace: true })
+    } catch (error) {
+      setServerError(getErrorMessage(error))
+      reset({ otp: '' })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  const onResend = () => {
-    restartOtpTimers()
-    reset({ otp: '' })
+  const onResend = async () => {
+    setServerError('')
+    setInfo('')
+    setResending(true)
+
+    try {
+      const { resendsLeft } = await resendOtp({ userId, purpose })
+      restartOtpTimers()
+      reset({ otp: '' })
+      setInfo(`New OTP sent. ${resendsLeft} ${resendsLeft === 1 ? 'resend' : 'resends'} left.`)
+    } catch (error) {
+      setServerError(getErrorMessage(error))
+    } finally {
+      setResending(false)
+    }
   }
 
-  if (verified) {
-    return (
-      <AuthLayout title="Welcome" subtitle="You're logged in.">
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-          Logged in successfully with +91 {mobile || '—'}.
-        </p>
-      </AuthLayout>
-    )
+  if (status === 'authenticated') {
+    return <Navigate to="/home" replace />
   }
 
-  if (!mobile || !otpExpiresAt) {
+  if (!mobile || !userId || !purpose || !otpExpiresAt) {
     return <Navigate to="/login" replace />
   }
 
@@ -88,12 +118,24 @@ function VerifyOtpPage() {
           )}
         </p>
 
+        {serverError && (
+          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
+            {serverError}
+          </p>
+        )}
+
+        {info && (
+          <p role="status" className="rounded-xl bg-gray-50 px-4 py-3 text-xs font-medium text-gray-700">
+            {info}
+          </p>
+        )}
+
         <button
           type="submit"
-          disabled={expired}
+          disabled={expired || submitting}
           className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
         >
-          Verify OTP
+          {submitting ? 'Verifying…' : 'Verify OTP'}
         </button>
       </form>
 
@@ -104,10 +146,14 @@ function VerifyOtpPage() {
       <button
         type="button"
         onClick={onResend}
-        disabled={resendSeconds > 0}
+        disabled={resendSeconds > 0 || resending}
         className="mt-5 w-full text-center text-sm font-semibold text-red-600 transition hover:text-red-700 disabled:cursor-not-allowed disabled:font-medium disabled:text-gray-400 disabled:hover:text-gray-400"
       >
-        {resendSeconds > 0 ? `Resend OTP in ${formatTime(resendSeconds)}` : 'Resend OTP'}
+        {resending
+          ? 'Sending…'
+          : resendSeconds > 0
+            ? `Resend OTP in ${formatTime(resendSeconds)}`
+            : 'Resend OTP'}
       </button>
 
       <p className="mt-2 text-center text-sm text-gray-600">

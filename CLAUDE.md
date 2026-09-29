@@ -23,9 +23,9 @@ working on this app:
   happens ball-by-ball" (scoring) if backend/domain code is added to this repo later.
 - **Live scoring** is ball-by-ball and mobile-first; the intended architecture pushes updates to
   spectators over WebSocket without page refreshes.
-- This repository contains the **marketing landing page** plus a UI-only **authentication flow**
-  (mobile number + OTP). There is no real dashboard/app, no backend integration, and no route
-  protection yet — see Auth below.
+- This repository contains the **marketing landing page** plus a working **authentication flow**
+  (mobile number + OTP, wired to the backend) ending in a minimal protected `/home` page. There is
+  no real tournament dashboard yet.
 
 ## Tech stack
 
@@ -40,24 +40,31 @@ working on this app:
   for custom controlled components (like `OtpInput`). Shared validation rules live in
   `src/lib/validators.js`, not duplicated per form.
 - `oxlint` for linting (`npm run lint`)
-- No backend integration yet — auth actions are local/no-op (see Auth below).
+- **axios** for every HTTP call (`src/lib/api.js`). **Never use `fetch`.**
+- **JavaScript only — no TypeScript**: `.js`/`.jsx` files only, no `.ts`/`.tsx`, no `@types/*`
+  packages, no type annotations.
+- Backend API base URL comes from `VITE_API_URL` (see `.env.example`; defaults to
+  `http://localhost:3000/api`). The backend only allows the origin `http://localhost:5173`, so keep
+  the dev server on port 5173.
 
 ## Structure
 
 - `src/main.jsx` — entry point, mounts `<App />`
 - `src/App.jsx` — the router shell only (`BrowserRouter` + `Routes`); no page content lives here
 - `src/pages/` — one file per **route** (`LandingPage`, `MobileEntryPage`,
-  `VerifyOtpPage`, `NotFoundPage`). `NotFoundPage` is wired up as the catch-all
+  `VerifyOtpPage`, `HomePage`, `NotFoundPage`). `NotFoundPage` is wired up as the catch-all
   `<Route path="*" element={<NotFoundPage />} />` in `App.jsx` — keep it last in the `<Routes>`
   list so it only matches unmatched paths. A page composes components and/or forms and is what a `<Route element={...}>`
   points to.
 - `src/components/` — reusable/presentational pieces, both landing-page sections (`Navbar`,
   `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
-  (`AuthLayout`, `OtpInput`). Landing sections take no props and keep content as local const
+  (`AuthLayout`, `OtpInput`, `FullPageLoader`) and route guards (`RequireAuth`, `RedirectIfAuthed`). Landing sections take no props and keep content as local const
   arrays; shared UI components (like `OtpInput`) do take props since they're reused across pages.
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
 - `src/lib/` — framework-agnostic helpers shared across pages: `validators.js`, `constants.js`
-  (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`).
+  (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`), `api.js` (axios instance, interceptors,
+  `getErrorMessage`), `authApi.js` (one function per auth endpoint), `session.js`
+  (`restoreSession`, `signOut`), `sessionFlag.js` (non-sensitive "has a session" flag).
 - `src/hooks/` — reusable hooks, e.g. `useCountdown.js`.
 - `src/index.css` — `@import "tailwindcss";` plus a `@theme` block overriding the `red-*` color
   palette (see Theme below). Don't add component-scoped CSS files; use Tailwind utilities.
@@ -82,45 +89,53 @@ utilities so the palette stays centralized in one place.
 Login and signup are the **same flow**, matching the backend: **mobile number + OTP only** — no
 email, no password, no PIN, ever.
 
-- **Entry** (`/login` and `/signup`, both render `MobileEntryPage`): enter the mobile number →
-  "Request OTP" navigates to `/verify-otp`. The backend decides whether the OTP is a signup or a
-  login OTP (`POST /api/auth/request-otp` returns `{ userId, purpose }`), so the UI never asks.
-- **Verify** (`/verify-otp`): enter the 4-digit OTP; a correct OTP means the user is logged in
-  (`POST /api/auth/verify-otp`). The page then renders an inline success state. "Resend OTP" maps
-  to `resend-otp` and only restarts the timers for now (no API call).
+- **Entry** (`/login` and `/signup`, both render `MobileEntryPage`, wrapped in `RedirectIfAuthed`):
+  mobile number → `POST /auth/request-otp` → `{ userId, purpose }` (`signup` for a new number,
+  `login` for a verified user; the UI never asks which) → `/verify-otp`.
+- **Verify** (`/verify-otp`): 4-digit OTP → `POST /auth/verify-otp` with `{ userId, otp, purpose }`.
+  Success returns `{ user, accessToken }` plus the refresh cookie, then the user goes to `/home`.
+  Errors from the API (`Invalid OTP. N attempts left`, expired, `Too many attempts…`) are shown
+  under the form. "Resend OTP" → `POST /auth/resend-otp`, shows "N resends left".
+- **Session**: the access token lives **in memory only** (zustand `accessToken`, never persisted,
+  never localStorage/sessionStorage). The refresh token is an HttpOnly cookie the JS cannot read;
+  every request uses `withCredentials`. `api.js` attaches `Authorization: Bearer`, and on a `401`
+  (except auth endpoints) does **one shared refresh** (`POST /auth/refresh`, single-flight because
+  the backend rotates the refresh token on every use) and retries the request once; if the refresh
+  fails the session is cleared and `RequireAuth` sends the user to `/login`.
+- **App start** (`restoreSession()` in `App.jsx`): if the non-sensitive `localStorage` flag
+  `sillypoint_session` exists it calls refresh → `GET /auth/me` and fills the store; otherwise the
+  status is `unauthenticated` immediately (no pointless 401s for logged-out visitors). The store
+  `status` is `loading | authenticated | unauthenticated`; guards show `FullPageLoader` while
+  `loading`.
+- **Guards**: `/home` is behind `RequireAuth`; `/login` and `/signup` redirect logged-in users to
+  `/home` (`RedirectIfAuthed`); the Navbar shows "Dashboard" instead of Log in / Get Started when
+  authenticated. **Log out** (`signOut()` on `HomePage`) calls `POST /auth/logout`, clears the store
+  and the flag, and returns to `/`.
 - **OTP timers** on `/verify-otp`: a "Code expires in mm:ss" countdown (10 min; mirrors backend
   `OTP_TTL_MS`, disables "Verify OTP" and shows an expired message at 0) and a "Resend OTP in
   mm:ss" countdown (30 s, **frontend-only** — the backend has no resend cooldown). The store keeps
   absolute end times (`otpExpiresAt`, `resendAvailableAt`, epoch ms) and `useCountdown` derives the
-  remaining seconds from `Date.now()`, so timers survive refreshes without restarting. The store is
-  persisted to `sessionStorage` via zustand `persist` (only `mobile` + the two end times;
-  `isAuthenticated` stays in memory). Opening `/verify-otp` with no pending OTP redirects to
-  `/login`. A note tells users not to refresh or close the page. When the API is wired, take the
-  end times from the `request-otp`/`resend-otp` responses instead of the local constants.
+  remaining seconds from `Date.now()`, so timers survive refreshes without restarting. A note tells
+  users not to refresh or close the page. The backend returns no timing fields, so these stay
+  local constants; the server is still the authority (expired OTP → 400, too many resends → 429).
+- `useAuthStore` (`src/store/authStore.js`): persisted to `sessionStorage` via zustand `persist`
+  (only `mobile`, `userId`, `purpose`, `otpExpiresAt`, `resendAvailableAt`, so a refresh mid-OTP
+  resumes); in memory: `user`, `accessToken`, `status`. Actions: `startOtp`, `restartOtpTimers`,
+  `setSession`, `setAccessToken`, `clearSession`. Opening `/verify-otp` with no pending OTP
+  redirects to `/login`.
 - Mobile numbers are Indian 10-digit numbers (`INDIAN_MOBILE_REGEX` in `src/lib/validators.js`,
   `[6-9]\d{9}`), always shown with a fixed `+91` prefix chip. The OTP is always exactly 4 digits
   (`OTP_REGEX`, `\d{4}`).
-- `useAuthStore` (`src/store/authStore.js`) holds `mobile` (set by `MobileEntryPage`, read by
-  `VerifyOtpPage` so the mobile number doesn't need to be passed via query params) and
-  `otpExpiresAt`/`resendAvailableAt`/`isAuthenticated`, with `startOtp`/`restartOtpTimers`/`login`/`reset`.
-  `login()` is a **local state flip only** — there is no
-  backend call, no token, no session persistence yet. Treat every auth action in this repo as a UI
-  stub to be wired to the real API later (`request-otp`, `verify-otp`, `resend-otp`, `refresh`,
-  `logout`). When wiring: access token in memory only (never localStorage), refresh token is an
-  HttpOnly cookie set by the backend, send `withCredentials` on `/api/auth/*`, and serialize
-  refresh calls.
-- There is **no route protection** — all routes are open. Don't add a `PrivateRoute`/redirect
-  guard until the store holds a real backend session to check against.
-- No dashboard/home route exists after login; `VerifyOtpPage` just renders an inline success
-  state rather than navigating anywhere further.
 - `OtpInput` (`src/components/OtpInput.jsx`) is the shared 4-box segmented digit input for the OTP.
   It's a controlled component (`value`/`onChange`) meant to be used via `react-hook-form`'s
   `Controller`, not `register`. It selects a box's existing content on focus so re-typing over a
   filled box overwrites it instead of silently no-op'ing against the native `maxLength=1` — don't
   remove that `onFocus` handler.
 - `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared centered-card shell for the auth
-  pages (logo, heading, subheading, back-to-home link) — reuse it for any future auth-related
-  page rather than rebuilding the card chrome.
+  pages and `HomePage` (logo, heading, subheading, back-to-home link) — reuse it for any future
+  account-related page rather than rebuilding the card chrome.
+- Adding a protected page: put it in `src/pages/`, wrap its `<Route>` element in `RequireAuth`, and
+  call the API only through `src/lib/api.js` so token refresh works automatically.
 
 ## Conventions
 

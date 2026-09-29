@@ -10,29 +10,40 @@ const newOtpTimers = () => {
   }
 }
 
-const noOtpTimers = { otpExpiresAt: null, resendAvailableAt: null }
+const noOtpFlow = {
+  mobile: '',
+  userId: null,
+  purpose: null,
+  otpExpiresAt: null,
+  resendAvailableAt: null,
+}
 
 export const useAuthStore = create(
   persist(
     (set) => ({
-      mobile: '',
-      otpExpiresAt: null,
-      resendAvailableAt: null,
-      isAuthenticated: false,
+      ...noOtpFlow,
+      user: null,
+      accessToken: null,
+      status: 'loading',
 
-      startOtp: (mobile) => set({ mobile, ...newOtpTimers() }),
+      startOtp: ({ mobile, userId, purpose }) => set({ mobile, userId, purpose, ...newOtpTimers() }),
 
       restartOtpTimers: () => set(newOtpTimers()),
 
-      login: ({ mobile }) => set({ mobile, isAuthenticated: true, ...noOtpTimers }),
+      setSession: ({ user, accessToken }) =>
+        set({ user, accessToken, status: 'authenticated', ...noOtpFlow }),
 
-      reset: () => set({ mobile: '', isAuthenticated: false, ...noOtpTimers }),
+      setAccessToken: (accessToken) => set({ accessToken }),
+
+      clearSession: () => set({ user: null, accessToken: null, status: 'unauthenticated' }),
     }),
     {
       name: 'sillypoint-auth',
       storage: createJSONStorage(() => sessionStorage),
-      partialize: ({ mobile, otpExpiresAt, resendAvailableAt }) => ({
+      partialize: ({ mobile, userId, purpose, otpExpiresAt, resendAvailableAt }) => ({
         mobile,
+        userId,
+        purpose,
         otpExpiresAt,
         resendAvailableAt,
       }),

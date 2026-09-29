@@ -1,12 +1,17 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
+import { getErrorMessage } from '../lib/api'
+import { requestOtp } from '../lib/authApi'
 import { useAuthStore } from '../store/authStore'
 import { mobileValidation } from '../lib/validators'
 
 function MobileEntryPage() {
   const navigate = useNavigate()
   const startOtp = useAuthStore((state) => state.startOtp)
+  const [serverError, setServerError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   const {
     register,
@@ -14,9 +19,19 @@ function MobileEntryPage() {
     formState: { errors },
   } = useForm({ defaultValues: { mobile: '' } })
 
-  const onSubmit = (data) => {
-    startOtp(data.mobile)
-    navigate('/verify-otp')
+  const onSubmit = async ({ mobile }) => {
+    setServerError('')
+    setSubmitting(true)
+
+    try {
+      const { userId, purpose } = await requestOtp(mobile)
+      startOtp({ mobile, userId, purpose })
+      navigate('/verify-otp')
+    } catch (error) {
+      setServerError(getErrorMessage(error))
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -52,11 +67,18 @@ function MobileEntryPage() {
           )}
         </div>
 
+        {serverError && (
+          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
+            {serverError}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+          disabled={submitting}
+          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
         >
-          Request OTP
+          {submitting ? 'Sending OTP…' : 'Request OTP'}
         </button>
       </form>
     </AuthLayout>
