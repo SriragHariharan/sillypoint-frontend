@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-function PinInput({ length = 4, value = '', onChange, masked = false, autoFocus = false, error = false, name }) {
+function OtpInput({ length = 4, value = '', onChange, autoFocus = false, error = false, name }) {
   const inputsRef = useRef([])
 
   const digits = Array.from({ length }, (_, i) => value[i] || '')
@@ -42,7 +42,7 @@ function PinInput({ length = 4, value = '', onChange, masked = false, autoFocus 
           ref={(el) => {
             inputsRef.current[index] = el
           }}
-          type={masked ? 'password' : 'text'}
+          type="text"
           inputMode="numeric"
           autoComplete="one-time-code"
           maxLength={1}
@@ -62,4 +62,4 @@ function PinInput({ length = 4, value = '', onChange, masked = false, autoFocus 
   )
 }
 
-export default PinInput
+export default OtpInput

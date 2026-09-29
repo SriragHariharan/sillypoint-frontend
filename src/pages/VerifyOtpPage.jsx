@@ -1,161 +1,117 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
-import PinInput from '../components/PinInput'
+import OtpInput from '../components/OtpInput'
+import { useCountdown } from '../hooks/useCountdown'
+import { formatTime } from '../lib/formatTime'
 import { useAuthStore } from '../store/authStore'
-import { otpValidation, pinValidation } from '../lib/validators'
+import { otpValidation } from '../lib/validators'
 
 function VerifyOtpPage() {
   const mobile = useAuthStore((state) => state.mobile)
+  const otpExpiresAt = useAuthStore((state) => state.otpExpiresAt)
+  const resendAvailableAt = useAuthStore((state) => state.resendAvailableAt)
   const login = useAuthStore((state) => state.login)
-  const [stage, setStage] = useState('otp')
-  const [done, setDone] = useState(false)
+  const restartOtpTimers = useAuthStore((state) => state.restartOtpTimers)
+  const [verified, setVerified] = useState(false)
 
-  const otpForm = useForm({ defaultValues: { otp: '' } })
-  const pinForm = useForm({ defaultValues: { pin: '', confirmPin: '' } })
+  const expirySeconds = useCountdown(otpExpiresAt)
+  const resendSeconds = useCountdown(resendAvailableAt)
+  const expired = expirySeconds === 0
 
-  const onVerifyOtp = () => {
-    setStage('pin')
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: { otp: '' } })
+
+  const onSubmit = () => {
+    login({ mobile })
+    setVerified(true)
   }
 
-  const onCreatePin = (data) => {
-    login({ mobile, pin: data.pin })
-    setDone(true)
+  const onResend = () => {
+    restartOtpTimers()
+    reset({ otp: '' })
   }
 
-  if (done) {
+  if (verified) {
     return (
-      <AuthLayout title="You're all set" subtitle="Your account has been created.">
+      <AuthLayout title="Welcome" subtitle="You're logged in.">
         <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-          Account created for +91 {mobile || '—'}. You can now log in anytime with your mobile
-          number and PIN.
+          Logged in successfully with +91 {mobile || '—'}.
         </p>
-        <Link
-          to="/login"
-          className="mt-6 block w-full rounded-full bg-red-600 py-3 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-        >
-          Go to login
-        </Link>
       </AuthLayout>
     )
   }
 
-  if (stage === 'pin') {
-    return (
-      <AuthLayout title="Create your PIN" subtitle="Set a 4-digit PIN to secure your account.">
-        <form onSubmit={pinForm.handleSubmit(onCreatePin)} className="space-y-5" noValidate>
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">4-digit PIN</label>
-            <Controller
-              name="pin"
-              control={pinForm.control}
-              rules={pinValidation}
-              render={({ field }) => (
-                <PinInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  masked
-                  error={!!pinForm.formState.errors.pin}
-                  name="pin"
-                />
-              )}
-            />
-            {pinForm.formState.errors.pin && (
-              <p className="mt-1.5 text-xs font-medium text-red-600">
-                {pinForm.formState.errors.pin.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">Confirm PIN</label>
-            <Controller
-              name="confirmPin"
-              control={pinForm.control}
-              rules={{
-                required: 'Confirm your PIN',
-                validate: (value) => value === pinForm.getValues('pin') || 'PINs do not match',
-              }}
-              render={({ field }) => (
-                <PinInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  masked
-                  error={!!pinForm.formState.errors.confirmPin}
-                  name="confirm pin"
-                />
-              )}
-            />
-            {pinForm.formState.errors.confirmPin && (
-              <p className="mt-1.5 text-xs font-medium text-red-600">
-                {pinForm.formState.errors.confirmPin.message}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-          >
-            Complete Signup
-          </button>
-        </form>
-      </AuthLayout>
-    )
+  if (!mobile || !otpExpiresAt) {
+    return <Navigate to="/login" replace />
   }
 
   return (
-    <AuthLayout
-      title="Verify OTP"
-      subtitle={
-        mobile
-          ? `Enter the 4-digit code sent to +91 ${mobile}.`
-          : 'Enter the 4-digit code sent to your mobile number.'
-      }
-    >
-      <form onSubmit={otpForm.handleSubmit(onVerifyOtp)} className="space-y-5" noValidate>
+    <AuthLayout title="Verify OTP" subtitle={`Enter the 4-digit code sent to +91 ${mobile}.`}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">OTP</label>
           <Controller
             name="otp"
-            control={otpForm.control}
+            control={control}
             rules={otpValidation}
             render={({ field }) => (
-              <PinInput
+              <OtpInput
                 value={field.value}
                 onChange={field.onChange}
-                error={!!otpForm.formState.errors.otp}
+                error={!!errors.otp}
                 name="otp"
                 autoFocus
               />
             )}
           />
-          {otpForm.formState.errors.otp && (
-            <p className="mt-1.5 text-xs font-medium text-red-600">
-              {otpForm.formState.errors.otp.message}
-            </p>
+          {errors.otp && (
+            <p className="mt-1.5 text-xs font-medium text-red-600">{errors.otp.message}</p>
           )}
         </div>
 
+        <p
+          role="timer"
+          className={`text-sm font-medium ${expired ? 'text-red-600' : 'text-gray-600'}`}
+        >
+          {expired ? (
+            'OTP expired. Request a new code.'
+          ) : (
+            <>
+              Code expires in <span className="font-bold text-gray-900">{formatTime(expirySeconds)}</span>
+            </>
+          )}
+        </p>
+
         <button
           type="submit"
-          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+          disabled={expired}
+          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
         >
           Verify OTP
         </button>
       </form>
 
+      <p className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
+        Please don&apos;t refresh or close this page while verifying your OTP.
+      </p>
+
       <button
         type="button"
-        disabled
-        className="mt-6 w-full text-center text-sm font-medium text-gray-400"
+        onClick={onResend}
+        disabled={resendSeconds > 0}
+        className="mt-5 w-full text-center text-sm font-semibold text-red-600 transition hover:text-red-700 disabled:cursor-not-allowed disabled:font-medium disabled:text-gray-400 disabled:hover:text-gray-400"
       >
-        Resend OTP
+        {resendSeconds > 0 ? `Resend OTP in ${formatTime(resendSeconds)}` : 'Resend OTP'}
       </button>
 
       <p className="mt-2 text-center text-sm text-gray-600">
-        <Link to="/signup" className="font-semibold text-red-600 hover:text-red-700">
+        <Link to="/login" className="font-semibold text-red-600 hover:text-red-700">
           Change mobile number
         </Link>
       </p>

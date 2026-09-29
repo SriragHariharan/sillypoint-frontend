@@ -1,12 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
 import { useAuthStore } from '../store/authStore'
 import { mobileValidation } from '../lib/validators'
 
-function SignupPage() {
+function MobileEntryPage() {
   const navigate = useNavigate()
-  const setMobile = useAuthStore((state) => state.setMobile)
+  const startOtp = useAuthStore((state) => state.startOtp)
 
   const {
     register,
@@ -15,12 +15,15 @@ function SignupPage() {
   } = useForm({ defaultValues: { mobile: '' } })
 
   const onSubmit = (data) => {
-    setMobile(data.mobile)
+    startOtp(data.mobile)
     navigate('/verify-otp')
   }
 
   return (
-    <AuthLayout title="Create an account" subtitle="Enter your mobile number to get started.">
+    <AuthLayout
+      title="Log in or sign up"
+      subtitle="Enter your mobile number and we'll send you an OTP."
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
           <label htmlFor="mobile" className="mb-1.5 block text-sm font-medium text-gray-700">
@@ -56,15 +59,8 @@ function SignupPage() {
           Request OTP
         </button>
       </form>
-
-      <p className="mt-6 text-center text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-red-600 hover:text-red-700">
-          Log in
-        </Link>
-      </p>
     </AuthLayout>
   )
 }
 
-export default SignupPage
+export default MobileEntryPage
