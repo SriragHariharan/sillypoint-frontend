@@ -73,9 +73,9 @@ function AddTournamentPage() {
     setSubmitting(true)
 
     try {
-      await createTournament(values)
+      const { tournament } = await createTournament(values)
       notifyInfo('Tournament created.')
-      navigate('/home')
+      navigate(`/tournaments/${tournament.id}`)
     } catch (error) {
       notifyError(getErrorMessage(error))
     } finally {

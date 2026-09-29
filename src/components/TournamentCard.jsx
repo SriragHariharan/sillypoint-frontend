@@ -29,13 +29,6 @@ function TournamentCard({ tournament }) {
           <dd>📅 {formatDateRange(tournament.startDate, tournament.endDate)}</dd>
         </div>
       </dl>
-
-      <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 text-xs font-semibold">
-        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-gray-700">
-          {tournament.format}
-        </span>
-        <span className="text-gray-500">{tournament.teamsCount} teams</span>
-      </div>
     </Link>
   )
 }

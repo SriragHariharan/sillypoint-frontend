@@ -1,14 +1,10 @@
 import { api } from './api'
-import tournaments from '../data/tournaments.json'
-import tournamentDetails from '../data/tournamentDetails.json'
 
-export const fetchTournaments = () => Promise.resolve(tournaments)
+export const fetchTournaments = (params, signal) =>
+  api.get('/tournaments', { params, signal }).then((response) => response.data)
 
-export const fetchTournamentDetails = (id) => {
-  const summary = tournaments.find((tournament) => tournament.id === id)
-  const details = tournamentDetails[id]
-  return Promise.resolve(summary && details ? { ...summary, ...details } : null)
-}
+export const fetchTournamentDetails = (id, signal) =>
+  api.get(`/tournaments/${id}`, { signal }).then((response) => response.data.tournament)
 
 export const createTournament = ({ name, description, location, startDate, endDate, logo }) => {
   const formData = new FormData()

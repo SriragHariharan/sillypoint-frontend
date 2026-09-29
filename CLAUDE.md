@@ -65,16 +65,21 @@ working on this app:
   form (name, description, logo, location, start/end date). Description uses `RichTextEditor`
   (TipTap: bold, italic, underline, bullet/numbered lists) via `Controller` and is submitted as an
   HTML string. `src/lib/tournamentApi.js` sends `POST /tournaments` as multipart `FormData`
-  (endpoint/field names assumed; adjust to the backend). Validation rules live in `validators.js`.
+  (matches the backend's `POST /api/tournaments`). Validation rules live in `validators.js`.
 - `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
-  (no `RequireAuth`) and mobile-first. List filters (search, status) and details
-  state (tab, team search, match status) live in the URL query string. Data is dummy JSON in
-  `src/data/tournaments.json` (list) and `src/data/tournamentDetails.json` (details keyed by id),
-  read only through `fetchTournaments` / `fetchTournamentDetails` in `src/lib/tournamentApi.js` —
-  replace those with axios calls when the API exists. Organizer avatars are local SVGs in
-  `public/avatars/`. "Add my team" is a placeholder (toast; sends logged-out users to `/login`).
-  `FeaturedTournaments` shows live/upcoming tournaments on the landing page. The Navbar hash links
-  are absolute (`/#features`) so they work from non-landing pages.
+  (no `RequireAuth`) and mobile-first, backed by the real API through `fetchTournaments` /
+  `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
+  `{ tournaments, page, limit, total }`; `GET /tournaments/:id` → `{ tournament }` with
+  `organizer: { id, mobile }`; 404 = not found). The API has no format, team count, organizer
+  name/photo, teams or matches, so the UI doesn't show them (Teams/Matches tabs are empty states).
+  List filters (search debounced 300 ms, status) live in the URL query string and are applied
+  server-side, with "Load more" paging; the details tab lives in the URL. Loading uses shimmer
+  skeletons (`Skeleton`, `TournamentCardSkeleton`, `TournamentDetailsSkeleton`; the `shimmer`
+  animation is in `index.css`). Requests use an `AbortController` and pages derive `loading` from a
+  request key instead of setting state in effects. "Add my team" is a placeholder (toast; sends
+  logged-out users to `/login`). `FeaturedTournaments` shows live/upcoming tournaments on the
+  landing page. The Navbar hash links are absolute (`/#features`) so they work from non-landing
+  pages. Creating a tournament navigates to its details page.
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
 - `src/lib/` — framework-agnostic helpers shared across pages: `validators.js`, `constants.js`
   (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`), `api.js` (axios instance, interceptors,
