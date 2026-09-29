@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const bracketRounds = [
   { label: 'R1', team: 'Tigers', detail: 'beat Warriors' },
   { label: 'R2', team: 'Tigers', detail: 'beat Kings' },
@@ -30,12 +32,12 @@ function Hero() {
             >
               Get Started Free
             </a>
-            <a
-              href="#how-it-works"
+            <Link
+              to="/tournaments"
               className="rounded-full border border-gray-300 px-7 py-3 text-center text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
             >
-              See how it works
-            </a>
+              Browse tournaments
+            </Link>
           </div>
         </div>
 

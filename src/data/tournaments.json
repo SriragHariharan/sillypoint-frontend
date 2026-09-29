@@ -1,0 +1,74 @@
+[
+  {
+    "id": "t1",
+    "name": "Sillypoint Premier League",
+    "logo": null,
+    "location": "Wankhede Practice Ground, Mumbai",
+    "city": "Mumbai",
+    "startDate": "2026-09-20",
+    "endDate": "2026-10-05",
+    "format": "Round Robin",
+    "status": "live",
+    "teamsCount": 6
+  },
+  {
+    "id": "t2",
+    "name": "Corporate Champions Cup",
+    "logo": null,
+    "location": "Chinnaswamy Nets Arena, Bengaluru",
+    "city": "Bengaluru",
+    "startDate": "2026-10-18",
+    "endDate": "2026-10-25",
+    "format": "Group + Knockout",
+    "status": "upcoming",
+    "teamsCount": 6
+  },
+  {
+    "id": "t3",
+    "name": "Inter-College Knockout",
+    "logo": null,
+    "location": "IIT Madras Sports Complex, Chennai",
+    "city": "Chennai",
+    "startDate": "2026-09-27",
+    "endDate": "2026-10-02",
+    "format": "Dynamic Knockout",
+    "status": "live",
+    "teamsCount": 8
+  },
+  {
+    "id": "t4",
+    "name": "Gully Cricket Carnival",
+    "logo": null,
+    "location": "Necklace Road Ground, Hyderabad",
+    "city": "Hyderabad",
+    "startDate": "2026-11-08",
+    "endDate": "2026-11-10",
+    "format": "Single Elimination",
+    "status": "upcoming",
+    "teamsCount": 6
+  },
+  {
+    "id": "t5",
+    "name": "Monsoon Trophy",
+    "logo": null,
+    "location": "Deccan Gymkhana Ground, Pune",
+    "city": "Pune",
+    "startDate": "2026-08-01",
+    "endDate": "2026-08-15",
+    "format": "Round Robin",
+    "status": "completed",
+    "teamsCount": 6
+  },
+  {
+    "id": "t6",
+    "name": "Veterans Winter Series",
+    "logo": null,
+    "location": "Feroz Shah Kotla Nets, Delhi",
+    "city": "Delhi",
+    "startDate": "2026-12-05",
+    "endDate": "2026-12-20",
+    "format": "Group + Knockout",
+    "status": "upcoming",
+    "teamsCount": 5
+  }
+]

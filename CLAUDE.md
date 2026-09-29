@@ -66,6 +66,15 @@ working on this app:
   (TipTap: bold, italic, underline, bullet/numbered lists) via `Controller` and is submitted as an
   HTML string. `src/lib/tournamentApi.js` sends `POST /tournaments` as multipart `FormData`
   (endpoint/field names assumed; adjust to the backend). Validation rules live in `validators.js`.
+- `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
+  (no `RequireAuth`) and mobile-first. List filters (search, status) and details
+  state (tab, team search, match status) live in the URL query string. Data is dummy JSON in
+  `src/data/tournaments.json` (list) and `src/data/tournamentDetails.json` (details keyed by id),
+  read only through `fetchTournaments` / `fetchTournamentDetails` in `src/lib/tournamentApi.js` —
+  replace those with axios calls when the API exists. Organizer avatars are local SVGs in
+  `public/avatars/`. "Add my team" is a placeholder (toast; sends logged-out users to `/login`).
+  `FeaturedTournaments` shows live/upcoming tournaments on the landing page. The Navbar hash links
+  are absolute (`/#features`) so they work from non-landing pages.
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
 - `src/lib/` — framework-agnostic helpers shared across pages: `validators.js`, `constants.js`
   (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`), `api.js` (axios instance, interceptors,

@@ -4,9 +4,25 @@ import logo from '../assets/app_logo.png'
 import { useAuthStore } from '../store/authStore'
 
 const links = [
-  { label: 'Features', href: '#features' },
-  { label: 'How it works', href: '#how-it-works' },
+  { label: 'Tournaments', to: '/tournaments' },
+  { label: 'Features', href: '/#features' },
+  { label: 'How it works', href: '/#how-it-works' },
 ]
+
+function NavItem({ link, className, onClick }) {
+  if (link.to) {
+    return (
+      <Link to={link.to} onClick={onClick} className={className}>
+        {link.label}
+      </Link>
+    )
+  }
+  return (
+    <a href={link.href} onClick={onClick} className={className}>
+      {link.label}
+    </a>
+  )
+}
 
 function Navbar() {
   const [open, setOpen] = useState(false)
@@ -15,7 +31,7 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-6 sm:py-4">
-        <a href="#top" className="flex items-center gap-2">
+        <a href="/#top" className="flex items-center gap-2">
           <img src={logo} alt="Sillypoint" className="h-8 w-8 rounded-md" />
           <span className="text-lg font-bold tracking-tight text-gray-900">
             Sillypoint
@@ -24,10 +40,8 @@ function Navbar() {
 
         <ul className="hidden items-center gap-8 text-sm font-medium text-gray-600 md:flex">
           {links.map((link) => (
-            <li key={link.href}>
-              <a href={link.href} className="transition hover:text-red-600">
-                {link.label}
-              </a>
+            <li key={link.label}>
+              <NavItem link={link} className="transition hover:text-red-600" />
             </li>
           ))}
         </ul>
@@ -82,14 +96,12 @@ function Navbar() {
       {open && (
         <ul className="space-y-1 border-t border-gray-100 bg-white px-5 py-3 text-sm font-medium text-gray-700 md:hidden">
           {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
+            <li key={link.label}>
+              <NavItem
+                link={link}
                 onClick={() => setOpen(false)}
                 className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
-              >
-                {link.label}
-              </a>
+              />
             </li>
           ))}
           {!authenticated && (

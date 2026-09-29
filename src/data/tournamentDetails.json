@@ -1,0 +1,103 @@
+{
+  "t1": {
+    "description": "<p>Mumbai's flagship <strong>T20 league</strong> for club teams. Every team plays every other team once, and the top of the table takes the trophy.</p><ul><li>20 overs a side, white ball</li><li>Two points for a win, one for a tie or no result</li><li>Umpires and scorers provided</li></ul><p>Entry fee: ₹8,000 per team.</p>",
+    "organizer": { "name": "Rohan Mehta", "mobile": "9820012345", "photo": "/avatars/avatar-1.svg" },
+    "teams": [
+      { "id": "t1-a", "name": "Bandra Blasters", "city": "Mumbai" },
+      { "id": "t1-b", "name": "Dadar Dynamos", "city": "Mumbai" },
+      { "id": "t1-c", "name": "Thane Titans", "city": "Thane" },
+      { "id": "t1-d", "name": "Colaba Kings", "city": "Mumbai" },
+      { "id": "t1-e", "name": "Navi Mumbai Strikers", "city": "Navi Mumbai" },
+      { "id": "t1-f", "name": "Powai Panthers", "city": "Mumbai" }
+    ],
+    "matches": [
+      { "id": "t1-m1", "teamA": "Bandra Blasters", "teamB": "Dadar Dynamos", "date": "2026-09-20", "venue": "Ground 1", "status": "completed", "result": "Bandra Blasters won by 24 runs" },
+      { "id": "t1-m2", "teamA": "Thane Titans", "teamB": "Colaba Kings", "date": "2026-09-27", "venue": "Ground 2", "status": "completed", "result": "Colaba Kings won by 5 wickets" },
+      { "id": "t1-m3", "teamA": "Navi Mumbai Strikers", "teamB": "Powai Panthers", "date": "2026-09-29", "venue": "Ground 1", "status": "live", "result": "Strikers 96/3 (12.4 ov)" },
+      { "id": "t1-m4", "teamA": "Dadar Dynamos", "teamB": "Thane Titans", "date": "2026-10-02", "venue": "Ground 2", "status": "upcoming", "result": null },
+      { "id": "t1-m5", "teamA": "Bandra Blasters", "teamB": "Colaba Kings", "date": "2026-10-05", "venue": "Ground 1", "status": "upcoming", "result": null }
+    ]
+  },
+  "t2": {
+    "description": "<p>An office-league showdown for <strong>corporate teams</strong> across Bengaluru. Teams are drawn into two groups, and the top two from each group advance to the semi-finals.</p><ul><li>15 overs a side</li><li>Each team must field at least two players from a non-tech department</li><li>Lunch and refreshments included</li></ul>",
+    "organizer": { "name": "Ananya Rao", "mobile": "9845098450", "photo": "/avatars/avatar-2.svg" },
+    "teams": [
+      { "id": "t2-a", "name": "Byte Bashers", "city": "Bengaluru" },
+      { "id": "t2-b", "name": "Cloud Crushers", "city": "Bengaluru" },
+      { "id": "t2-c", "name": "Stack Smashers", "city": "Bengaluru" },
+      { "id": "t2-d", "name": "Pipeline Pacers", "city": "Bengaluru" },
+      { "id": "t2-e", "name": "Sprint Strikers", "city": "Bengaluru" },
+      { "id": "t2-f", "name": "Deploy Daredevils", "city": "Bengaluru" }
+    ],
+    "matches": [
+      { "id": "t2-m1", "teamA": "Byte Bashers", "teamB": "Cloud Crushers", "date": "2026-10-18", "venue": "Arena 1", "status": "upcoming", "result": null },
+      { "id": "t2-m2", "teamA": "Stack Smashers", "teamB": "Pipeline Pacers", "date": "2026-10-18", "venue": "Arena 2", "status": "upcoming", "result": null },
+      { "id": "t2-m3", "teamA": "Sprint Strikers", "teamB": "Deploy Daredevils", "date": "2026-10-19", "venue": "Arena 1", "status": "upcoming", "result": null }
+    ]
+  },
+  "t3": {
+    "description": "<p>A fast, chaotic <strong>Dynamic Knockout</strong> for college teams. Pairings are drawn at random every round, matches are sudden-death, and odd team counts get a bye.</p><ul><li>10 overs a side</li><li>Student ID required for every player</li><li>Super over decides any tie</li></ul>",
+    "organizer": { "name": "Karthik Subramanian", "mobile": "9444123456", "photo": "/avatars/avatar-3.svg" },
+    "teams": [
+      { "id": "t3-a", "name": "IITM Invincibles", "city": "Chennai" },
+      { "id": "t3-b", "name": "Anna University XI", "city": "Chennai" },
+      { "id": "t3-c", "name": "Loyola Lions", "city": "Chennai" },
+      { "id": "t3-d", "name": "SRM Rockets", "city": "Chennai" },
+      { "id": "t3-e", "name": "VIT Vipers", "city": "Vellore" },
+      { "id": "t3-f", "name": "SSN Smashers", "city": "Chennai" },
+      { "id": "t3-g", "name": "Stella Maris Stars", "city": "Chennai" },
+      { "id": "t3-h", "name": "Presidency Pirates", "city": "Chennai" }
+    ],
+    "matches": [
+      { "id": "t3-m1", "teamA": "IITM Invincibles", "teamB": "SRM Rockets", "date": "2026-09-27", "venue": "Main Ground", "status": "completed", "result": "IITM Invincibles won by 3 wickets" },
+      { "id": "t3-m2", "teamA": "Loyola Lions", "teamB": "VIT Vipers", "date": "2026-09-27", "venue": "Main Ground", "status": "completed", "result": "VIT Vipers won by 12 runs" },
+      { "id": "t3-m3", "teamA": "Anna University XI", "teamB": "SSN Smashers", "date": "2026-09-29", "venue": "Main Ground", "status": "live", "result": "Anna University 58/2 (6.1 ov)" },
+      { "id": "t3-m4", "teamA": "Stella Maris Stars", "teamB": "Presidency Pirates", "date": "2026-09-30", "venue": "Nets Ground", "status": "upcoming", "result": null }
+    ]
+  },
+  "t4": {
+    "description": "<p>A one-weekend <strong>single elimination</strong> street-cricket carnival with tennis-ball cricket rules. Lose once and you're out.</p><ul><li>8 overs a side</li><li>Tennis ball, no pads required</li><li>Cash prizes for the top three teams</li></ul>",
+    "organizer": { "name": "Imran Sheikh", "mobile": "9908076543", "photo": null },
+    "teams": [
+      { "id": "t4-a", "name": "Charminar Chargers", "city": "Hyderabad" },
+      { "id": "t4-b", "name": "Banjara Bulls", "city": "Hyderabad" },
+      { "id": "t4-c", "name": "Gachibowli Gladiators", "city": "Hyderabad" },
+      { "id": "t4-d", "name": "Secunderabad Sultans", "city": "Hyderabad" },
+      { "id": "t4-e", "name": "Kukatpally Knights", "city": "Hyderabad" },
+      { "id": "t4-f", "name": "Madhapur Mavericks", "city": "Hyderabad" }
+    ],
+    "matches": [
+      { "id": "t4-m1", "teamA": "Charminar Chargers", "teamB": "Banjara Bulls", "date": "2026-11-08", "venue": "Ground A", "status": "upcoming", "result": null },
+      { "id": "t4-m2", "teamA": "Gachibowli Gladiators", "teamB": "Secunderabad Sultans", "date": "2026-11-08", "venue": "Ground B", "status": "upcoming", "result": null }
+    ]
+  },
+  "t5": {
+    "description": "<p>The <strong>Monsoon Trophy</strong> wrapped up in August with a thrilling final. Six Pune clubs played a full round robin over two weeks.</p><ul><li>Champions: Deccan Daredevils</li><li>Runners-up: Kothrud Kings</li></ul>",
+    "organizer": { "name": "Sneha Kulkarni", "mobile": "9822011223", "photo": "/avatars/avatar-1.svg" },
+    "teams": [
+      { "id": "t5-a", "name": "Deccan Daredevils", "city": "Pune" },
+      { "id": "t5-b", "name": "Kothrud Kings", "city": "Pune" },
+      { "id": "t5-c", "name": "Baner Bombers", "city": "Pune" },
+      { "id": "t5-d", "name": "Hadapsar Hawks", "city": "Pune" },
+      { "id": "t5-e", "name": "Viman Nagar Vikings", "city": "Pune" },
+      { "id": "t5-f", "name": "Aundh Avengers", "city": "Pune" }
+    ],
+    "matches": [
+      { "id": "t5-m1", "teamA": "Deccan Daredevils", "teamB": "Baner Bombers", "date": "2026-08-01", "venue": "Gymkhana 1", "status": "completed", "result": "Deccan Daredevils won by 8 wickets" },
+      { "id": "t5-m2", "teamA": "Kothrud Kings", "teamB": "Hadapsar Hawks", "date": "2026-08-02", "venue": "Gymkhana 2", "status": "completed", "result": "Kothrud Kings won by 31 runs" },
+      { "id": "t5-m3", "teamA": "Deccan Daredevils", "teamB": "Kothrud Kings", "date": "2026-08-15", "venue": "Gymkhana 1", "status": "completed", "result": "Deccan Daredevils won by 2 runs" }
+    ]
+  },
+  "t6": {
+    "description": "<p>A friendly <strong>over-40 series</strong> for veteran cricketers. Two groups feed into a knockout, with fun rules to keep it light.</p><ul><li>16 overs a side</li><li>Runners allowed for every batter</li><li>Minimum age 40 on the first day</li></ul>",
+    "organizer": { "name": "Vikram Malhotra", "mobile": "9810098100", "photo": "/avatars/avatar-2.svg" },
+    "teams": [
+      { "id": "t6-a", "name": "Old Delhi Oldies", "city": "Delhi" },
+      { "id": "t6-b", "name": "Gurgaon Grandmasters", "city": "Gurugram" },
+      { "id": "t6-c", "name": "Noida Nostalgics", "city": "Noida" },
+      { "id": "t6-d", "name": "Dwarka Dinosaurs", "city": "Delhi" },
+      { "id": "t6-e", "name": "Rohini Retros", "city": "Delhi" }
+    ],
+    "matches": []
+  }
+}

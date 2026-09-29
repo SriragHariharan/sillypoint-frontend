@@ -46,6 +46,13 @@ function HomePage() {
         Create tournament
       </Link>
 
+      <Link
+        to="/tournaments"
+        className="mt-3 block w-full rounded-full border border-gray-300 py-3 text-center text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
+      >
+        Browse tournaments
+      </Link>
+
       <button
         type="button"
         onClick={onLogout}

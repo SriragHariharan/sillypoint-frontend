@@ -10,6 +10,8 @@ import MobileEntryPage from './pages/MobileEntryPage'
 import VerifyOtpPage from './pages/VerifyOtpPage'
 import HomePage from './pages/HomePage'
 import AddTournamentPage from './pages/AddTournamentPage'
+import TournamentsPage from './pages/TournamentsPage'
+import TournamentDetailsPage from './pages/TournamentDetailsPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -60,6 +62,8 @@ function App() {
             </RequireAuth>
           }
         />
+        <Route path="/tournaments" element={<TournamentsPage />} />
+        <Route path="/tournaments/:id" element={<TournamentDetailsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
