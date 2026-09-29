@@ -9,6 +9,7 @@ import LandingPage from './pages/LandingPage'
 import MobileEntryPage from './pages/MobileEntryPage'
 import VerifyOtpPage from './pages/VerifyOtpPage'
 import HomePage from './pages/HomePage'
+import AddTournamentPage from './pages/AddTournamentPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -48,6 +49,14 @@ function App() {
           element={
             <RequireAuth>
               <HomePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/tournaments/new"
+          element={
+            <RequireAuth>
+              <AddTournamentPage />
             </RequireAuth>
           }
         />

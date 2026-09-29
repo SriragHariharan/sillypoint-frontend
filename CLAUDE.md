@@ -61,6 +61,11 @@ working on this app:
   `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
   (`AuthLayout`, `OtpInput`, `FullPageLoader`) and route guards (`RequireAuth`, `RedirectIfAuthed`). Landing sections take no props and keep content as local const
   arrays; shared UI components (like `OtpInput`) do take props since they're reused across pages.
+- `AddTournamentPage` (`/tournaments/new`, behind `RequireAuth`, linked from `HomePage`): create-tournament
+  form (name, description, logo, location, start/end date). Description uses `RichTextEditor`
+  (TipTap: bold, italic, underline, bullet/numbered lists) via `Controller` and is submitted as an
+  HTML string. `src/lib/tournamentApi.js` sends `POST /tournaments` as multipart `FormData`
+  (endpoint/field names assumed; adjust to the backend). Validation rules live in `validators.js`.
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
 - `src/lib/` — framework-agnostic helpers shared across pages: `validators.js`, `constants.js`
   (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`), `api.js` (axios instance, interceptors,
