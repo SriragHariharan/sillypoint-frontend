@@ -12,4 +12,17 @@
   --color-red-800: #6e1120;
   --color-red-900: #560d19;
   --color-red-950: #300609;
+
+  --animate-toast-in: toast-in 0.25s ease-out;
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-12px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
+import { notifyError } from './notify'
 import { clearSessionFlag } from './sessionFlag'
 
 const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
@@ -48,6 +49,7 @@ api.interceptors.response.use(
     } catch {
       useAuthStore.getState().clearSession()
       clearSessionFlag()
+      notifyError('Your session has expired. Please log in again.')
       return Promise.reject(error)
     }
 

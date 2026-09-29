@@ -7,6 +7,7 @@ import { useCountdown } from '../hooks/useCountdown'
 import { getErrorMessage } from '../lib/api'
 import { resendOtp, verifyOtp } from '../lib/authApi'
 import { formatTime } from '../lib/formatTime'
+import { notifyError, notifyInfo } from '../lib/notify'
 import { setSessionFlag } from '../lib/sessionFlag'
 import { useAuthStore } from '../store/authStore'
 import { otpValidation } from '../lib/validators'
@@ -22,8 +23,6 @@ function VerifyOtpPage() {
   const setSession = useAuthStore((state) => state.setSession)
   const restartOtpTimers = useAuthStore((state) => state.restartOtpTimers)
 
-  const [serverError, setServerError] = useState('')
-  const [info, setInfo] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [resending, setResending] = useState(false)
 
@@ -39,8 +38,6 @@ function VerifyOtpPage() {
   } = useForm({ defaultValues: { otp: '' } })
 
   const onSubmit = async ({ otp }) => {
-    setServerError('')
-    setInfo('')
     setSubmitting(true)
 
     try {
@@ -49,7 +46,7 @@ function VerifyOtpPage() {
       setSession({ user: data.user, accessToken: data.accessToken })
       navigate('/home', { replace: true })
     } catch (error) {
-      setServerError(getErrorMessage(error))
+      notifyError(getErrorMessage(error))
       reset({ otp: '' })
     } finally {
       setSubmitting(false)
@@ -57,17 +54,15 @@ function VerifyOtpPage() {
   }
 
   const onResend = async () => {
-    setServerError('')
-    setInfo('')
     setResending(true)
 
     try {
       const { resendsLeft } = await resendOtp({ userId, purpose })
       restartOtpTimers()
       reset({ otp: '' })
-      setInfo(`New OTP sent. ${resendsLeft} ${resendsLeft === 1 ? 'resend' : 'resends'} left.`)
+      notifyInfo(`New OTP sent. ${resendsLeft} ${resendsLeft === 1 ? 'resend' : 'resends'} left.`)
     } catch (error) {
-      setServerError(getErrorMessage(error))
+      notifyError(getErrorMessage(error))
     } finally {
       setResending(false)
     }
@@ -117,18 +112,6 @@ function VerifyOtpPage() {
             </>
           )}
         </p>
-
-        {serverError && (
-          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
-            {serverError}
-          </p>
-        )}
-
-        {info && (
-          <p role="status" className="rounded-xl bg-gray-50 px-4 py-3 text-xs font-medium text-gray-700">
-            {info}
-          </p>
-        )}
 
         <button
           type="submit"

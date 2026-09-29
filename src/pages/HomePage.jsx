@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import { getErrorMessage } from '../lib/api'
 import { fetchMe } from '../lib/authApi'
+import { notifyError } from '../lib/notify'
 import { signOut } from '../lib/session'
 import { useAuthStore } from '../store/authStore'
 
@@ -10,7 +11,6 @@ function HomePage() {
   const navigate = useNavigate()
   const storedUser = useAuthStore((state) => state.user)
   const [profile, setProfile] = useState(null)
-  const [error, setError] = useState('')
   const [loggingOut, setLoggingOut] = useState(false)
 
   useEffect(() => {
@@ -18,7 +18,7 @@ function HomePage() {
 
     fetchMe()
       .then((data) => active && setProfile(data.user))
-      .catch((err) => active && setError(getErrorMessage(err)))
+      .catch((err) => active && notifyError(getErrorMessage(err)))
 
     return () => {
       active = false
@@ -38,8 +38,6 @@ function HomePage() {
       <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
         Signed in as +91 {user?.mobile}. Your tournament dashboard is coming soon.
       </p>
-
-      {error && <p className="mt-4 text-xs font-medium text-red-600">{error}</p>}
 
       <button
         type="button"

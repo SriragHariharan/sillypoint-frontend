@@ -40,6 +40,7 @@ working on this app:
   for custom controlled components (like `OtpInput`). Shared validation rules live in
   `src/lib/validators.js`, not duplicated per form.
 - `oxlint` for linting (`npm run lint`)
+- **react-hot-toast** for notifications (custom-styled, see Toasts below).
 - **axios** for every HTTP call (`src/lib/api.js`). **Never use `fetch`.**
 - **JavaScript only — no TypeScript**: `.js`/`.jsx` files only, no `.ts`/`.tsx`, no `@types/*`
   packages, no type annotations.
@@ -66,6 +67,8 @@ working on this app:
   `getErrorMessage`), `authApi.js` (one function per auth endpoint), `session.js`
   (`restoreSession`, `signOut`), `sessionFlag.js` (non-sensitive "has a session" flag).
 - `src/hooks/` — reusable hooks, e.g. `useCountdown.js`.
+- Toasts: `src/components/AppToast.jsx` (the styled card) and `src/lib/notify.jsx`
+  (`notifyError`, `notifyInfo`); `<Toaster />` is mounted once in `App.jsx`.
 - `src/index.css` — `@import "tailwindcss";` plus a `@theme` block overriding the `red-*` color
   palette (see Theme below). Don't add component-scoped CSS files; use Tailwind utilities.
 - `src/assets/` — image assets (e.g. `app_logo.png`, used as the logo/favicon)
@@ -131,6 +134,13 @@ email, no password, no PIN, ever.
   `Controller`, not `register`. It selects a box's existing content on focus so re-typing over a
   filled box overwrites it instead of silently no-op'ing against the native `maxLength=1` — don't
   remove that `onFocus` handler.
+- **Toasts**: every server/API message (`getErrorMessage(error)` results, "New OTP sent. N resends
+  left.", "session expired") is shown with `notifyError(...)` / `notifyInfo(...)`, never as an
+  inline box. They appear top-center for `TOAST_DURATION_MS` (10 s, `src/lib/constants.js`), pause
+  on hover, can be dismissed with ×, and are de-duplicated by message so repeated identical errors
+  don't stack. Style follows the theme: error = red accent + solid red badge, info = black accent +
+  black badge (no other hues). Only field-level validation errors (react-hook-form) stay inline
+  under their input.
 - `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared centered-card shell for the auth
   pages and `HomePage` (logo, heading, subheading, back-to-home link) — reuse it for any future
   account-related page rather than rebuilding the card chrome.

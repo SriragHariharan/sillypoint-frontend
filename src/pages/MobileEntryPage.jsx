@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
 import { getErrorMessage } from '../lib/api'
 import { requestOtp } from '../lib/authApi'
+import { notifyError } from '../lib/notify'
 import { useAuthStore } from '../store/authStore'
 import { mobileValidation } from '../lib/validators'
 
 function MobileEntryPage() {
   const navigate = useNavigate()
   const startOtp = useAuthStore((state) => state.startOtp)
-  const [serverError, setServerError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
   const {
@@ -20,7 +20,6 @@ function MobileEntryPage() {
   } = useForm({ defaultValues: { mobile: '' } })
 
   const onSubmit = async ({ mobile }) => {
-    setServerError('')
     setSubmitting(true)
 
     try {
@@ -28,7 +27,7 @@ function MobileEntryPage() {
       startOtp({ mobile, userId, purpose })
       navigate('/verify-otp')
     } catch (error) {
-      setServerError(getErrorMessage(error))
+      notifyError(getErrorMessage(error))
     } finally {
       setSubmitting(false)
     }
@@ -66,12 +65,6 @@ function MobileEntryPage() {
             <p className="mt-1.5 text-xs font-medium text-red-600">{errors.mobile.message}</p>
           )}
         </div>
-
-        {serverError && (
-          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
-            {serverError}
-          </p>
-        )}
 
         <button
           type="submit"
