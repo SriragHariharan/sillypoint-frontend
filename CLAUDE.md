@@ -53,19 +53,34 @@ working on this app:
 - `src/main.jsx` — entry point, mounts `<App />`
 - `src/App.jsx` — the router shell only (`BrowserRouter` + `Routes`); no page content lives here
 - `src/pages/` — one file per **route** (`LandingPage`, `MobileEntryPage`,
-  `VerifyOtpPage`, `HomePage`, `NotFoundPage`). `NotFoundPage` is wired up as the catch-all
+  `VerifyOtpPage`, `DashboardPage`, `NotFoundPage`). `NotFoundPage` is wired up as the catch-all
   `<Route path="*" element={<NotFoundPage />} />` in `App.jsx` — keep it last in the `<Routes>`
   list so it only matches unmatched paths. A page composes components and/or forms and is what a `<Route element={...}>`
   points to.
-- `src/components/` — reusable/presentational pieces, both landing-page sections (`Navbar`,
+- `src/components/` — reusable/presentational pieces, both landing-page sections (`PublicNavbar`,
   `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
   (`AuthLayout`, `OtpInput`, `FullPageLoader`) and route guards (`RequireAuth`, `RedirectIfAuthed`). Landing sections take no props and keep content as local const
   arrays; shared UI components (like `OtpInput`) do take props since they're reused across pages.
-- `AddTournamentPage` (`/tournaments/new`, behind `RequireAuth`, linked from `HomePage`): create-tournament
-  form (name, description, logo, location, start/end date). Description uses `RichTextEditor`
+- **Navbars** (three, flat in `src/components/`): `PublicNavbar` is the marketing bar for logged-out
+  visitors (logo, Tournaments / Features / How it works, Log in / Get Started, full-width mobile menu
+  with the CTAs; the landing page always uses it and shows a Dashboard button when logged in).
+  `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and an avatar
+  account menu (mobile number, links on mobile, Log out). With `bottomTabs` (default) it also renders a
+  fixed mobile bottom tab bar (Dashboard, Tournaments, Create) — pages using it must add `pb-16 sm:pb-0`
+  to their root so content isn't hidden (`DashboardPage`, `AddTournamentPage`). `Navbar` is the switch
+  for public pages shared by both audiences (`/tournaments*`): `AppNavbar` without tabs when
+  authenticated (so it doesn't clash with the sticky "Add my team" bar), a logo-only bar while the
+  session is `loading` (no flash), else `PublicNavbar`. Auth screens keep `AuthLayout` (no navbar).
+- `AddTournamentPage` (`/tournaments/new`, behind `RequireAuth`, linked from `DashboardPage`): create-tournament
+  form (name, description, logo, location, start/end date) inside `AppNavbar` (flat on mobile, card from `sm`). Description uses `RichTextEditor`
   (TipTap: bold, italic, underline, bullet/numbered lists) via `Controller` and is submitted as an
   HTML string. `src/lib/tournamentApi.js` sends `POST /tournaments` as multipart `FormData`
   (matches the backend's `POST /api/tournaments`). Validation rules live in `validators.js`.
+- `DashboardPage` (`/home`, behind `RequireAuth`; the post-login landing page): profile card (mobile number, verified badge,
+  log out; hidden below `sm`, where the `AppNavbar` avatar menu covers it — the API has no name/photo yet), stat tiles (organized / live / upcoming
+  from `GET /tournaments?organizerId=<me>` totals), quick actions, and the user's recent
+  tournaments as `TournamentCard`s with shimmer, empty and retry states. It uses the `user` from
+  `useAuthStore`.
 - `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
   (no `RequireAuth`) and mobile-first, backed by the real API through `fetchTournaments` /
   `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
@@ -131,7 +146,7 @@ email, no password, no PIN, ever.
   `loading`.
 - **Guards**: `/home` is behind `RequireAuth`; `/login` and `/signup` redirect logged-in users to
   `/home` (`RedirectIfAuthed`); the Navbar shows "Dashboard" instead of Log in / Get Started when
-  authenticated. **Log out** (`signOut()` on `HomePage`) calls `POST /auth/logout`, clears the store
+  authenticated. **Log out** (`signOut()` on `DashboardPage`) calls `POST /auth/logout`, clears the store
   and the flag, and returns to `/`.
 - **OTP timers** on `/verify-otp`: a "Code expires in mm:ss" countdown (10 min; mirrors backend
   `OTP_TTL_MS`, disables "Verify OTP" and shows an expired message at 0) and a "Resend OTP in
@@ -161,7 +176,7 @@ email, no password, no PIN, ever.
   black badge (no other hues). Only field-level validation errors (react-hook-form) stay inline
   under their input.
 - `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared centered-card shell for the auth
-  pages and `HomePage` (logo, heading, subheading, back-to-home link) — reuse it for any future
+  pages (logo, heading, subheading, back-to-home link) — reuse it for any future
   account-related page rather than rebuilding the card chrome.
 - Adding a protected page: put it in `src/pages/`, wrap its `<Route>` element in `RequireAuth`, and
   call the API only through `src/lib/api.js` so token refresh works automatically.

@@ -1,4 +1,4 @@
-import Navbar from '../components/Navbar'
+import PublicNavbar from '../components/PublicNavbar'
 import Hero from '../components/Hero'
 import Features from '../components/Features'
 import Formats from '../components/Formats'
@@ -11,7 +11,7 @@ import Footer from '../components/Footer'
 function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
+      <PublicNavbar />
       <Hero />
       <FeaturedTournaments />
       <HowItWorks />

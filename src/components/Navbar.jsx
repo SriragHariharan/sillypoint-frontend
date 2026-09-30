@@ -1,124 +1,25 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
 import { useAuthStore } from '../store/authStore'
-
-const links = [
-  { label: 'Tournaments', to: '/tournaments' },
-  { label: 'Features', href: '/#features' },
-  { label: 'How it works', href: '/#how-it-works' },
-]
-
-function NavItem({ link, className, onClick }) {
-  if (link.to) {
-    return (
-      <Link to={link.to} onClick={onClick} className={className}>
-        {link.label}
-      </Link>
-    )
-  }
-  return (
-    <a href={link.href} onClick={onClick} className={className}>
-      {link.label}
-    </a>
-  )
-}
+import AppNavbar from './AppNavbar'
+import PublicNavbar from './PublicNavbar'
 
 function Navbar() {
-  const [open, setOpen] = useState(false)
-  const authenticated = useAuthStore((state) => state.status === 'authenticated')
+  const status = useAuthStore((state) => state.status)
 
-  return (
-    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-6 sm:py-4">
-        <a href="/#top" className="flex items-center gap-2">
-          <img src={logo} alt="Sillypoint" className="h-8 w-8 rounded-md" />
-          <span className="text-lg font-bold tracking-tight text-gray-900">
-            Sillypoint
-          </span>
-        </a>
+  if (status === 'authenticated') return <AppNavbar bottomTabs={false} />
 
-        <ul className="hidden items-center gap-8 text-sm font-medium text-gray-600 md:flex">
-          {links.map((link) => (
-            <li key={link.label}>
-              <NavItem link={link} className="transition hover:text-red-600" />
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center gap-2">
-          {authenticated ? (
-            <Link
-              to="/home"
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
-            >
-              Dashboard
-            </Link>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="hidden text-sm font-semibold text-gray-700 transition hover:text-red-600 sm:block"
-              >
-                Log in
-              </Link>
-
-              <Link
-                to="/signup"
-                className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 sm:px-5"
-              >
-                Get Started
-              </Link>
-            </>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setOpen((prev) => !prev)}
-            aria-label="Toggle menu"
-            aria-expanded={open}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-gray-700 transition hover:bg-gray-100 md:hidden"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className="h-5 w-5"
-            >
-              {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
-            </svg>
-          </button>
+  if (status === 'loading') {
+    return (
+      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-5 sm:px-6">
+          <img src={logo} alt="" className="h-8 w-8 rounded-md" />
+          <span className="text-lg font-bold tracking-tight text-gray-900">Sillypoint</span>
         </div>
-      </nav>
+      </header>
+    )
+  }
 
-      {open && (
-        <ul className="space-y-1 border-t border-gray-100 bg-white px-5 py-3 text-sm font-medium text-gray-700 md:hidden">
-          {links.map((link) => (
-            <li key={link.label}>
-              <NavItem
-                link={link}
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
-              />
-            </li>
-          ))}
-          {!authenticated && (
-            <li className="sm:hidden">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-2 py-2 transition hover:bg-red-50 hover:text-red-600"
-              >
-                Log in
-              </Link>
-            </li>
-          )}
-        </ul>
-      )}
-    </header>
-  )
+  return <PublicNavbar />
 }
 
 export default Navbar

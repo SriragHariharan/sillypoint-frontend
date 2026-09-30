@@ -8,7 +8,7 @@ import { restoreSession } from './lib/session'
 import LandingPage from './pages/LandingPage'
 import MobileEntryPage from './pages/MobileEntryPage'
 import VerifyOtpPage from './pages/VerifyOtpPage'
-import HomePage from './pages/HomePage'
+import DashboardPage from './pages/DashboardPage'
 import AddTournamentPage from './pages/AddTournamentPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailsPage from './pages/TournamentDetailsPage'
@@ -50,7 +50,7 @@ function App() {
           path="/home"
           element={
             <RequireAuth>
-              <HomePage />
+              <DashboardPage />
             </RequireAuth>
           }
         />
