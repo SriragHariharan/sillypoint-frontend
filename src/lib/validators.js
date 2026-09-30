@@ -10,8 +10,8 @@ export const mobileValidation = {
 }
 
 export const DESCRIPTION_MAX_LENGTH = 500
-export const LOGO_MAX_BYTES = 2 * 1024 * 1024
-export const LOGO_TYPES = ['image/png', 'image/jpeg', 'image/webp']
+export const IMAGE_MAX_BYTES = 2 * 1024 * 1024
+export const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp']
 
 export const htmlTextLength = (html) => html.replace(/<[^>]*>/g, '').length
 
@@ -42,8 +42,14 @@ export const descriptionValidation = {
 
 export const validateLogo = (file) => {
   if (!file) return true
-  if (!LOGO_TYPES.includes(file.type)) return 'Logo must be a PNG, JPG or WebP image'
-  if (file.size > LOGO_MAX_BYTES) return 'Logo must be smaller than 2 MB'
+  if (!IMAGE_TYPES.includes(file.type)) return 'Logo must be a PNG, JPG or WebP image'
+  if (file.size > IMAGE_MAX_BYTES) return 'Logo must be smaller than 2 MB'
+  return true
+}
+
+export const validateAvatar = (file) => {
+  if (!IMAGE_TYPES.includes(file.type)) return 'Photo must be a PNG, JPG or WebP image'
+  if (file.size > IMAGE_MAX_BYTES) return 'Photo must be smaller than 2 MB'
   return true
 }
 

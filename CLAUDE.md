@@ -64,8 +64,13 @@ working on this app:
 - **Navbars** (three, flat in `src/components/`): `PublicNavbar` is the marketing bar for logged-out
   visitors (logo, Tournaments / Features / How it works, Log in / Get Started, full-width mobile menu
   with the CTAs; the landing page always uses it and shows a Dashboard button when logged in).
-  `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and an avatar
-  account menu (mobile number, links on mobile, Log out). With `bottomTabs` (default) it also renders a
+  `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and `ProfileMenu`
+  (the avatar account menu: photo, mobile number, Add/Change photo, Remove photo with an inline confirm,
+  links on mobile, Log out). Nav link data lives in `src/lib/navLinks.js`. Profile photo upload/remove goes
+  through `useAvatar` (`src/hooks/useAvatar.js`: validates with `validateAvatar`, calls `userApi.js`
+  `PUT`/`DELETE /users/me/avatar`, toasts, and `updateUser({ avatar })` in `authStore` so the navbar,
+  dashboard and other views update instantly). The photo also shows on the dashboard profile card and
+  as the organizer photo on tournament details. With `bottomTabs` (default) it also renders a
   fixed mobile bottom tab bar (Dashboard, Tournaments, Create) — pages using it must add `pb-16 sm:pb-0`
   to their root so content isn't hidden (`DashboardPage`, `AddTournamentPage`). `Navbar` is the switch
   for public pages shared by both audiences (`/tournaments*`): `AppNavbar` without tabs when
@@ -76,8 +81,8 @@ working on this app:
   (TipTap: bold, italic, underline, bullet/numbered lists) via `Controller` and is submitted as an
   HTML string. `src/lib/tournamentApi.js` sends `POST /tournaments` as multipart `FormData`
   (matches the backend's `POST /api/tournaments`). Validation rules live in `validators.js`.
-- `DashboardPage` (`/home`, behind `RequireAuth`; the post-login landing page): profile card (mobile number, verified badge,
-  log out; hidden below `sm`, where the `AppNavbar` avatar menu covers it — the API has no name/photo yet), stat tiles (organized / live / upcoming
+- `DashboardPage` (`/home`, behind `RequireAuth`; the post-login landing page): profile card (photo, mobile number, verified badge,
+  log out; hidden below `sm`, where the `AppNavbar` avatar menu covers it — names are not supported yet), stat tiles (organized / live / upcoming
   from `GET /tournaments?organizerId=<me>` totals), quick actions, and the user's recent
   tournaments as `TournamentCard`s with shimmer, empty and retry states. It uses the `user` from
   `useAuthStore`.

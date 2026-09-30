@@ -89,7 +89,7 @@ function DashboardPage() {
           <aside className="order-last space-y-4 sm:order-first lg:sticky lg:top-24 lg:self-start">
             <section className="hidden rounded-2xl border border-gray-200 bg-white p-4 sm:block sm:p-5">
               <div className="flex items-center gap-3">
-                <Avatar size="lg" />
+                <Avatar src={user?.avatar} size="lg" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Your profile</p>
                   <p className="mt-1 truncate text-lg font-bold text-gray-900">+91 {user?.mobile}</p>
@@ -100,7 +100,7 @@ function DashboardPage() {
               </div>
 
               <p className="mt-4 rounded-xl bg-gray-50 px-3 py-2.5 text-xs text-gray-600">
-                You sign in with your mobile number and an OTP. Name and photo will be available soon.
+                You sign in with your mobile number and an OTP. Change your photo from the account menu at the top right; names are coming soon.
               </p>
 
               <button

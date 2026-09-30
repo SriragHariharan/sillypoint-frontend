@@ -35,6 +35,8 @@ export const useAuthStore = create(
 
       setAccessToken: (accessToken) => set({ accessToken }),
 
+      updateUser: (changes) => set((state) => ({ user: state.user ? { ...state.user, ...changes } : state.user })),
+
       clearSession: () => set({ user: null, accessToken: null, status: 'unauthenticated' }),
     }),
     {

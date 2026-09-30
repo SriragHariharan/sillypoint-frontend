@@ -207,7 +207,7 @@ function TournamentDetailsPage() {
             <section className="rounded-2xl border border-gray-200 p-4 sm:p-5">
               <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Organizer</h2>
               <div className="mt-3 flex items-center gap-3">
-                <Avatar size="md" />
+                <Avatar src={organizer.avatar} size="md" />
                 <div className="min-w-0">
                   <p className="text-xs text-gray-500">Contact</p>
                   <a
