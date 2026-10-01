@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import AddTeamsModal from '../components/AddTeamsModal'
 import Avatar from '../components/Avatar'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
@@ -8,8 +9,10 @@ import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import { getErrorMessage } from '../lib/api'
 import { formatDateRange } from '../lib/formatDate'
 import { notifyError, notifyInfo } from '../lib/notify'
+import { fetchTeams } from '../lib/teamApi'
 import { fetchTournamentDetails } from '../lib/tournamentApi'
 import { useAuthStore } from '../store/authStore'
+import { useTournamentTeamsStore } from '../store/tournamentTeamsStore'
 
 const TABS = [
   { value: 'overview', label: 'Overview' },
@@ -22,8 +25,10 @@ const EMPTY_TEXT = {
   matches: 'Fixtures will be published later.',
 }
 
+const NO_TEAMS = []
+
 const addTeamClass =
-  'rounded-full bg-red-600 px-7 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
+  'rounded-full bg-red-600 px-7 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-60'
 
 function PageShell({ children }) {
   return (
@@ -42,6 +47,10 @@ function TournamentDetailsPage() {
   const authenticated = useAuthStore((state) => state.status === 'authenticated')
   const [reloadKey, setReloadKey] = useState(0)
   const [loaded, setLoaded] = useState({ key: null, tournament: null, failed: false })
+  const [fetchingTeams, setFetchingTeams] = useState(false)
+  const [myTeams, setMyTeams] = useState(null)
+  const addedTeams = useTournamentTeamsStore((state) => state.teamsByTournament[id] ?? NO_TEAMS)
+  const addTeams = useTournamentTeamsStore((state) => state.addTeams)
 
   const tab = TABS.some((item) => item.value === params.get('tab')) ? params.get('tab') : 'overview'
 
@@ -78,13 +87,53 @@ function TournamentDetailsPage() {
     )
   }
 
-  const onAddTeam = () => {
+  const addedIds = addedTeams.map((team) => team.id)
+
+  const onAddTeam = async () => {
+    if (fetchingTeams) return
     if (!authenticated) {
       notifyInfo('Log in to add your team to this tournament.')
       navigate('/login')
       return
     }
-    notifyInfo('Team registration is coming soon.')
+
+    setFetchingTeams(true)
+    let teams
+    try {
+      teams = await fetchTeams()
+    } catch (error) {
+      notifyError(getErrorMessage(error))
+      return
+    } finally {
+      setFetchingTeams(false)
+    }
+
+    if (teams.length === 0) {
+      notifyInfo('Create a team first to add it to this tournament.')
+      navigate('/teams/new')
+      return
+    }
+
+    if (teams.length === 1) {
+      const [team] = teams
+      if (addedIds.includes(team.id)) {
+        notifyInfo(`${team.name} is already added to this tournament.`)
+        return
+      }
+      addTeams(id, [team])
+      notifyInfo(`${team.name} added to this tournament.`)
+      return
+    }
+
+    setMyTeams(teams)
+  }
+
+  const closeModal = () => setMyTeams(null)
+
+  const confirmTeams = (teams) => {
+    addTeams(id, teams)
+    setMyTeams(null)
+    notifyInfo(teams.length === 1 ? `${teams[0].name} added to this tournament.` : `${teams.length} teams added to this tournament.`)
   }
 
   if (loading) {
@@ -195,6 +244,21 @@ function TournamentDetailsPage() {
                 ) : (
                   <p className="text-sm text-gray-600">The organizer hasn&apos;t added a description yet.</p>
                 )
+              ) : tab === 'teams' && addedTeams.length > 0 ? (
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {addedTeams.map((team) => (
+                    <li
+                      key={team.id}
+                      className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
+                    >
+                      <Avatar src={team.logo} name={team.name} size="sm" rounded="rounded-xl" />
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-gray-900">{team.name}</p>
+                        <p className="truncate text-xs text-gray-600">Captain: {team.captain_name}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               ) : (
                 <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-600">
                   {EMPTY_TEXT[tab]}
@@ -220,7 +284,12 @@ function TournamentDetailsPage() {
               </div>
             </section>
 
-            <button type="button" onClick={onAddTeam} className={`${addTeamClass} mt-4 hidden w-full sm:block`}>
+            <button
+              type="button"
+              onClick={onAddTeam}
+              disabled={fetchingTeams}
+              className={`${addTeamClass} mt-4 hidden w-full sm:block`}
+            >
               Add my team
             </button>
           </aside>
@@ -228,10 +297,13 @@ function TournamentDetailsPage() {
       </main>
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 px-5 py-3 backdrop-blur sm:hidden">
-        <button type="button" onClick={onAddTeam} className={`${addTeamClass} w-full`}>
+        <button type="button" onClick={onAddTeam} disabled={fetchingTeams} className={`${addTeamClass} w-full`}>
           Add my team
         </button>
       </div>
+      {myTeams && (
+        <AddTeamsModal teams={myTeams} addedIds={addedIds} onClose={closeModal} onConfirm={confirmTeams} />
+      )}
     </PageShell>
   )
 }
