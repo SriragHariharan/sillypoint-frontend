@@ -239,7 +239,7 @@ function TournamentDetailsPage() {
   const { organizer } = tournament
   const isOrganizer = Boolean(user) && user.id === organizer.id
   const canManage = tournament.status === 'upcoming' || tournament.status === 'live'
-  const showAddTeam = !isOrganizer && authStatus !== 'loading'
+  const showAddTeam = !isOrganizer && authStatus !== 'loading' && tournament.status !== 'cancelled' && tournament.status !== 'completed'
   const info = [
     { label: 'Location', value: tournament.location },
     { label: 'Dates', value: formatDateRange(tournament.startDate, tournament.endDate) },
