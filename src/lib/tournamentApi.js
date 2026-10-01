@@ -6,13 +6,15 @@ export const fetchTournaments = (params, signal) =>
 export const fetchTournamentDetails = (id, signal) =>
   api.get(`/tournaments/${id}`, { signal }).then((response) => response.data.tournament)
 
-export const createTournament = ({ name, description, location, startDate, endDate, logo }) => {
+export const createTournament = ({ name, description, location, startDate, endDate, registrationFee, prizeMoney, logo }) => {
   const formData = new FormData()
   formData.append('name', name)
   formData.append('description', description)
   formData.append('location', location)
   formData.append('startDate', startDate)
   formData.append('endDate', endDate)
+  formData.append('registrationFee', registrationFee)
+  formData.append('prizeMoney', prizeMoney)
   if (logo) formData.append('logo', logo)
 
   return api.post('/tournaments', formData).then((response) => response.data)
@@ -30,3 +32,6 @@ export const cancelTournament = (id) => api.post(`/tournaments/${id}/cancel`).th
 
 export const rescheduleTournament = (id, { startDate, endDate }) =>
   api.patch(`/tournaments/${id}/reschedule`, { startDate, endDate }).then((response) => response.data.tournament)
+
+export const updateTournamentPrizeMoney = (id, prizeMoney) =>
+  api.patch(`/tournaments/${id}`, { prizeMoney }).then((response) => response.data.tournament)

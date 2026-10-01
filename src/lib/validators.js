@@ -34,6 +34,19 @@ export const locationValidation = {
   validate: (value) => value.trim().length > 0 || 'Enter the location',
 }
 
+export const AMOUNT_MAX = 10000000
+
+const amountValidation = (label) => ({
+  required: `Enter the ${label}`,
+  validate: (value) => {
+    if (!/^\d+$/.test(String(value).trim())) return `${label[0].toUpperCase()}${label.slice(1)} must be a whole number`
+    return Number(value) <= AMOUNT_MAX || `${label[0].toUpperCase()}${label.slice(1)} must be at most ${AMOUNT_MAX.toLocaleString('en-IN')}`
+  },
+})
+
+export const registrationFeeValidation = amountValidation('registration fee')
+export const prizeMoneyValidation = amountValidation('prize money')
+
 export const teamNameValidation = {
   required: 'Enter the team name',
   maxLength: { value: 60, message: 'Team name must be at most 60 characters' },

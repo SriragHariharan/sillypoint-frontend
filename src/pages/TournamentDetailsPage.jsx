@@ -10,6 +10,7 @@ import StatusBadge from '../components/StatusBadge'
 import TeamCardSkeleton from '../components/TeamCardSkeleton'
 import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import { getErrorMessage } from '../lib/api'
+import { formatRupees } from '../lib/formatCurrency'
 import { formatDateRange } from '../lib/formatDate'
 import { notifyError, notifyInfo } from '../lib/notify'
 import { fetchTeams } from '../lib/teamApi'
@@ -243,6 +244,11 @@ function TournamentDetailsPage() {
   const info = [
     { label: 'Location', value: tournament.location },
     { label: 'Dates', value: formatDateRange(tournament.startDate, tournament.endDate) },
+    {
+      label: 'Registration fee',
+      value: tournament.registrationFee === 0 ? 'Free' : formatRupees(tournament.registrationFee),
+    },
+    ...(tournament.prizeMoney > 0 ? [{ label: 'Prize money', value: formatRupees(tournament.prizeMoney) }] : []),
   ]
 
   return (

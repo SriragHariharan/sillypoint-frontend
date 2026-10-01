@@ -40,6 +40,7 @@ working on this app:
   for custom controlled components (like `OtpInput`). Shared validation rules live in
   `src/lib/validators.js`, not duplicated per form.
 - `oxlint` for linting (`npm run lint`)
+- **lucide-react** for icons (see Icons below).
 - **react-hot-toast** for notifications (custom-styled, see Toasts below).
 - **axios** for every HTTP call (`src/lib/api.js`). **Never use `fetch`.**
 - **JavaScript only — no TypeScript**: `.js`/`.jsx` files only, no `.ts`/`.tsx`, no `@types/*`
@@ -99,12 +100,15 @@ working on this app:
   animation is in `index.css`). Requests use an `AbortController` and pages derive `loading` from a
   request key instead of setting state in effects. The organizer never sees "Add my team" (the backend also returns 403); instead
   `ManageTournament` offers Reschedule (`PATCH /tournaments/:id/reschedule`) and Cancel
-  (`POST /tournaments/:id/cancel`) while the tournament is upcoming or live. "Add my team" sends logged-out users to `/login`, adds
+  (`POST /tournaments/:id/cancel`) and Edit prize money (`PATCH /tournaments/:id`, only `prizeMoney`; the registration fee set at creation can never change) while the tournament is upcoming or live. "Add my team" sends logged-out users to `/login`, adds
   a single team directly, or opens `AddTeamsModal` for several (`POST /tournaments/:id/teams`);
   `EnrolledTeamCard` shows Remove (`DELETE /tournaments/:id/teams/:teamId`) to the organizer and to
-  whoever added the team. `FeaturedTournaments` shows live/upcoming tournaments on the
+  whoever added the team. Tournaments carry `registrationFee` (0 shows "Free") and `prizeMoney` (hidden when 0) on cards and details. `FeaturedTournaments` shows live/upcoming tournaments on the
   landing page. The Navbar hash links are absolute (`/#features`) so they work from non-landing
   pages. Creating a tournament navigates to its details page.
+- **Icons**: use `lucide-react` icons (or inline SVG) instead of emojis. Size them with Tailwind (`h-4 w-4 shrink-0`),
+  color with theme classes (`text-red-600`) and mark decorative ones `aria-hidden="true"`. `TournamentCard` uses `MapPin`
+  (location), `Calendar` (dates), `Ticket` (entry fee) and `Trophy` (prize money).
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).
 - `src/lib/` — framework-agnostic helpers shared across pages: `validators.js`, `constants.js`
   (OTP expiry / resend cooldown), `formatTime.js` (`mm:ss`), `api.js` (axios instance, interceptors,
