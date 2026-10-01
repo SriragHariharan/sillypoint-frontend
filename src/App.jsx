@@ -12,6 +12,9 @@ import DashboardPage from './pages/DashboardPage'
 import AddTournamentPage from './pages/AddTournamentPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailsPage from './pages/TournamentDetailsPage'
+import TeamsPage from './pages/TeamsPage'
+import AddTeamPage from './pages/AddTeamPage'
+import EditTeamPage from './pages/EditTeamPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
@@ -59,6 +62,30 @@ function App() {
           element={
             <RequireAuth>
               <AddTournamentPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/teams"
+          element={
+            <RequireAuth>
+              <TeamsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/teams/new"
+          element={
+            <RequireAuth>
+              <AddTeamPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/teams/:id/edit"
+          element={
+            <RequireAuth>
+              <EditTeamPage />
             </RequireAuth>
           }
         />

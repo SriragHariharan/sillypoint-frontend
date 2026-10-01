@@ -12,6 +12,12 @@ export const NAV_LINKS = [
     isActive: (pathname) => pathname.startsWith('/tournaments') && pathname !== '/tournaments/new',
   },
   {
+    to: '/teams',
+    label: 'Teams',
+    icon: 'M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M21 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+    isActive: (pathname) => pathname.startsWith('/teams'),
+  },
+  {
     to: '/tournaments/new',
     label: 'Create',
     icon: 'M12 5v14M5 12h14',

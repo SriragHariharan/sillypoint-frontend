@@ -34,6 +34,23 @@ export const locationValidation = {
   validate: (value) => value.trim().length > 0 || 'Enter the location',
 }
 
+export const teamNameValidation = {
+  required: 'Enter the team name',
+  maxLength: { value: 60, message: 'Team name must be at most 60 characters' },
+  validate: (value) => value.trim().length >= 2 || 'Team name must be at least 2 characters',
+}
+
+export const captainNameValidation = {
+  required: 'Enter the captain name',
+  maxLength: { value: 60, message: 'Captain name must be at most 60 characters' },
+  validate: (value) => value.trim().length > 0 || 'Enter the captain name',
+}
+
+export const captainMobileValidation = {
+  ...mobileValidation,
+  required: 'Enter the captain mobile number',
+}
+
 export const descriptionValidation = {
   validate: (value) =>
     htmlTextLength(value) <= DESCRIPTION_MAX_LENGTH ||
