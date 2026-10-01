@@ -66,6 +66,12 @@ function MobileEntryPage() {
           )}
         </div>
 
+        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+          <p className="text-xs font-medium text-gray-700">
+            Your OTP and tournament notifications will be sent to this mobile number on WhatsApp.
+          </p>
+        </div>
+
         <button
           type="submit"
           disabled={submitting}

@@ -122,7 +122,7 @@ function TeamForm({ team, submitting, submitLabel, submittingLabel, onSubmit }) 
 
       <div>
         <label htmlFor="captainMobile" className={labelClass}>
-          Captain mobile
+          Captain mobile (WhatsApp)
         </label>
         <input
           id="captainMobile"
@@ -133,6 +133,9 @@ function TeamForm({ team, submitting, submitLabel, submittingLabel, onSubmit }) 
           className={inputClass(errors.captainMobile)}
           {...register('captainMobile', captainMobileValidation)}
         />
+        <p className="mt-1.5 text-xs text-gray-500">
+          Team notifications will be sent to this number on WhatsApp.
+        </p>
         <FieldError error={errors.captainMobile} />
       </div>
 

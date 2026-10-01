@@ -77,7 +77,7 @@ function VerifyOtpPage() {
   }
 
   return (
-    <AuthLayout title="Verify OTP" subtitle={`Enter the 4-digit code sent to +91 ${mobile}.`}>
+    <AuthLayout title="Verify OTP" subtitle={`Enter the 4-digit code sent to +91 ${mobile} on WhatsApp.`}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">OTP</label>
