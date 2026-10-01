@@ -91,13 +91,18 @@ working on this app:
   `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
   `{ tournaments, page, limit, total }`; `GET /tournaments/:id` → `{ tournament }` with
   `organizer: { id, mobile }`; 404 = not found). The API has no format, team count, organizer
-  name/photo, teams or matches, so the UI doesn't show them (Teams/Matches tabs are empty states).
+  name/photo or matches, so the UI doesn't show them (the Matches tab is an empty state). The Teams tab
+  lists enrolled teams from `GET /tournaments/:id/teams`.
   List filters (search debounced 300 ms, status) live in the URL query string and are applied
   server-side, with "Load more" paging; the details tab lives in the URL. Loading uses shimmer
   skeletons (`Skeleton`, `TournamentCardSkeleton`, `TournamentDetailsSkeleton`; the `shimmer`
   animation is in `index.css`). Requests use an `AbortController` and pages derive `loading` from a
-  request key instead of setting state in effects. "Add my team" is a placeholder (toast; sends
-  logged-out users to `/login`). `FeaturedTournaments` shows live/upcoming tournaments on the
+  request key instead of setting state in effects. The organizer never sees "Add my team" (the backend also returns 403); instead
+  `ManageTournament` offers Reschedule (`PATCH /tournaments/:id/reschedule`) and Cancel
+  (`POST /tournaments/:id/cancel`) while the tournament is upcoming or live. "Add my team" sends logged-out users to `/login`, adds
+  a single team directly, or opens `AddTeamsModal` for several (`POST /tournaments/:id/teams`);
+  `EnrolledTeamCard` shows Remove (`DELETE /tournaments/:id/teams/:teamId`) to the organizer and to
+  whoever added the team. `FeaturedTournaments` shows live/upcoming tournaments on the
   landing page. The Navbar hash links are absolute (`/#features`) so they work from non-landing
   pages. Creating a tournament navigates to its details page.
 - `src/store/` — zustand stores, one per domain (e.g. `authStore.js`).

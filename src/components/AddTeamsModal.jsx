@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import Avatar from './Avatar'
 
-function AddTeamsModal({ teams, addedIds, onClose, onConfirm }) {
+function AddTeamsModal({ teams, addedIds, adding, onClose, onConfirm }) {
   const [selected, setSelected] = useState([])
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') onClose()
+      if (event.key === 'Escape' && !adding) onClose()
     }
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -15,7 +15,7 @@ function AddTeamsModal({ teams, addedIds, onClose, onConfirm }) {
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [onClose])
+  }, [onClose, adding])
 
   const toggle = (id) =>
     setSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
@@ -25,7 +25,7 @@ function AddTeamsModal({ teams, addedIds, onClose, onConfirm }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center sm:p-6"
-      onClick={onClose}
+      onClick={adding ? undefined : onClose}
     >
       <div
         role="dialog"
@@ -83,6 +83,7 @@ function AddTeamsModal({ teams, addedIds, onClose, onConfirm }) {
           <button
             type="button"
             onClick={onClose}
+            disabled={adding}
             className="flex-1 rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
           >
             Cancel
@@ -90,10 +91,10 @@ function AddTeamsModal({ teams, addedIds, onClose, onConfirm }) {
           <button
             type="button"
             onClick={confirm}
-            disabled={selected.length === 0}
+            disabled={selected.length === 0 || adding}
             className="flex-1 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-red-600"
           >
-            {selected.length > 0 ? `Add Teams (${selected.length})` : 'Add Teams'}
+            {adding ? 'Adding…' : selected.length > 0 ? `Add Teams (${selected.length})` : 'Add Teams'}
           </button>
         </div>
       </div>

@@ -2,17 +2,24 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import AddTeamsModal from '../components/AddTeamsModal'
 import Avatar from '../components/Avatar'
+import EnrolledTeamCard from '../components/EnrolledTeamCard'
 import Footer from '../components/Footer'
+import ManageTournament from '../components/ManageTournament'
 import Navbar from '../components/Navbar'
 import StatusBadge from '../components/StatusBadge'
+import TeamCardSkeleton from '../components/TeamCardSkeleton'
 import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import { getErrorMessage } from '../lib/api'
 import { formatDateRange } from '../lib/formatDate'
 import { notifyError, notifyInfo } from '../lib/notify'
 import { fetchTeams } from '../lib/teamApi'
-import { fetchTournamentDetails } from '../lib/tournamentApi'
+import {
+  addTournamentTeams,
+  fetchTournamentDetails,
+  fetchTournamentTeams,
+  removeTournamentTeam,
+} from '../lib/tournamentApi'
 import { useAuthStore } from '../store/authStore'
-import { useTournamentTeamsStore } from '../store/tournamentTeamsStore'
 
 const TABS = [
   { value: 'overview', label: 'Overview' },
@@ -21,11 +28,10 @@ const TABS = [
 ]
 
 const EMPTY_TEXT = {
-  teams: 'Teams will appear here once registration opens.',
   matches: 'Fixtures will be published later.',
 }
 
-const NO_TEAMS = []
+const TEAM_SKELETON_COUNT = 2
 
 const addTeamClass =
   'rounded-full bg-red-600 px-7 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-60'
@@ -49,13 +55,19 @@ function TournamentDetailsPage() {
   const [loaded, setLoaded] = useState({ key: null, tournament: null, failed: false })
   const [fetchingTeams, setFetchingTeams] = useState(false)
   const [myTeams, setMyTeams] = useState(null)
-  const addedTeams = useTournamentTeamsStore((state) => state.teamsByTournament[id] ?? NO_TEAMS)
-  const addTeams = useTournamentTeamsStore((state) => state.addTeams)
+  const [adding, setAdding] = useState(false)
+  const user = useAuthStore((state) => state.user)
+  const authStatus = useAuthStore((state) => state.status)
+  const [teamsReloadKey, setTeamsReloadKey] = useState(0)
+  const [enrolled, setEnrolled] = useState({ key: null, teams: [], failed: false })
 
   const tab = TABS.some((item) => item.value === params.get('tab')) ? params.get('tab') : 'overview'
 
   const key = `${id}|${reloadKey}`
   const loading = loaded.key !== key
+  const teamsKey = `${id}|${teamsReloadKey}`
+  const teamsLoading = enrolled.key !== teamsKey
+  const addedTeams = enrolled.teams
 
   useEffect(() => {
     const controller = new AbortController()
@@ -75,6 +87,20 @@ function TournamentDetailsPage() {
     return () => controller.abort()
   }, [id, key])
 
+  useEffect(() => {
+    const controller = new AbortController()
+
+    fetchTournamentTeams(id, controller.signal)
+      .then((teams) => setEnrolled({ key: teamsKey, teams, failed: false }))
+      .catch((error) => {
+        if (error?.code === 'ERR_CANCELED') return
+        if (error.response?.status !== 404) notifyError(getErrorMessage(error))
+        setEnrolled({ key: teamsKey, teams: [], failed: true })
+      })
+
+    return () => controller.abort()
+  }, [id, teamsKey])
+
   const setTab = (value) => {
     setParams(
       (prev) => {
@@ -90,7 +116,7 @@ function TournamentDetailsPage() {
   const addedIds = addedTeams.map((team) => team.id)
 
   const onAddTeam = async () => {
-    if (fetchingTeams) return
+    if (fetchingTeams || adding) return
     if (!authenticated) {
       notifyInfo('Log in to add your team to this tournament.')
       navigate('/login')
@@ -120,8 +146,7 @@ function TournamentDetailsPage() {
         notifyInfo(`${team.name} is already added to this tournament.`)
         return
       }
-      addTeams(id, [team])
-      notifyInfo(`${team.name} added to this tournament.`)
+      await enroll([team])
       return
     }
 
@@ -130,10 +155,40 @@ function TournamentDetailsPage() {
 
   const closeModal = () => setMyTeams(null)
 
-  const confirmTeams = (teams) => {
-    addTeams(id, teams)
-    setMyTeams(null)
-    notifyInfo(teams.length === 1 ? `${teams[0].name} added to this tournament.` : `${teams.length} teams added to this tournament.`)
+  const onTournamentChanged = (summary) =>
+    setLoaded((current) => ({ ...current, tournament: { ...current.tournament, ...summary } }))
+
+  const enroll = async (teams) => {
+    setAdding(true)
+    try {
+      const added = await addTournamentTeams(
+        id,
+        teams.map((team) => team.id),
+      )
+      setEnrolled((current) => ({ ...current, teams: [...current.teams, ...added] }))
+      setMyTeams(null)
+      notifyInfo(
+        teams.length === 1
+          ? `${teams[0].name} added to this tournament.`
+          : `${teams.length} teams added to this tournament.`,
+      )
+    } catch (error) {
+      notifyError(getErrorMessage(error))
+      setTeamsReloadKey((value) => value + 1)
+    } finally {
+      setAdding(false)
+    }
+  }
+
+  const removeTeam = async (team) => {
+    try {
+      await removeTournamentTeam(id, team.id)
+      setEnrolled((current) => ({ ...current, teams: current.teams.filter((item) => item.id !== team.id) }))
+      notifyInfo(`${team.name} removed from this tournament.`)
+    } catch (error) {
+      notifyError(getErrorMessage(error))
+      setTeamsReloadKey((value) => value + 1)
+    }
   }
 
   if (loading) {
@@ -182,6 +237,9 @@ function TournamentDetailsPage() {
   }
 
   const { organizer } = tournament
+  const isOrganizer = Boolean(user) && user.id === organizer.id
+  const canManage = tournament.status === 'upcoming' || tournament.status === 'live'
+  const showAddTeam = !isOrganizer && authStatus !== 'loading'
   const info = [
     { label: 'Location', value: tournament.location },
     { label: 'Dates', value: formatDateRange(tournament.startDate, tournament.endDate) },
@@ -189,7 +247,9 @@ function TournamentDetailsPage() {
 
   return (
     <PageShell>
-      <main className="mx-auto max-w-6xl px-5 pb-32 pt-5 sm:px-6 sm:pb-16 sm:pt-8">
+      <main
+        className={`mx-auto max-w-6xl px-5 pt-5 sm:px-6 sm:pb-16 sm:pt-8 ${showAddTeam ? 'pb-32' : 'pb-16'}`}
+      >
         <Link to="/tournaments" className="text-sm font-medium text-gray-500 transition hover:text-red-600">
           ← All tournaments
         </Link>
@@ -229,7 +289,7 @@ function TournamentDetailsPage() {
                       : 'border-transparent text-gray-500 hover:text-gray-800'
                   }`}
                 >
-                  {item.label}
+                  {item.value === 'teams' && addedTeams.length > 0 ? `${item.label} (${addedTeams.length})` : item.label}
                 </button>
               ))}
             </div>
@@ -244,21 +304,41 @@ function TournamentDetailsPage() {
                 ) : (
                   <p className="text-sm text-gray-600">The organizer hasn&apos;t added a description yet.</p>
                 )
-              ) : tab === 'teams' && addedTeams.length > 0 ? (
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {addedTeams.map((team) => (
-                    <li
-                      key={team.id}
-                      className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
+              ) : tab === 'teams' ? (
+                teamsLoading ? (
+                  <div aria-busy="true" className="grid gap-3 sm:grid-cols-2">
+                    <span className="sr-only">Loading teams…</span>
+                    {Array.from({ length: TEAM_SKELETON_COUNT }, (_, index) => (
+                      <TeamCardSkeleton key={index} />
+                    ))}
+                  </div>
+                ) : enrolled.failed ? (
+                  <div className="rounded-2xl border border-dashed border-gray-300 px-6 py-10 text-center">
+                    <p className="text-base font-bold text-gray-900">Couldn&apos;t load teams</p>
+                    <button
+                      type="button"
+                      onClick={() => setTeamsReloadKey((value) => value + 1)}
+                      className="mt-4 rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
                     >
-                      <Avatar src={team.logo} name={team.name} size="sm" rounded="rounded-xl" />
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-gray-900">{team.name}</p>
-                        <p className="truncate text-xs text-gray-600">Captain: {team.captain_name}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                      Retry
+                    </button>
+                  </div>
+                ) : addedTeams.length === 0 ? (
+                  <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-600">
+                    No teams have joined yet.
+                  </p>
+                ) : (
+                  <ul className="grid gap-3 sm:grid-cols-2">
+                    {addedTeams.map((team) => (
+                      <EnrolledTeamCard
+                        key={team.id}
+                        team={team}
+                        canRemove={isOrganizer || (Boolean(user) && team.added_by === user.id)}
+                        onRemove={removeTeam}
+                      />
+                    ))}
+                  </ul>
+                )
               ) : (
                 <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-600">
                   {EMPTY_TEXT[tab]}
@@ -284,25 +364,46 @@ function TournamentDetailsPage() {
               </div>
             </section>
 
-            <button
-              type="button"
-              onClick={onAddTeam}
-              disabled={fetchingTeams}
-              className={`${addTeamClass} mt-4 hidden w-full sm:block`}
-            >
-              Add my team
-            </button>
+            {isOrganizer && canManage && (
+              <div className="mt-4">
+                <ManageTournament key={`${tournament.startDate}|${tournament.endDate}`} tournament={tournament} onChanged={onTournamentChanged} />
+              </div>
+            )}
+
+            {showAddTeam && (
+              <button
+                type="button"
+                onClick={onAddTeam}
+                disabled={fetchingTeams || adding}
+                className={`${addTeamClass} mt-4 hidden w-full sm:block`}
+              >
+                Add my team
+              </button>
+            )}
           </aside>
         </div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 px-5 py-3 backdrop-blur sm:hidden">
-        <button type="button" onClick={onAddTeam} disabled={fetchingTeams} className={`${addTeamClass} w-full`}>
-          Add my team
-        </button>
-      </div>
+      {showAddTeam && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 px-5 py-3 backdrop-blur sm:hidden">
+          <button
+            type="button"
+            onClick={onAddTeam}
+            disabled={fetchingTeams || adding}
+            className={`${addTeamClass} w-full`}
+          >
+            Add my team
+          </button>
+        </div>
+      )}
       {myTeams && (
-        <AddTeamsModal teams={myTeams} addedIds={addedIds} onClose={closeModal} onConfirm={confirmTeams} />
+        <AddTeamsModal
+          teams={myTeams}
+          addedIds={addedIds}
+          adding={adding}
+          onClose={closeModal}
+          onConfirm={enroll}
+        />
       )}
     </PageShell>
   )

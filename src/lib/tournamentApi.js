@@ -17,3 +17,16 @@ export const createTournament = ({ name, description, location, startDate, endDa
 
   return api.post('/tournaments', formData).then((response) => response.data)
 }
+
+export const fetchTournamentTeams = (id, signal) =>
+  api.get(`/tournaments/${id}/teams`, { signal }).then((response) => response.data.teams)
+
+export const addTournamentTeams = (id, teamIds) =>
+  api.post(`/tournaments/${id}/teams`, { team_ids: teamIds }).then((response) => response.data.teams)
+
+export const removeTournamentTeam = (id, teamId) => api.delete(`/tournaments/${id}/teams/${teamId}`)
+
+export const cancelTournament = (id) => api.post(`/tournaments/${id}/cancel`).then((response) => response.data.tournament)
+
+export const rescheduleTournament = (id, { startDate, endDate }) =>
+  api.patch(`/tournaments/${id}/reschedule`, { startDate, endDate }).then((response) => response.data.tournament)
