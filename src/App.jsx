@@ -12,6 +12,7 @@ import DashboardPage from './pages/DashboardPage'
 import AddTournamentPage from './pages/AddTournamentPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailsPage from './pages/TournamentDetailsPage'
+import MatchDetailsPage from './pages/MatchDetailsPage'
 import TeamsPage from './pages/TeamsPage'
 import AddTeamPage from './pages/AddTeamPage'
 import EditTeamPage from './pages/EditTeamPage'
@@ -91,6 +92,7 @@ function App() {
         />
         <Route path="/tournaments" element={<TournamentsPage />} />
         <Route path="/tournaments/:id" element={<TournamentDetailsPage />} />
+        <Route path="/matches/:id" element={<MatchDetailsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

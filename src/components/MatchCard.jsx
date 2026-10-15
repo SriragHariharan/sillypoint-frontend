@@ -1,4 +1,5 @@
 import { Calendar } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { matchStageLabel } from '../lib/matchStages'
 import Avatar from './Avatar'
@@ -16,7 +17,8 @@ function MatchCard({ match }) {
   const stage = matchStageLabel(match.stage)
 
   return (
-    <li className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <li className="rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-red-600">
+      <Link to={`/matches/${match.id}`} className="block rounded-2xl p-4">
       {stage && (
         <p className="mb-3 flex justify-center">
           <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">{stage}</span>
@@ -33,7 +35,8 @@ function MatchCard({ match }) {
         <Calendar className="h-4 w-4 shrink-0" aria-hidden="true" />
         {formatMatchDateTime(match.scheduledAt)}
       </p>
-      {match.notes && <p className="mt-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>}
+      {match.notes && <p className="mt-2 line-clamp-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>}
+      </Link>
     </li>
   )
 }
