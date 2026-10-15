@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import AddMatchModal from '../components/AddMatchModal'
 import AddTeamsModal from '../components/AddTeamsModal'
 import Avatar from '../components/Avatar'
 import EnrolledTeamCard from '../components/EnrolledTeamCard'
 import Footer from '../components/Footer'
 import ManageTournament from '../components/ManageTournament'
+import MatchCard from '../components/MatchCard'
 import Navbar from '../components/Navbar'
 import StatusBadge from '../components/StatusBadge'
 import TeamCardSkeleton from '../components/TeamCardSkeleton'
@@ -12,6 +14,7 @@ import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import { getErrorMessage } from '../lib/api'
 import { formatRupees } from '../lib/formatCurrency'
 import { formatDateRange } from '../lib/formatDate'
+import { createTournamentMatch, fetchTournamentMatches } from '../lib/matchApi'
 import { notifyError, notifyInfo } from '../lib/notify'
 import { fetchTeams } from '../lib/teamApi'
 import {
@@ -27,10 +30,6 @@ const TABS = [
   { value: 'teams', label: 'Teams' },
   { value: 'matches', label: 'Matches' },
 ]
-
-const EMPTY_TEXT = {
-  matches: 'Fixtures will be published later.',
-}
 
 const TEAM_SKELETON_COUNT = 2
 
@@ -61,6 +60,10 @@ function TournamentDetailsPage() {
   const authStatus = useAuthStore((state) => state.status)
   const [teamsReloadKey, setTeamsReloadKey] = useState(0)
   const [enrolled, setEnrolled] = useState({ key: null, teams: [], failed: false })
+  const [matchesReloadKey, setMatchesReloadKey] = useState(0)
+  const [matchList, setMatchList] = useState({ key: null, matches: [], failed: false })
+  const [showAddMatch, setShowAddMatch] = useState(false)
+  const [creatingMatch, setCreatingMatch] = useState(false)
 
   const tab = TABS.some((item) => item.value === params.get('tab')) ? params.get('tab') : 'overview'
 
@@ -69,6 +72,8 @@ function TournamentDetailsPage() {
   const teamsKey = `${id}|${teamsReloadKey}`
   const teamsLoading = enrolled.key !== teamsKey
   const addedTeams = enrolled.teams
+  const matchesKey = `${id}|${matchesReloadKey}`
+  const matchesLoading = matchList.key !== matchesKey
 
   useEffect(() => {
     const controller = new AbortController()
@@ -101,6 +106,20 @@ function TournamentDetailsPage() {
 
     return () => controller.abort()
   }, [id, teamsKey])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    fetchTournamentMatches(id, controller.signal)
+      .then((matches) => setMatchList({ key: matchesKey, matches, failed: false }))
+      .catch((error) => {
+        if (error?.code === 'ERR_CANCELED') return
+        if (error.response?.status !== 404) notifyError(getErrorMessage(error))
+        setMatchList({ key: matchesKey, matches: [], failed: true })
+      })
+
+    return () => controller.abort()
+  }, [id, matchesKey])
 
   const setTab = (value) => {
     setParams(
@@ -181,6 +200,22 @@ function TournamentDetailsPage() {
     }
   }
 
+  const closeAddMatch = () => setShowAddMatch(false)
+
+  const createMatch = async (values) => {
+    setCreatingMatch(true)
+    try {
+      await createTournamentMatch(id, values)
+      setShowAddMatch(false)
+      setMatchesReloadKey((value) => value + 1)
+      notifyInfo('Match created.')
+    } catch (error) {
+      notifyError(getErrorMessage(error))
+    } finally {
+      setCreatingMatch(false)
+    }
+  }
+
   const removeTeam = async (team) => {
     try {
       await removeTournamentTeam(id, team.id)
@@ -240,6 +275,7 @@ function TournamentDetailsPage() {
   const { organizer } = tournament
   const isOrganizer = Boolean(user) && user.id === organizer.id
   const canManage = tournament.status === 'upcoming' || tournament.status === 'live'
+  const canAddMatch = isOrganizer && canManage
   const showAddTeam = !isOrganizer && authStatus !== 'loading' && tournament.status !== 'cancelled' && tournament.status !== 'completed'
   const info = [
     { label: 'Location', value: tournament.location },
@@ -346,9 +382,48 @@ function TournamentDetailsPage() {
                   </ul>
                 )
               ) : (
-                <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-600">
-                  {EMPTY_TEXT[tab]}
-                </p>
+                <div>
+                  {canAddMatch && (
+                    <div className="mb-4 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setShowAddMatch(true)}
+                        className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+                      >
+                        Add Match
+                      </button>
+                    </div>
+                  )}
+                  {matchesLoading ? (
+                    <div aria-busy="true" className="grid gap-3 sm:grid-cols-2">
+                      <span className="sr-only">Loading matches…</span>
+                      {Array.from({ length: TEAM_SKELETON_COUNT }, (_, index) => (
+                        <TeamCardSkeleton key={index} />
+                      ))}
+                    </div>
+                  ) : matchList.failed ? (
+                    <div className="rounded-2xl border border-dashed border-gray-300 px-6 py-10 text-center">
+                      <p className="text-base font-bold text-gray-900">Couldn&apos;t load matches</p>
+                      <button
+                        type="button"
+                        onClick={() => setMatchesReloadKey((value) => value + 1)}
+                        className="mt-4 rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  ) : matchList.matches.length === 0 ? (
+                    <p className="rounded-2xl border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-600">
+                      {canAddMatch ? 'No matches scheduled yet. Add the first one.' : 'No matches have been scheduled yet.'}
+                    </p>
+                  ) : (
+                    <ul className="grid gap-3 sm:grid-cols-2">
+                      {matchList.matches.map((match) => (
+                        <MatchCard key={match.id} match={match} />
+                      ))}
+                    </ul>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -401,6 +476,15 @@ function TournamentDetailsPage() {
             Add my team
           </button>
         </div>
+      )}
+      {showAddMatch && (
+        <AddMatchModal
+          teams={addedTeams}
+          tournament={tournament}
+          submitting={creatingMatch}
+          onClose={closeAddMatch}
+          onSubmit={createMatch}
+        />
       )}
       {myTeams && (
         <AddTeamsModal

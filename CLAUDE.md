@@ -91,8 +91,8 @@ working on this app:
   (no `RequireAuth`) and mobile-first, backed by the real API through `fetchTournaments` /
   `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
   `{ tournaments, page, limit, total }`; `GET /tournaments/:id` → `{ tournament }` with
-  `organizer: { id, mobile }`; 404 = not found). The API has no format, team count, organizer
-  name/photo or matches, so the UI doesn't show them (the Matches tab is an empty state). The Teams tab
+  `organizer: { id, mobile }`; 404 = not found). The API has no format, team count or organizer
+  name/photo, so the UI doesn't show them. The Matches tab lists `GET /tournaments/:id/matches` as `MatchCard`s; the organizer (while upcoming/live) gets an "Add Match" button opening `AddMatchModal` (team A VS team B selects from the enrolled teams, date, time, optional stage label from `src/lib/matchStages.js` shown as a badge on `MatchCard`, optional notes; `POST /tournaments/:id/matches` via `src/lib/matchApi.js`). The Teams tab
   lists enrolled teams from `GET /tournaments/:id/teams`.
   List filters (search debounced 300 ms, status) live in the URL query string and are applied
   server-side, with "Load more" paging; the details tab lives in the URL. Loading uses shimmer
@@ -197,6 +197,7 @@ email, no password, no PIN, ever.
 
 ## Conventions
 
+- Dropdowns: always use `src/components/Select.jsx` (custom listbox with optional option logos, keyboard support; use via `Controller` in react-hook-form forms). Never a native `<select>`.
 - Mobile-first layout: base (unprefixed) Tailwind classes target mobile; use `sm:`/`md:`/`lg:` to
   scale up padding, font sizes, and grid columns for larger screens. Grids default to a single
   column and expand via `sm:grid-cols-*`/`lg:grid-cols-*`. Button groups stack (`flex-col`) on
