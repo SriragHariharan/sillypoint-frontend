@@ -88,7 +88,10 @@ working on this app:
   tournaments as `TournamentCard`s with shimmer, empty and retry states. It uses the `user` from
   `useAuthStore`.
 - `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
-  (no `RequireAuth`) and mobile-first, backed by the real API through `fetchTournaments` /
+  (no `RequireAuth`) and mobile-first. `TournamentDetailsPage` only composes `Tournament*` components
+  (`TournamentHeader`, `TournamentTabs`, `TournamentTeamsTab`, `TournamentMatchesTab`, `TournamentSidebar`, …)
+  and the `useTournamentDetails` / `useTournamentTeams` / `useTournamentMatches` / `useAddTeamFlow` hooks, which own
+  the data loading and flows; tab definitions are in `src/lib/tournamentTabs.js`. Both are backed by the real API through `fetchTournaments` /
   `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
   `{ tournaments, page, limit, total }`; `GET /tournaments/:id` → `{ tournament }` with
   `organizer: { id, mobile }`; 404 = not found). The API has no format, team count or organizer
@@ -207,6 +210,9 @@ email, no password, no PIN, ever.
   `src/App.jsx`.
 - No comments in JSX/config for self-explanatory code; keep components free of unused
   boilerplate from the original Vite template.
+- **File size**: keep every frontend source file (`.jsx`/`.js` under `src/`) under 215 lines. When a file
+  nears the limit, split it: pages compose components, data loading and multi-step flows go in
+  `src/hooks/`, constants and helpers go in `src/lib/`. Fix any file you touch that is already over the limit.
 
 ## Commands
 
