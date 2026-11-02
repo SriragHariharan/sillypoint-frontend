@@ -1,5 +1,6 @@
 export const INDIAN_MOBILE_REGEX = /^[6-9]\d{9}$/
 export const OTP_REGEX = /^\d{4}$/
+export const SCORER_PIN_REGEX = /^\d{6}$/
 
 export const mobileValidation = {
   required: 'Enter your mobile number',
@@ -62,6 +63,25 @@ export const captainNameValidation = {
 export const captainMobileValidation = {
   ...mobileValidation,
   required: 'Enter the captain mobile number',
+}
+
+export const scorerNameValidation = {
+  required: 'Enter the scorer name',
+  maxLength: { value: 60, message: 'Scorer name must be at most 60 characters' },
+  validate: (value) => value.trim().length >= 2 || 'Scorer name must be at least 2 characters',
+}
+
+export const scorerMobileValidation = {
+  ...mobileValidation,
+  required: 'Enter the scorer mobile number',
+}
+
+export const scorerPinValidation = {
+  required: 'Enter the 6-digit PIN',
+  pattern: {
+    value: SCORER_PIN_REGEX,
+    message: 'PIN must be 6 digits',
+  },
 }
 
 export const descriptionValidation = {

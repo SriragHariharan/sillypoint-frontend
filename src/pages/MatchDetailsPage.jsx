@@ -1,122 +1,67 @@
-import { Calendar, MapPin, Trophy } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Calendar, MapPin, Trophy, User } from 'lucide-react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import Avatar from '../components/Avatar'
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
+import AddScorerModal from '../components/AddScorerModal'
+import MatchDetailsSkeleton from '../components/MatchDetailsSkeleton'
+import MatchTeamSide from '../components/MatchTeamSide'
 import RescheduleMatchModal from '../components/RescheduleMatchModal'
-import Skeleton from '../components/Skeleton'
-import { getErrorMessage } from '../lib/api'
+import ScorerAccessCard from '../components/ScorerAccessCard'
+import TournamentPageShell from '../components/TournamentPageShell'
+import { useMatchDetails } from '../hooks/useMatchDetails'
 import { formatMatchDateTime } from '../lib/formatDate'
-import { fetchMatchDetails, rescheduleMatch } from '../lib/matchApi'
 import { matchStageLabel } from '../lib/matchStages'
-import { notifyError, notifyInfo } from '../lib/notify'
 import { useAuthStore } from '../store/authStore'
 
-function PageShell({ children }) {
-  return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
-      {children}
-      <Footer />
-    </div>
-  )
-}
-
-function TeamSide({ team }) {
-  return (
-    <div className="flex min-w-0 flex-1 flex-col items-center gap-3 text-center">
-      <Avatar src={team.logo} name={team.name} size="lg" rounded="rounded-2xl" />
-      <span className="w-full break-words text-base font-extrabold text-gray-900 sm:text-lg">{team.name}</span>
-    </div>
-  )
-}
-
-function MatchDetailsSkeleton() {
-  return (
-    <div aria-busy="true" className="mx-auto max-w-3xl px-5 pb-16 pt-5 sm:px-6 sm:pt-8">
-      <span className="sr-only">Loading match…</span>
-      <Skeleton className="h-4 w-40 rounded" />
-      <Skeleton className="mt-6 h-72 rounded-2xl" />
-    </div>
-  )
-}
+const actionClass =
+  'rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600'
 
 function MatchDetailsPage() {
   const { id } = useParams()
   const user = useAuthStore((state) => state.user)
-  const [reloadKey, setReloadKey] = useState(0)
-  const [loaded, setLoaded] = useState({ key: null, match: null, failed: false })
+  const details = useMatchDetails(id)
   const [rescheduling, setRescheduling] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [addingScorer, setAddingScorer] = useState(false)
   const [openedAt] = useState(() => Date.now())
 
-  const key = `${id}|${reloadKey}`
-  const loading = loaded.key !== key
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    fetchMatchDetails(id, controller.signal)
-      .then((match) => setLoaded({ key, match, failed: false }))
-      .catch((error) => {
-        if (error?.code === 'ERR_CANCELED') return
-        if (error.response?.status === 404) {
-          setLoaded({ key, match: null, failed: false })
-          return
-        }
-        notifyError(getErrorMessage(error))
-        setLoaded({ key, match: null, failed: true })
-      })
-
-    return () => controller.abort()
-  }, [id, key])
-
   const onReschedule = async (values) => {
-    setSaving(true)
-    try {
-      const updated = await rescheduleMatch(id, values)
-      setLoaded((current) => ({ ...current, match: updated }))
-      setRescheduling(false)
-      notifyInfo('Match rescheduled.')
-    } catch (error) {
-      notifyError(getErrorMessage(error))
-    } finally {
-      setSaving(false)
-    }
+    if (await details.reschedule(values)) setRescheduling(false)
   }
 
-  if (loading) {
+  const onAddScorer = async (values) => {
+    if (await details.addScorer(values)) setAddingScorer(false)
+  }
+
+  if (details.loading) {
     return (
-      <PageShell>
+      <TournamentPageShell>
         <MatchDetailsSkeleton />
-      </PageShell>
+      </TournamentPageShell>
     )
   }
 
-  if (loaded.failed) {
+  if (details.failed) {
     return (
-      <PageShell>
+      <TournamentPageShell>
         <main className="mx-auto max-w-md px-5 py-20 text-center">
           <h1 className="text-2xl font-extrabold text-gray-900">Couldn&apos;t load this match</h1>
           <p className="mt-2 text-sm text-gray-600">Check your connection and try again.</p>
           <button
             type="button"
-            onClick={() => setReloadKey((value) => value + 1)}
+            onClick={details.retry}
             className="mt-6 rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
           >
             Retry
           </button>
         </main>
-      </PageShell>
+      </TournamentPageShell>
     )
   }
 
-  const { match } = loaded
+  const { match } = details
 
   if (!match) {
     return (
-      <PageShell>
+      <TournamentPageShell>
         <main className="mx-auto max-w-md px-5 py-20 text-center">
           <h1 className="text-2xl font-extrabold text-gray-900">Match not found</h1>
           <p className="mt-2 text-sm text-gray-600">It may have been removed or the link is wrong.</p>
@@ -127,18 +72,20 @@ function MatchDetailsPage() {
             Browse tournaments
           </Link>
         </main>
-      </PageShell>
+      </TournamentPageShell>
     )
   }
 
   const { tournament } = match
   const stage = matchStageLabel(match.stage)
   const open = tournament.status === 'upcoming' || tournament.status === 'live'
+  const isOrganizer = Boolean(user) && user.id === tournament.organizerId
   const notStarted = new Date(match.scheduledAt).getTime() > openedAt
-  const canReschedule = Boolean(user) && user.id === tournament.organizerId && open && notStarted
+  const canReschedule = isOrganizer && open && notStarted
+  const canAddScorer = isOrganizer && open && !match.scorerName
 
   return (
-    <PageShell>
+    <TournamentPageShell>
       <main className="mx-auto max-w-3xl px-5 pb-16 pt-5 sm:px-6 sm:pt-8">
         <Link
           to={`/tournaments/${tournament.id}?tab=matches`}
@@ -165,16 +112,16 @@ function MatchDetailsPage() {
 
           <div className="px-4 py-6 sm:px-8 sm:py-8">
             <div className="flex items-start gap-3 sm:gap-6">
-              <TeamSide team={match.teamA} />
+              <MatchTeamSide team={match.teamA} />
               <span className="mt-6 shrink-0 rounded-full bg-red-600 px-3 py-1 text-xs font-extrabold tracking-wider text-white">
                 VS
               </span>
-              <TeamSide team={match.teamB} />
+              <MatchTeamSide team={match.teamB} />
             </div>
           </div>
 
           <div className="flex flex-col gap-4 border-t border-gray-200 bg-gray-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <dl className="grid gap-3 sm:grid-cols-2 sm:gap-8">
+            <dl className="grid gap-3 sm:grid-cols-2 sm:gap-x-8">
               <div className="flex items-start gap-2.5">
                 <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
                 <div>
@@ -191,19 +138,35 @@ function MatchDetailsPage() {
                   <dd className="mt-0.5 text-sm font-semibold text-gray-900">{tournament.location}</dd>
                 </div>
               </div>
+              {match.scorerName && (
+                <div className="flex items-start gap-2.5">
+                  <User className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Scorer</dt>
+                    <dd className="mt-0.5 break-words text-sm font-semibold text-gray-900">{match.scorerName}</dd>
+                  </div>
+                </div>
+              )}
             </dl>
 
-            {canReschedule && (
-              <button
-                type="button"
-                onClick={() => setRescheduling(true)}
-                className="shrink-0 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
-              >
-                Reschedule match
-              </button>
+            {(canReschedule || canAddScorer) && (
+              <div className="flex shrink-0 flex-col gap-2">
+                {canAddScorer && (
+                  <button type="button" onClick={() => setAddingScorer(true)} className={actionClass}>
+                    Add scorer
+                  </button>
+                )}
+                {canReschedule && (
+                  <button type="button" onClick={() => setRescheduling(true)} className={actionClass}>
+                    Reschedule match
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </section>
+
+        {isOrganizer && match.scorerName && <ScorerAccessCard matchId={match.id} scorerName={match.scorerName} />}
 
         {match.notes && (
           <section className="mt-4 rounded-2xl bg-gray-50 p-4 sm:p-5">
@@ -216,12 +179,20 @@ function MatchDetailsPage() {
       {rescheduling && (
         <RescheduleMatchModal
           match={match}
-          submitting={saving}
+          submitting={details.saving}
           onClose={() => setRescheduling(false)}
           onSubmit={onReschedule}
         />
       )}
-    </PageShell>
+      {addingScorer && (
+        <AddScorerModal
+          match={match}
+          submitting={details.saving}
+          onClose={() => setAddingScorer(false)}
+          onSubmit={onAddScorer}
+        />
+      )}
+    </TournamentPageShell>
   )
 }
 

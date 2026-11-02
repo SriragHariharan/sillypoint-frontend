@@ -6,7 +6,14 @@ import { clearSessionFlag } from './sessionFlag'
 const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
 const timeout = 15000
 
-const AUTH_PATHS = ['/auth/request-otp', '/auth/verify-otp', '/auth/resend-otp', '/auth/refresh', '/auth/logout']
+const AUTH_PATHS = [
+  '/auth/request-otp',
+  '/auth/verify-otp',
+  '/auth/resend-otp',
+  '/auth/refresh',
+  '/auth/logout',
+  '/scorer/login',
+]
 
 export const api = axios.create({ baseURL, timeout, withCredentials: true })
 
