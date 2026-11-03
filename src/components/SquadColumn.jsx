@@ -3,7 +3,8 @@ import { SQUAD_SIZE, filledCount } from '../lib/squad'
 import Avatar from './Avatar'
 import PlayerRow from './PlayerRow'
 
-function SquadColumn({ side, team, register, control, errors }) {  const values = useWatch({ control, name: side })
+function SquadColumn({ side, team, register, control, errors }) {
+  const values = useWatch({ control, name: side })
   const count = filledCount(values)
 
   const group = (key, title, rows) => (
@@ -26,7 +27,7 @@ function SquadColumn({ side, team, register, control, errors }) {  const values 
   )
 
   return (
-    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-2.5 shadow-sm sm:p-4">
+    <div className="min-w-0 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
       <div className="flex items-center gap-2 border-b border-gray-200 pb-3 sm:gap-3">
         <Avatar src={team.logo} name={team.name} size="xs" rounded="rounded-lg" />
         <h2 className="min-w-0 flex-1 break-words text-sm font-extrabold leading-tight text-gray-900 sm:text-base">

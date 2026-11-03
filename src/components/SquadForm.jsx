@@ -1,7 +1,9 @@
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { squadDefaults } from '../lib/squad'
+import { SIDES, filledCount, squadDefaults } from '../lib/squad'
 import SquadColumn from './SquadColumn'
+import SquadSlider from './SquadSlider'
 
 function SquadForm({ squads, saving, backTo, onSave }) {
   const {
@@ -10,15 +12,35 @@ function SquadForm({ squads, saving, backTo, onSave }) {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: squadDefaults(squads) })
+  const [goTo, setGoTo] = useState({ index: 0, nonce: 0 })
+  const watched = useWatch({ control, name: SIDES })
+
+  const tabs = SIDES.map((side, index) => ({
+    label: squads[side].team.name,
+    logo: squads[side].team.logo,
+    count: filledCount(watched[index]),
+    invalid: Boolean(errors[side]),
+  }))
+
+  const showFirstError = (formErrors) =>
+    setGoTo((current) => ({ index: Math.max(0, SIDES.findIndex((side) => formErrors[side])), nonce: current.nonce + 1 }))
 
   return (
-    <form onSubmit={handleSubmit(onSave)} noValidate>
-      <div className="grid grid-cols-2 items-start gap-2 sm:gap-6">
-        <SquadColumn side="teamA" team={squads.teamA.team} register={register} control={control} errors={errors} />
-        <SquadColumn side="teamB" team={squads.teamB.team} register={register} control={control} errors={errors} />
-      </div>
+    <form onSubmit={handleSubmit(onSave, showFirstError)} noValidate>
+      <SquadSlider tabs={tabs} goTo={goTo}>
+        {SIDES.map((side) => (
+          <SquadColumn
+            key={side}
+            side={side}
+            team={squads[side].team}
+            register={register}
+            control={control}
+            errors={errors}
+          />
+        ))}
+      </SquadSlider>
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-gray-200 bg-white/95 px-3 py-3 backdrop-blur sm:px-6">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white/95 px-3 py-3 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <Link
             to={backTo}
