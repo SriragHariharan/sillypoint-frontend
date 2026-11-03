@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import RedirectIfAuthed from './components/RedirectIfAuthed'
 import RequireAuth from './components/RequireAuth'
+import RequireScorer from './components/RequireScorer'
 import { TOAST_DURATION_MS } from './lib/constants'
 import { restoreSession } from './lib/session'
 import LandingPage from './pages/LandingPage'
@@ -96,7 +97,14 @@ function App() {
         <Route path="/tournaments/:id" element={<TournamentDetailsPage />} />
         <Route path="/matches/:id" element={<MatchDetailsPage />} />
         <Route path="/scorer/:token" element={<ScorerLoginPage />} />
-        <Route path="/scorer/:token/welcome" element={<ScorerWelcomePage />} />
+        <Route
+          path="/scorer/:token/welcome"
+          element={
+            <RequireScorer>
+              <ScorerWelcomePage />
+            </RequireScorer>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

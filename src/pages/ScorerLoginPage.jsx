@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
 import { getErrorMessage } from '../lib/api'
 import { notifyError } from '../lib/notify'
@@ -17,6 +17,7 @@ function ScorerLoginPage() {
   const { token } = useParams()
   const navigate = useNavigate()
   const setScorerSession = useScorerStore((state) => state.setScorerSession)
+  const hasSession = useScorerStore((state) => Boolean(state.accessToken) && state.linkToken === token)
   const [submitting, setSubmitting] = useState(false)
 
   const {
@@ -30,7 +31,7 @@ function ScorerLoginPage() {
 
     try {
       const session = await scorerLogin({ token, mobile, pin })
-      setScorerSession(session)
+      setScorerSession({ ...session, linkToken: token })
       navigate(`/scorer/${token}/welcome`, { replace: true })
     } catch (error) {
       notifyError(getErrorMessage(error))
@@ -38,6 +39,8 @@ function ScorerLoginPage() {
       setSubmitting(false)
     }
   }
+
+  if (hasSession) return <Navigate to={`/scorer/${token}/welcome`} replace />
 
   return (
     <AuthLayout title="Scorer login" subtitle="Enter your mobile number and the 6-digit PIN the organizer shared with you.">

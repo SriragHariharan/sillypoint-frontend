@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
+import { useScorerStore } from '../store/scorerStore'
 import { notifyError } from './notify'
 import { clearSessionFlag } from './sessionFlag'
 
@@ -12,7 +13,7 @@ const AUTH_PATHS = [
   '/auth/resend-otp',
   '/auth/refresh',
   '/auth/logout',
-  '/scorer/login',
+  '/scorer/',
 ]
 
 export const api = axios.create({ baseURL, timeout, withCredentials: true })
@@ -33,8 +34,11 @@ export const refreshAccessToken = () => {
   return refreshPromise
 }
 
+const bearerTokenFor = (url) =>
+  url?.startsWith('/scorer/') ? useScorerStore.getState().accessToken : useAuthStore.getState().accessToken
+
 api.interceptors.request.use((config) => {
-  const { accessToken } = useAuthStore.getState()
+  const accessToken = bearerTokenFor(config.url)
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
   return config
 })

@@ -1,7 +1,9 @@
 import { Calendar } from 'lucide-react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
+import { isScoringOpen } from '../lib/scoringWindow'
 import { useScorerStore } from '../store/scorerStore'
 
 function ScorerWelcomePage() {
@@ -9,13 +11,19 @@ function ScorerWelcomePage() {
   const navigate = useNavigate()
   const scorer = useScorerStore((state) => state.scorer)
   const match = useScorerStore((state) => state.match)
+  const scoringOpensAt = useScorerStore((state) => state.scoringOpensAt)
+  const serverOffsetMs = useScorerStore((state) => state.serverOffsetMs)
   const clearScorerSession = useScorerStore((state) => state.clearScorerSession)
-
-  if (!scorer || !match) return <Navigate to={`/scorer/${token}`} replace />
 
   const logOut = () => {
     clearScorerSession()
     navigate(`/scorer/${token}`, { replace: true })
+  }
+
+  if (!scorer || !match) return null
+
+  if (!isScoringOpen(scoringOpensAt, serverOffsetMs)) {
+    return <ScorerWaitingScreen onLogOut={logOut} />
   }
 
   return (
