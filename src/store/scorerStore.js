@@ -23,6 +23,8 @@ export const useScorerStore = create(
 
       setScorerDetails: (details) => set(detailsOf(details)),
 
+      setMatch: (match) => set({ match }),
+
       requestRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
 
       clearScorerSession: () => set({ accessToken: null, linkToken: null, ...noDetails }),

@@ -6,4 +6,12 @@ export const scorerLogin = ({ token, mobile, pin }) =>
 export const fetchScorerSession = (signal) =>
   api.get('/scorer/me', { signal }).then((response) => response.data)
 
+export const fetchSquads = (signal) =>
+  api.get('/scorer/players', { signal }).then((response) => response.data)
+
+export const saveSquads = (squads) => api.put('/scorer/players', squads).then((response) => response.data)
+
+export const saveToss = ({ winnerTeamId, decision }) =>
+  api.put('/scorer/toss', { winnerTeamId, decision }).then((response) => response.data.match)
+
 export const scorerLinkUrl = (token) => `${window.location.origin}/scorer/${token}`

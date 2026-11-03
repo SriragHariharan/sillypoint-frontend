@@ -16,6 +16,7 @@ import TournamentDetailsPage from './pages/TournamentDetailsPage'
 import MatchDetailsPage from './pages/MatchDetailsPage'
 import ScorerLoginPage from './pages/ScorerLoginPage'
 import ScorerWelcomePage from './pages/ScorerWelcomePage'
+import ScorerPlayersPage from './pages/ScorerPlayersPage'
 import TeamsPage from './pages/TeamsPage'
 import AddTeamPage from './pages/AddTeamPage'
 import EditTeamPage from './pages/EditTeamPage'
@@ -102,6 +103,14 @@ function App() {
           element={
             <RequireScorer>
               <ScorerWelcomePage />
+            </RequireScorer>
+          }
+        />
+        <Route
+          path="/scorer/:token/players"
+          element={
+            <RequireScorer>
+              <ScorerPlayersPage />
             </RequireScorer>
           }
         />

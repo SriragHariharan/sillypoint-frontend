@@ -84,6 +84,20 @@ export const scorerPinValidation = {
   },
 }
 
+export const PLAYER_NAME_MAX_LENGTH = 60
+
+const squadNames = (squad) =>
+  [...squad.playing, ...squad.substitutes].map((player) => player.name.trim().toLowerCase()).filter(Boolean)
+
+export const playerNameValidation = (side) => ({
+  maxLength: { value: PLAYER_NAME_MAX_LENGTH, message: `At most ${PLAYER_NAME_MAX_LENGTH} characters` },
+  validate: (value, values) => {
+    const name = value.trim().toLowerCase()
+    if (!name) return true
+    return squadNames(values[side]).filter((other) => other === name).length === 1 || 'Same player twice in this team'
+  },
+})
+
 export const descriptionValidation = {
   validate: (value) =>
     htmlTextLength(value) <= DESCRIPTION_MAX_LENGTH ||

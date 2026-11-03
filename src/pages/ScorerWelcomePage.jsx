@@ -1,6 +1,7 @@
 import { Calendar } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import ScorerMatchActions from '../components/ScorerMatchActions'
 import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { isScoringOpen } from '../lib/scoringWindow'
@@ -41,6 +42,8 @@ function ScorerWelcomePage() {
         </p>
         <p className="mt-1 text-xs text-gray-600">{match.tournament.name}</p>
       </div>
+
+      <ScorerMatchActions match={match} />
 
       <button
         type="button"
