@@ -2,35 +2,24 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import AppNavbar from '../components/AppNavbar'
+import FieldError from '../components/FieldError'
 import RichTextEditor from '../components/RichTextEditor'
+import TournamentDateFields from '../components/TournamentDateFields'
+import TournamentMoneyFields from '../components/TournamentMoneyFields'
+import TournamentSquadSizeFields from '../components/TournamentSquadSizeFields'
 import { getErrorMessage } from '../lib/api'
+import { inputClass, labelClass } from '../lib/formStyles'
 import { notifyError, notifyInfo } from '../lib/notify'
+import { MAX_PLAYERS_PER_SIDE, MAX_SUBSTITUTES_PER_SIDE } from '../lib/squad'
 import { createTournament } from '../lib/tournamentApi'
 import {
   DESCRIPTION_MAX_LENGTH,
   descriptionValidation,
-  endDateValidation,
   htmlTextLength,
   locationValidation,
-  prizeMoneyValidation,
-  registrationFeeValidation,
-  startDateValidation,
-  todayISO,
   tournamentNameValidation,
   validateLogo,
 } from '../lib/validators'
-
-const inputClass = (hasError) =>
-  `w-full rounded-xl border px-3 py-3 text-sm text-gray-900 outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100 ${
-    hasError ? 'border-red-400' : 'border-gray-300'
-  }`
-
-const labelClass = 'mb-1.5 block text-sm font-medium text-gray-700'
-
-function FieldError({ error }) {
-  if (!error) return null
-  return <p className="mt-1.5 text-xs font-medium text-red-600">{error.message}</p>
-}
 
 function AddTournamentPage() {
   const navigate = useNavigate()
@@ -54,6 +43,8 @@ function AddTournamentPage() {
       endDate: '',
       registrationFee: '0',
       prizeMoney: '0',
+      playersPerSide: String(MAX_PLAYERS_PER_SIDE),
+      substitutesPerSide: String(MAX_SUBSTITUTES_PER_SIDE),
     },
   })
 
@@ -194,71 +185,11 @@ function AddTournamentPage() {
                 <FieldError error={errors.location} />
               </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="startDate" className={labelClass}>
-                    Start date
-                  </label>
-                  <input
-                    id="startDate"
-                    type="date"
-                    min={todayISO()}
-                    className={inputClass(errors.startDate)}
-                    {...register('startDate', { ...startDateValidation, deps: ['endDate'] })}
-                  />
-                  <FieldError error={errors.startDate} />
-                </div>
-                <div>
-                  <label htmlFor="endDate" className={labelClass}>
-                    End date
-                  </label>
-                  <input
-                    id="endDate"
-                    type="date"
-                    min={startDate || todayISO()}
-                    className={inputClass(errors.endDate)}
-                    {...register('endDate', endDateValidation(() => getValues('startDate')))}
-                  />
-                  <FieldError error={errors.endDate} />
-                </div>
-              </div>
+              <TournamentDateFields register={register} errors={errors} getValues={getValues} startDate={startDate} />
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="registrationFee" className={labelClass}>
-                    Registration fee (₹)
-                  </label>
-                  <input
-                    id="registrationFee"
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    step={1}
-                    className={inputClass(errors.registrationFee)}
-                    {...register('registrationFee', registrationFeeValidation)}
-                  />
-                  <p className="mt-1.5 text-xs text-gray-500">
-                    Cannot be changed after the tournament is created. Enter 0 for a free tournament.
-                  </p>
-                  <FieldError error={errors.registrationFee} />
-                </div>
-                <div>
-                  <label htmlFor="prizeMoney" className={labelClass}>
-                    Prize money (₹)
-                  </label>
-                  <input
-                    id="prizeMoney"
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    step={1}
-                    className={inputClass(errors.prizeMoney)}
-                    {...register('prizeMoney', prizeMoneyValidation)}
-                  />
-                  <p className="mt-1.5 text-xs text-gray-500">You can update this later.</p>
-                  <FieldError error={errors.prizeMoney} />
-                </div>
-              </div>
+              <TournamentMoneyFields register={register} errors={errors} />
+
+              <TournamentSquadSizeFields register={register} errors={errors} />
 
               <button
                 type="submit"

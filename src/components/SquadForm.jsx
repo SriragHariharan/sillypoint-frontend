@@ -5,13 +5,13 @@ import { SIDES, filledCount, squadDefaults } from '../lib/squad'
 import SquadColumn from './SquadColumn'
 import SquadSlider from './SquadSlider'
 
-function SquadForm({ squads, saving, backTo, onSave }) {
+function SquadForm({ squads, limits, saving, backTo, onSave }) {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: squadDefaults(squads) })
+  } = useForm({ defaultValues: squadDefaults(squads, limits) })
   const [goTo, setGoTo] = useState({ index: 0, nonce: 0 })
   const watched = useWatch({ control, name: SIDES })
 
@@ -27,12 +27,13 @@ function SquadForm({ squads, saving, backTo, onSave }) {
 
   return (
     <form onSubmit={handleSubmit(onSave, showFirstError)} noValidate>
-      <SquadSlider tabs={tabs} goTo={goTo}>
+      <SquadSlider tabs={tabs} total={limits.total} goTo={goTo}>
         {SIDES.map((side) => (
           <SquadColumn
             key={side}
             side={side}
             team={squads[side].team}
+            total={limits.total}
             register={register}
             control={control}
             errors={errors}

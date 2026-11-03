@@ -1,5 +1,4 @@
 import { Children, useEffect, useRef, useState } from 'react'
-import { SQUAD_SIZE } from '../lib/squad'
 import Avatar from './Avatar'
 
 const slideTo = (track, index) => {
@@ -7,7 +6,7 @@ const slideTo = (track, index) => {
   if (card) track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' })
 }
 
-function SquadSlider({ tabs, goTo, children }) {
+function SquadSlider({ tabs, total, goTo, children }) {
   const trackRef = useRef(null)
   const [active, setActive] = useState(0)
 
@@ -39,7 +38,7 @@ function SquadSlider({ tabs, goTo, children }) {
             <span className="min-w-0 flex-1">
               <span className="block truncate text-xs font-bold leading-tight">{tab.label}</span>
               <span className={`block text-xs ${active === index ? 'text-red-100' : 'text-gray-500'}`}>
-                {tab.count}/{SQUAD_SIZE} players
+                {tab.count}/{total} players
               </span>
             </span>
             {tab.invalid && (

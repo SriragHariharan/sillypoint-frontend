@@ -1,18 +1,25 @@
-export const PLAYING_XI_SIZE = 11
-export const SUBSTITUTES_SIZE = 4
-export const SQUAD_SIZE = PLAYING_XI_SIZE + SUBSTITUTES_SIZE
+export const MIN_PLAYERS_PER_SIDE = 5
+export const MAX_PLAYERS_PER_SIDE = 11
+export const MIN_SUBSTITUTES_PER_SIDE = 0
+export const MAX_SUBSTITUTES_PER_SIDE = 4
 
 export const SIDES = ['teamA', 'teamB']
 
+export const squadLimits = (tournament) => {
+  const playing = tournament?.playersPerSide ?? MAX_PLAYERS_PER_SIDE
+  const substitutes = tournament?.substitutesPerSide ?? MAX_SUBSTITUTES_PER_SIDE
+  return { playing, substitutes, total: playing + substitutes }
+}
+
 const padTo = (players, size) => Array.from({ length: size }, (_, index) => ({ name: players[index]?.name ?? '' }))
 
-export const squadDefaults = (squads) =>
+export const squadDefaults = (squads, limits) =>
   Object.fromEntries(
     SIDES.map((side) => [
       side,
       {
-        playing: padTo(squads[side].playing, PLAYING_XI_SIZE),
-        substitutes: padTo(squads[side].substitutes, SUBSTITUTES_SIZE),
+        playing: padTo(squads[side].playing, limits.playing),
+        substitutes: padTo(squads[side].substitutes, limits.substitutes),
       },
     ]),
   )

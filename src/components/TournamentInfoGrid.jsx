@@ -10,6 +10,11 @@ function TournamentInfoGrid({ tournament }) {
       value: tournament.registrationFee === 0 ? 'Free' : formatRupees(tournament.registrationFee),
     },
     ...(tournament.prizeMoney > 0 ? [{ label: 'Prize money', value: formatRupees(tournament.prizeMoney) }] : []),
+    { label: 'Players per side', value: String(tournament.playersPerSide) },
+    {
+      label: 'Substitutes per side',
+      value: tournament.substitutesPerSide === 0 ? 'None' : String(tournament.substitutesPerSide),
+    },
   ]
 
   return (

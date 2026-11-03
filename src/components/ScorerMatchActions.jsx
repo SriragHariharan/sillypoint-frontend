@@ -5,7 +5,7 @@ import { useSquads } from '../hooks/useSquads'
 import { notifyInfo } from '../lib/notify'
 import { saveToss } from '../lib/scorerApi'
 import { handleScorerError } from '../lib/scorerErrors'
-import { SQUAD_SIZE, savedCount, tossSummary } from '../lib/squad'
+import { savedCount, squadLimits, tossSummary } from '../lib/squad'
 import { useScorerStore } from '../store/scorerStore'
 import TossModal from './TossModal'
 
@@ -33,6 +33,7 @@ function ScorerMatchActions({ match }) {
   }
 
   const toss = tossSummary(match)
+  const { total } = squadLimits(match.tournament)
 
   return (
     <div className="mt-5 space-y-3">
@@ -41,7 +42,7 @@ function ScorerMatchActions({ match }) {
         Add players
         {squads && (
           <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
-            {savedCount(squads.teamA)}/{SQUAD_SIZE} · {savedCount(squads.teamB)}/{SQUAD_SIZE}
+            {savedCount(squads.teamA)}/{total} · {savedCount(squads.teamB)}/{total}
           </span>
         )}
       </Link>

@@ -1,3 +1,10 @@
+import {
+  MAX_PLAYERS_PER_SIDE,
+  MAX_SUBSTITUTES_PER_SIDE,
+  MIN_PLAYERS_PER_SIDE,
+  MIN_SUBSTITUTES_PER_SIDE,
+} from './squad'
+
 export const INDIAN_MOBILE_REGEX = /^[6-9]\d{9}$/
 export const OTP_REGEX = /^\d{4}$/
 export const SCORER_PIN_REGEX = /^\d{6}$/
@@ -47,6 +54,23 @@ const amountValidation = (label) => ({
 
 export const registrationFeeValidation = amountValidation('registration fee')
 export const prizeMoneyValidation = amountValidation('prize money')
+
+const countValidation = (label, min, max) => ({
+  required: `Enter the ${label}`,
+  validate: (value) => {
+    const name = `${label[0].toUpperCase()}${label.slice(1)}`
+    if (!/^\d+$/.test(String(value).trim())) return `${name} must be a whole number`
+    const count = Number(value)
+    return (count >= min && count <= max) || `${name} must be between ${min} and ${max}`
+  },
+})
+
+export const playersPerSideValidation = countValidation('players per side', MIN_PLAYERS_PER_SIDE, MAX_PLAYERS_PER_SIDE)
+export const substitutesPerSideValidation = countValidation(
+  'substitutes per side',
+  MIN_SUBSTITUTES_PER_SIDE,
+  MAX_SUBSTITUTES_PER_SIDE,
+)
 
 export const teamNameValidation = {
   required: 'Enter the team name',
