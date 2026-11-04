@@ -40,7 +40,13 @@ export const filledCount = (side) =>
 
 export const savedCount = (squad) => squad.playing.length + squad.substitutes.length
 
-export const tossSummary = (match) => {
+export const isMatchReady = (match, squads) => {
+  if (!match?.tossWinnerTeamId || !squads) return false
+  const { playing } = squadLimits(match.tournament)
+  return SIDES.every((side) => (squads[side]?.playing.length ?? 0) >= playing)
+}
+
+export const tossSummary =(match) => {
   if (!match.tossWinnerTeamId) return null
   const winner = match.tossWinnerTeamId === match.teamA.id ? match.teamA : match.teamB
   return `${winner.name} won the toss and chose to ${match.tossDecision === 'bat' ? 'bat' : 'bowl'}.`

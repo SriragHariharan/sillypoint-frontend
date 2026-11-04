@@ -1,11 +1,11 @@
-import { Coins, Users } from 'lucide-react'
+import { Coins, Play, Users } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSquads } from '../hooks/useSquads'
-import { notifyInfo } from '../lib/notify'
+import { notifyError, notifyInfo } from '../lib/notify'
 import { saveToss } from '../lib/scorerApi'
 import { handleScorerError } from '../lib/scorerErrors'
-import { savedCount, squadLimits, tossSummary } from '../lib/squad'
+import { isMatchReady, savedCount, squadLimits, tossSummary } from '../lib/squad'
 import { useScorerStore } from '../store/scorerStore'
 import TossModal from './TossModal'
 
@@ -14,6 +14,7 @@ const actionClass =
 
 function ScorerMatchActions({ match }) {
   const { token } = useParams()
+  const navigate = useNavigate()
   const setMatch = useScorerStore((state) => state.setMatch)
   const { squads } = useSquads()
   const [tossOpen, setTossOpen] = useState(false)
@@ -30,6 +31,14 @@ function ScorerMatchActions({ match }) {
     } finally {
       setSaving(false)
     }
+  }
+
+  const startScoring = () => {
+    if (!isMatchReady(match, squads)) {
+      notifyError('Before the start of the match, players must be nominated and the toss must be made.')
+      return
+    }
+    navigate(`/scorer/${token}/scoring`)
   }
 
   const toss = tossSummary(match)
@@ -52,6 +61,11 @@ function ScorerMatchActions({ match }) {
         Toss
       </button>
       {toss && <p className="text-center text-xs font-semibold text-gray-700">{toss}</p>}
+
+      <button type="button" onClick={startScoring} className={actionClass}>
+        <Play className="h-4 w-4 shrink-0" aria-hidden="true" />
+        Start scoring
+      </button>
 
       {tossOpen && (
         <TossModal match={match} submitting={saving} onClose={() => setTossOpen(false)} onSubmit={submitToss} />
