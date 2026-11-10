@@ -1,37 +1,58 @@
+import { CircleDot, Crown, Radio, Shuffle, Trophy, Users } from 'lucide-react'
+import SectionHeading from './SectionHeading'
+
 const steps = [
-  { title: 'Create your tournament', description: 'Set the name, format, overs and dates.' },
-  { title: 'Register teams', description: 'Add teams manually or share a registration link.' },
-  { title: 'Generate fixtures', description: 'Byes and pairings are handled automatically.' },
-  { title: 'Score every ball', description: 'Assign scorers and record deliveries live.' },
-  { title: 'Broadcast live scores', description: 'Spectators watch matches update in real time.' },
-  { title: 'Crown a champion', description: 'Standings, stats and results, all calculated for you.' },
+  { icon: Trophy, title: 'Create your tournament', description: 'Set the name, format, overs and dates.' },
+  { icon: Users, title: 'Register teams', description: 'Add teams manually or share a registration link.' },
+  { icon: Shuffle, title: 'Generate fixtures', description: 'Byes and pairings are handled automatically.' },
+  { icon: CircleDot, title: 'Score every ball', description: 'Assign scorers and record deliveries live.' },
+  { icon: Radio, title: 'Broadcast live scores', description: 'Spectators watch matches update in real time.' },
+  { icon: Crown, title: 'Crown a champion', description: 'Standings, stats and results, all calculated for you.' },
 ]
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-20 bg-gray-50">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">
-          From kickoff to champion
-        </h2>
-        <p className="mt-4 text-gray-600">
-          The whole tournament lifecycle, in one flow.
-        </p>
-      </div>
+    <section id="how-it-works" className="relative scroll-mt-16 overflow-hidden border-t border-white/10 bg-gray-950 py-16 sm:py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(55% 45% at 50% 55%, rgba(166, 25, 46, 0.2), transparent 70%)' }}
+      />
 
-      <ol className="mt-10 grid gap-8 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
-        {steps.map((step, index) => (
-          <li key={step.title} className="flex gap-4">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">
-              {index + 1}
-            </span>
-            <div>
-              <h3 className="font-bold text-gray-900">{step.title}</h3>
-              <p className="mt-1 text-sm text-gray-600">{step.description}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
+        <SectionHeading
+          center
+          eyebrow="How it works"
+          title={
+            <>
+              From kickoff to <span className="text-red-500">champion</span>
+            </>
+          }
+        >
+          The whole tournament lifecycle, in one flow.
+        </SectionHeading>
+
+        <ol className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          {steps.map(({ icon: Icon, title, description }, index) => (
+            <li
+              key={title}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur transition hover:-translate-y-0.5 hover:border-red-500/60 hover:bg-white/[0.07]"
+            >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-1 -top-3 text-7xl font-black tabular-nums text-white/[0.06]"
+              >
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-red-400">
+                <Icon aria-hidden="true" className="h-5 w-5" />
+              </span>
+              <h3 className="mt-5 text-lg font-bold text-white">{title}</h3>
+              <p className="mt-1.5 text-sm text-gray-300">{description}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   )
 }

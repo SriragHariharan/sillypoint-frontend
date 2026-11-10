@@ -1,6 +1,8 @@
+import { ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchTournaments } from '../lib/tournamentApi'
+import SectionHeading from './SectionHeading'
 import TournamentCard from './TournamentCard'
 import TournamentCardSkeleton from './TournamentCardSkeleton'
 
@@ -26,32 +28,41 @@ function FeaturedTournaments() {
   if (tournaments?.length === 0) return null
 
   return (
-    <section id="tournaments" className="bg-gray-50 py-14 sm:py-20">
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">
-              Happening on Sillypoint
-            </h2>
-            <p className="mt-4 text-gray-600">
-              Follow live tournaments or find one to join — no account needed to browse.
-            </p>
-          </div>
+    <section id="tournaments" className="relative scroll-mt-16 overflow-hidden bg-gray-950 py-16 sm:py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(45% 55% at 92% 0%, rgba(166, 25, 46, 0.2), transparent 70%)' }}
+      />
+
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeading
+            eyebrow="Happening now"
+            title={
+              <>
+                On <span className="text-red-500">Sillypoint</span> right now
+              </>
+            }
+          >
+            Follow live tournaments or find one to join. No account needed to browse.
+          </SectionHeading>
           <Link
             to="/tournaments"
-            className="text-sm font-semibold text-red-600 transition hover:text-red-700"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
           >
-            View all tournaments →
+            View all tournaments
+            <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </Link>
         </div>
 
         <div
           aria-busy={tournaments === null}
-          className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
+          className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
         >
           {tournaments === null
-            ? Array.from({ length: FEATURED_COUNT }, (_, index) => <TournamentCardSkeleton key={index} />)
-            : tournaments.map((tournament) => <TournamentCard key={tournament.id} tournament={tournament} />)}
+            ? Array.from({ length: FEATURED_COUNT }, (_, index) => <TournamentCardSkeleton key={index} dark />)
+            : tournaments.map((tournament) => <TournamentCard key={tournament.id} tournament={tournament} dark />)}
         </div>
       </div>
     </section>

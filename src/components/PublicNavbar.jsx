@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
 import { useAuthStore } from '../store/authStore'
@@ -7,8 +7,6 @@ const links = [
   { label: 'Tournaments', to: '/tournaments' },
   { label: 'How it works', href: '/#how-it-works' },
 ]
-
-const NAV_HEIGHT = 72
 
 const lightText = {
   brand: 'text-gray-900',
@@ -25,11 +23,6 @@ const THEMES = {
     header: 'sticky top-0 border-b border-gray-100 bg-white/90 backdrop-blur',
     panel: 'border-t border-gray-100 bg-white',
   },
-  light: {
-    ...lightText,
-    header: 'fixed inset-x-0 top-0 border-b border-gray-200/60 bg-white/70 backdrop-blur-xl',
-    panel: 'border-t border-gray-200/60 bg-white/80 backdrop-blur-xl',
-  },
   dark: {
     brand: 'text-white',
     link: 'text-gray-200 hover:bg-white/10 hover:text-white',
@@ -37,7 +30,7 @@ const THEMES = {
     login: 'text-gray-200 hover:text-white',
     toggle: 'text-white hover:bg-white/10',
     outline: 'border-white/25 text-white hover:border-white hover:bg-white/10',
-    header: 'fixed inset-x-0 top-0 border-b border-white/10 bg-white/[0.04] backdrop-blur-md',
+    header: 'fixed inset-x-0 top-0 border-b border-white/10 bg-gray-950/55 backdrop-blur-xl',
     panel: 'border-t border-white/10 bg-gray-950/70 backdrop-blur-xl',
   },
 }
@@ -59,37 +52,13 @@ function NavItem({ link, active, className, onClick, theme }) {
   )
 }
 
-// With `glass` the bar floats over the page as frosted glass: dark glass while the dark hero is behind it, light glass once the page scrolls onto white sections
+// With `glass` the bar floats over the dark page as frosted glass
 function PublicNavbar({ glass = false }) {
   const [open, setOpen] = useState(false)
-  const [overHero, setOverHero] = useState(true)
   const { pathname } = useLocation()
   const authenticated = useAuthStore((state) => state.status === 'authenticated')
 
-  useEffect(() => {
-    if (!glass) return undefined
-
-    let frame = 0
-    const update = () => {
-      frame = 0
-      const hero = document.getElementById('top')
-      setOverHero(hero ? hero.getBoundingClientRect().bottom > NAV_HEIGHT : false)
-    }
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-
-    schedule()
-    window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
-    }
-  }, [glass])
-
-  const theme = THEMES[!glass ? 'solid' : overHero ? 'dark' : 'light']
+  const theme = THEMES[glass ? 'dark' : 'solid']
   const isActive = (link) => Boolean(link.to) && pathname.startsWith(link.to)
   const close = () => setOpen(false)
 
