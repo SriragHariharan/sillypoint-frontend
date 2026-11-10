@@ -41,7 +41,7 @@ export const filledCount = (side) =>
 export const savedCount = (squad) => squad.playing.length + squad.substitutes.length
 
 export const isMatchReady = (match, squads) => {
-  if (!match?.tossWinnerTeamId || !squads) return false
+  if (!match?.tossWinnerTeamId || !match.oversPerSide || !squads) return false
   const { playing } = squadLimits(match.tournament)
   return SIDES.every((side) => (squads[side]?.playing.length ?? 0) >= playing)
 }

@@ -14,4 +14,7 @@ export const saveSquads = (squads) => api.put('/scorer/players', squads).then((r
 export const saveToss = ({ winnerTeamId, decision }) =>
   api.put('/scorer/toss', { winnerTeamId, decision }).then((response) => response.data.match)
 
+export const saveOvers = ({ oversPerSide }) =>
+  api.put('/scorer/overs', { oversPerSide }).then((response) => response.data.match)
+
 export const scorerLinkUrl = (token) => `${window.location.origin}/scorer/${token}`

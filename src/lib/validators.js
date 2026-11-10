@@ -4,6 +4,7 @@ import {
   MIN_PLAYERS_PER_SIDE,
   MIN_SUBSTITUTES_PER_SIDE,
 } from './squad'
+import { MAX_OVERS_PER_SIDE, MIN_OVERS_PER_SIDE } from './overs'
 
 export const INDIAN_MOBILE_REGEX = /^[6-9]\d{9}$/
 export const OTP_REGEX = /^\d{4}$/
@@ -71,6 +72,8 @@ export const substitutesPerSideValidation = countValidation(
   MIN_SUBSTITUTES_PER_SIDE,
   MAX_SUBSTITUTES_PER_SIDE,
 )
+
+export const oversPerSideValidation = countValidation('overs per side', MIN_OVERS_PER_SIDE, MAX_OVERS_PER_SIDE)
 
 export const teamNameValidation = {
   required: 'Enter the team name',
