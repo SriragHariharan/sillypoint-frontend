@@ -67,7 +67,7 @@ working on this app:
   with the CTAs; the landing page always uses it and shows a Dashboard button when logged in).
   `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and `ProfileMenu`
   (the avatar account menu: photo, mobile number, Add/Change photo, Remove photo with an inline confirm,
-  links on mobile, Log out). Nav link data lives in `src/lib/navLinks.js`. Profile photo upload/remove goes
+  links on mobile, Log out). Nav link data lives in `src/lib/navLinks.js`; from `sm` the desktop links are icon-only (with `aria-label` / `title`) and the labels only appear from `lg` (1024px), so the bar never overflows at tablet widths. Profile photo upload/remove goes
   through `useAvatar` (`src/hooks/useAvatar.js`: validates with `validateAvatar`, calls `userApi.js`
   `PUT`/`DELETE /users/me/avatar`, toasts, and `updateUser({ avatar })` in `authStore` so the navbar,
   dashboard and other views update instantly). The photo also shows on the dashboard profile card and

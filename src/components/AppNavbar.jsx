@@ -41,7 +41,9 @@ function AppNavbar({ bottomTabs = true }) {
                   <Link
                     to={link.to}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold transition ${
+                    aria-label={link.desktopLabel ?? link.label}
+                    title={link.desktopLabel ?? link.label}
+                    className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition lg:px-3.5 ${
                       active
                         ? 'bg-red-50 text-red-600'
                         : isCreate
@@ -50,7 +52,7 @@ function AppNavbar({ bottomTabs = true }) {
                     }`}
                   >
                     <Icon path={link.icon} />
-                    {link.desktopLabel ?? link.label}
+                    <span className="hidden whitespace-nowrap lg:inline">{link.desktopLabel ?? link.label}</span>
                   </Link>
                 </li>
               )
