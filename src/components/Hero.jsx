@@ -17,7 +17,7 @@ function Hero() {
         style={{ background: 'radial-gradient(55% 60% at 12% 18%, rgba(166, 25, 46, 0.28), transparent 70%)' }}
       />
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 py-14 sm:px-6 sm:py-20 md:grid-cols-[1.05fr_1fr] md:gap-8 md:py-24">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-32 md:grid-cols-[1.05fr_1fr] md:gap-8 md:pb-24 md:pt-36">
         <div>
           <span className="inline-block rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-red-200">
             Cricket tournament management

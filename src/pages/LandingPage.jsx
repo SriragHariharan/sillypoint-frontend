@@ -8,7 +8,7 @@ import Footer from '../components/Footer'
 function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <PublicNavbar />
+      <PublicNavbar glass />
       <Hero />
       <FeaturedTournaments />
       <HowItWorks />

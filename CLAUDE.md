@@ -64,7 +64,7 @@ working on this app:
   arrays; shared UI components (like `OtpInput`) do take props since they're reused across pages.
 - **Navbars** (three, flat in `src/components/`): `PublicNavbar` is the marketing bar for logged-out
   visitors (logo, Tournaments / How it works, Log in / Get Started, full-width mobile menu
-  with the CTAs; the landing page always uses it and shows a Dashboard button when logged in).
+  with the CTAs; the landing page always uses it with the `glass` prop, which floats the bar over the page as frosted glass: dark glass over the dark hero, light glass once the page scrolls onto the white sections, so the hero has top padding for it; other public pages keep the solid sticky bar; it shows a Dashboard button when logged in).
   `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and `ProfileMenu`
   (the avatar account menu: photo, mobile number, Add/Change photo, Remove photo with an inline confirm,
   links on mobile, Log out). Nav link data lives in `src/lib/navLinks.js`; from `sm` the desktop links are icon-only (with `aria-label` / `title`) and the labels only appear from `lg` (1024px), so the bar never overflows at tablet widths. Profile photo upload/remove goes
