@@ -5,7 +5,6 @@ import { useAuthStore } from '../store/authStore'
 
 const links = [
   { label: 'Tournaments', to: '/tournaments' },
-  { label: 'Features', href: '/#features' },
   { label: 'How it works', href: '/#how-it-works' },
 ]
 

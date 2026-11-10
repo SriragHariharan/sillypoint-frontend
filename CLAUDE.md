@@ -59,11 +59,11 @@ working on this app:
   list so it only matches unmatched paths. A page composes components and/or forms and is what a `<Route element={...}>`
   points to.
 - `src/components/` — reusable/presentational pieces, both landing-page sections (`PublicNavbar`,
-  `Hero`, `Features`, `Formats`, `HowItWorks`, `Roles`, `CTASection`, `Footer`) and shared UI
+  `Hero`, `FeaturedTournaments`, `HowItWorks`, `CTASection`, `Footer`) and shared UI
   (`AuthLayout`, `OtpInput`, `FullPageLoader`) and route guards (`RequireAuth`, `RedirectIfAuthed`). Landing sections take no props and keep content as local const
   arrays; shared UI components (like `OtpInput`) do take props since they're reused across pages.
 - **Navbars** (three, flat in `src/components/`): `PublicNavbar` is the marketing bar for logged-out
-  visitors (logo, Tournaments / Features / How it works, Log in / Get Started, full-width mobile menu
+  visitors (logo, Tournaments / How it works, Log in / Get Started, full-width mobile menu
   with the CTAs; the landing page always uses it and shows a Dashboard button when logged in).
   `AppNavbar` is the logged-in bar: logo, Dashboard / Tournaments / Create links, and `ProfileMenu`
   (the avatar account menu: photo, mobile number, Add/Change photo, Remove photo with an inline confirm,

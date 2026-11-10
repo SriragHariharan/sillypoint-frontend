@@ -17,10 +17,10 @@ function CTASection() {
             Create a Tournament
           </a>
           <a
-            href="#features"
+            href="#how-it-works"
             className="rounded-full border border-white/70 px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10"
           >
-            Explore Features
+            See how it works
           </a>
         </div>
       </div>

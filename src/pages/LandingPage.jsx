@@ -1,10 +1,7 @@
 import PublicNavbar from '../components/PublicNavbar'
 import Hero from '../components/Hero'
-import Features from '../components/Features'
-import Formats from '../components/Formats'
 import FeaturedTournaments from '../components/FeaturedTournaments'
 import HowItWorks from '../components/HowItWorks'
-import Roles from '../components/Roles'
 import CTASection from '../components/CTASection'
 import Footer from '../components/Footer'
 
@@ -15,9 +12,6 @@ function LandingPage() {
       <Hero />
       <FeaturedTournaments />
       <HowItWorks />
-      <Features />
-      <Formats />
-      <Roles />
       <CTASection />
       <Footer />
     </div>
