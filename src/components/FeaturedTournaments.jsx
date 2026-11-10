@@ -32,7 +32,7 @@ function FeaturedTournaments() {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(45% 55% at 92% 0%, rgba(166, 25, 46, 0.2), transparent 70%)' }}
+        style={{ background: 'radial-gradient(55% 45% at 50% 60%, rgba(166, 25, 46, 0.2), transparent 70%)' }}
       />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
