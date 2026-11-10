@@ -1,4 +1,5 @@
-import { Copy } from 'lucide-react'
+import { Copy, Eye, EyeOff } from 'lucide-react'
+import { useState } from 'react'
 import { useScorerAccess } from '../hooks/useScorerAccess'
 import { notifyError, notifyInfo } from '../lib/notify'
 import { scorerLinkUrl } from '../lib/scorerApi'
@@ -13,67 +14,93 @@ const copyText = async (text, label) => {
   }
 }
 
-function CopyRow({ id, label, value }) {
+const iconButtonClass =
+  'flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-700 transition hover:border-red-600 hover:text-red-600'
+
+function Row({ label, value, title, className = '', children }) {
   return (
-    <div>
-      <label htmlFor={id} className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
-        {label}
-      </label>
-      <div className="flex gap-2">
-        <input
-          id={id}
-          readOnly
-          value={value}
-          onFocus={(event) => event.target.select()}
-          className="min-w-0 flex-1 rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
-        />
-        <button
-          type="button"
-          onClick={() => copyText(value, label)}
-          className="flex shrink-0 items-center gap-1.5 rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
-        >
-          <Copy className="h-4 w-4 shrink-0" aria-hidden="true" />
-          Copy
-        </button>
-      </div>
+    <div className={`flex min-w-0 items-center gap-2 py-1.5 ${className}`}>
+      <span className="w-8 shrink-0 text-[11px] font-semibold uppercase tracking-wide text-gray-500">{label}</span>
+      <span title={title} className="min-w-0 flex-1 truncate text-sm font-medium text-gray-900">
+        {value}
+      </span>
+      {children}
     </div>
   )
 }
 
-function ScorerAccessCard({ matchId, scorerName }) {
-  const { access, loading, failed, retry } = useScorerAccess(matchId)
+function CopyButton({ label, text }) {
+  return (
+    <button type="button" onClick={() => copyText(text, label)} aria-label={`Copy ${label}`} title={`Copy ${label}`} className={iconButtonClass}>
+      <Copy className="h-4 w-4" aria-hidden="true" />
+    </button>
+  )
+}
+
+function PinRow({ pin }) {
+  const [revealed, setRevealed] = useState(false)
+  const Icon = revealed ? EyeOff : Eye
 
   return (
-    <section className="mt-4 rounded-2xl border border-gray-200 p-4 sm:p-5">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Scorer access</h2>
-      <p className="mt-2 text-sm text-gray-700">
-        Share this link and PIN with {scorerName}. They log in with their mobile number and the PIN.
-      </p>
+    <Row
+      label="PIN"
+      value={<span className="tracking-widest tabular-nums">{revealed ? pin : '•'.repeat(pin.length)}</span>}
+      className="sm:w-64 sm:shrink-0 sm:border-l sm:border-gray-100 sm:pl-4"
+    >
+      <button
+        type="button"
+        onClick={() => setRevealed((current) => !current)}
+        aria-label={revealed ? 'Hide PIN' : 'Show PIN'}
+        aria-pressed={revealed}
+        title={revealed ? 'Hide PIN' : 'Show PIN'}
+        className={iconButtonClass}
+      >
+        <Icon className="h-4 w-4" aria-hidden="true" />
+      </button>
+      <CopyButton label="PIN" text={pin} />
+    </Row>
+  )
+}
 
-      <div className="mt-4 space-y-4">
-        {loading && (
-          <div aria-busy="true" className="space-y-4">
-            <span className="sr-only">Loading scorer access…</span>
-            <Skeleton className="h-11 rounded-xl" />
-            <Skeleton className="h-11 rounded-xl" />
-          </div>
-        )}
-        {!loading && failed && (
+function ScorerAccessCard({ matchId }) {
+  const { access, loading, failed, retry } = useScorerAccess(matchId)
+  const link = access ? scorerLinkUrl(access.linkToken) : ''
+
+  return (
+    <section className="mt-3 rounded-xl border border-gray-200 bg-white px-3 py-2">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Scorer access</h2>
+        <p className="hidden truncate text-[11px] text-gray-500 min-[380px]:block">The scorer logs in with the PIN only</p>
+      </div>
+
+      {loading && (
+        <div aria-busy="true" className="py-1.5">
+          <span className="sr-only">Loading scorer access…</span>
+          <Skeleton className="h-9 rounded-lg" />
+        </div>
+      )}
+
+      {!loading && failed && (
+        <div className="flex items-center justify-between gap-3 py-1.5">
+          <p className="text-sm text-gray-600">Couldn&apos;t load scorer access.</p>
           <button
             type="button"
             onClick={retry}
-            className="rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+            className="rounded-full bg-red-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-red-700"
           >
             Retry
           </button>
-        )}
-        {!loading && access && (
-          <>
-            <CopyRow id="scorer-link" label="Login link" value={scorerLinkUrl(access.linkToken)} />
-            <CopyRow id="scorer-pin" label="PIN" value={access.pin} />
-          </>
-        )}
-      </div>
+        </div>
+      )}
+
+      {!loading && access && (
+        <div className="divide-y divide-gray-100 sm:flex sm:divide-y-0">
+          <Row label="Link" value={link} title={link} className="sm:flex-1 sm:pr-4">
+            <CopyButton label="login link" text={link} />
+          </Row>
+          <PinRow pin={access.pin} />
+        </div>
+      )}
     </section>
   )
 }

@@ -5,7 +5,7 @@ import AuthLayout from '../components/AuthLayout'
 import { getErrorMessage } from '../lib/api'
 import { notifyError } from '../lib/notify'
 import { scorerLogin } from '../lib/scorerApi'
-import { mobileValidation, scorerPinValidation } from '../lib/validators'
+import { scorerPinValidation } from '../lib/validators'
 import { useScorerStore } from '../store/scorerStore'
 
 const fieldClass = (hasError) =>
@@ -24,13 +24,13 @@ function ScorerLoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { mobile: '', pin: '' } })
+  } = useForm({ defaultValues: { pin: '' } })
 
-  const onSubmit = async ({ mobile, pin }) => {
+  const onSubmit = async ({ pin }) => {
     setSubmitting(true)
 
     try {
-      const session = await scorerLogin({ token, mobile, pin })
+      const session = await scorerLogin({ token, pin })
       setScorerSession({ ...session, linkToken: token })
       navigate(`/scorer/${token}/welcome`, { replace: true })
     } catch (error) {
@@ -43,32 +43,8 @@ function ScorerLoginPage() {
   if (hasSession) return <Navigate to={`/scorer/${token}/welcome`} replace />
 
   return (
-    <AuthLayout title="Scorer login" subtitle="Enter your mobile number and the 6-digit PIN the organizer shared with you.">
+    <AuthLayout title="Scorer login" subtitle="Enter the 6-digit PIN the organizer shared with you.">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-        <div>
-          <label htmlFor="scorer-login-mobile" className="mb-1.5 block text-sm font-medium text-gray-700">
-            Mobile number
-          </label>
-          <div
-            className={`flex items-center overflow-hidden rounded-xl border focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100 ${
-              errors.mobile ? 'border-red-400' : 'border-gray-300'
-            }`}
-          >
-            <span className="border-r border-gray-300 bg-gray-50 px-3 py-3 text-sm font-medium text-gray-600">+91</span>
-            <input
-              id="scorer-login-mobile"
-              type="tel"
-              inputMode="numeric"
-              maxLength={10}
-              autoComplete="off"
-              placeholder="98765 43210"
-              className="w-full px-3 py-3 text-sm text-gray-900 outline-none"
-              {...register('mobile', mobileValidation)}
-            />
-          </div>
-          {errors.mobile && <p className="mt-1.5 text-xs font-medium text-red-600">{errors.mobile.message}</p>}
-        </div>
-
         <div>
           <label htmlFor="scorer-login-pin" className="mb-1.5 block text-sm font-medium text-gray-700">
             PIN

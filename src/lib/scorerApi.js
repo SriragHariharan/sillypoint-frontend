@@ -1,7 +1,7 @@
 import { api } from './api'
 
-export const scorerLogin = ({ token, mobile, pin }) =>
-  api.post('/scorer/login', { token, mobile, pin }).then((response) => response.data)
+export const scorerLogin = ({ token, pin }) =>
+  api.post('/scorer/login', { token, pin }).then((response) => response.data)
 
 export const fetchScorerSession = (signal) =>
   api.get('/scorer/me', { signal }).then((response) => response.data)

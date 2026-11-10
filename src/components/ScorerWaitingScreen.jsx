@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Calendar, Clock, MapPin, Trophy, User } from 'lucide-react'
+import { Calendar, Clock, MapPin, Trophy } from 'lucide-react'
 import { useCountdown } from '../hooks/useCountdown'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { formatDuration } from '../lib/formatTime'
@@ -21,7 +21,6 @@ function DetailRow({ icon: Icon, label, children }) {
 }
 
 function ScorerWaitingScreen({ onLogOut }) {
-  const scorer = useScorerStore((state) => state.scorer)
   const match = useScorerStore((state) => state.match)
   const scoringOpensAt = useScorerStore((state) => state.scoringOpensAt)
   const serverOffsetMs = useScorerStore((state) => state.serverOffsetMs)
@@ -37,7 +36,7 @@ function ScorerWaitingScreen({ onLogOut }) {
 
   return (
     <AuthLayout
-      title={`Hi ${scorer.name}, scoring isn't open yet`}
+      title="Scoring isn't open yet"
       subtitle="You can start scoring 30 minutes before the match begins. This page opens up by itself."
     >
       <div className="rounded-xl bg-red-600 px-4 py-4 text-center text-white">
@@ -75,9 +74,6 @@ function ScorerWaitingScreen({ onLogOut }) {
           </DetailRow>
           <DetailRow icon={MapPin} label="Location">
             {match.tournament.location}
-          </DetailRow>
-          <DetailRow icon={User} label="Scorer">
-            {scorer.name}
           </DetailRow>
           <DetailRow icon={Clock} label="Scoring opens">
             {formatMatchDateTime(scoringOpensAt)}

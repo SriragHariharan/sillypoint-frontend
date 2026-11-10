@@ -10,7 +10,6 @@ import { useScorerStore } from '../store/scorerStore'
 function ScorerWelcomePage() {
   const { token } = useParams()
   const navigate = useNavigate()
-  const scorer = useScorerStore((state) => state.scorer)
   const match = useScorerStore((state) => state.match)
   const scoringOpensAt = useScorerStore((state) => state.scoringOpensAt)
   const serverOffsetMs = useScorerStore((state) => state.serverOffsetMs)
@@ -21,7 +20,7 @@ function ScorerWelcomePage() {
     navigate(`/scorer/${token}`, { replace: true })
   }
 
-  if (!scorer || !match) return null
+  if (!match) return null
 
   if (!isScoringOpen(scoringOpensAt, serverOffsetMs)) {
     return <ScorerWaitingScreen onLogOut={logOut} />
@@ -29,7 +28,7 @@ function ScorerWelcomePage() {
 
   return (
     <AuthLayout
-      title={`Welcome, ${scorer.name}`}
+      title="Welcome, scorer"
       subtitle="You are the scorer for this match. Set up the players, toss and overs, then start scoring."
     >
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">

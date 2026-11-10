@@ -1,7 +1,6 @@
-import { Calendar, MapPin, Trophy, User } from 'lucide-react'
+import { Calendar, MapPin, Trophy } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import AddScorerModal from '../components/AddScorerModal'
 import MatchDetailsSkeleton from '../components/MatchDetailsSkeleton'
 import MatchScorecardSection from '../components/MatchScorecardSection'
 import MatchTeamSide from '../components/MatchTeamSide'
@@ -21,15 +20,10 @@ function MatchDetailsPage() {
   const user = useAuthStore((state) => state.user)
   const details = useMatchDetails(id)
   const [rescheduling, setRescheduling] = useState(false)
-  const [addingScorer, setAddingScorer] = useState(false)
   const [openedAt] = useState(() => Date.now())
 
   const onReschedule = async (values) => {
     if (await details.reschedule(values)) setRescheduling(false)
-  }
-
-  const onAddScorer = async (values) => {
-    if (await details.addScorer(values)) setAddingScorer(false)
   }
 
   if (details.loading) {
@@ -83,7 +77,6 @@ function MatchDetailsPage() {
   const isOrganizer = Boolean(user) && user.id === tournament.organizerId
   const notStarted = new Date(match.scheduledAt).getTime() > openedAt
   const canReschedule = isOrganizer && open && notStarted
-  const canAddScorer = isOrganizer && open && !match.scorerName
 
   return (
     <TournamentPageShell>
@@ -139,29 +132,13 @@ function MatchDetailsPage() {
                   <dd className="mt-0.5 text-sm font-semibold text-gray-900">{tournament.location}</dd>
                 </div>
               </div>
-              {match.scorerName && (
-                <div className="flex items-start gap-2.5">
-                  <User className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Scorer</dt>
-                    <dd className="mt-0.5 break-words text-sm font-semibold text-gray-900">{match.scorerName}</dd>
-                  </div>
-                </div>
-              )}
             </dl>
 
-            {(canReschedule || canAddScorer) && (
+            {canReschedule && (
               <div className="flex shrink-0 flex-col gap-2">
-                {canAddScorer && (
-                  <button type="button" onClick={() => setAddingScorer(true)} className={actionClass}>
-                    Add scorer
-                  </button>
-                )}
-                {canReschedule && (
-                  <button type="button" onClick={() => setRescheduling(true)} className={actionClass}>
-                    Reschedule match
-                  </button>
-                )}
+                <button type="button" onClick={() => setRescheduling(true)} className={actionClass}>
+                  Reschedule match
+                </button>
               </div>
             )}
           </div>
@@ -169,7 +146,7 @@ function MatchDetailsPage() {
 
         <MatchScorecardSection match={match} />
 
-        {isOrganizer && match.scorerName && <ScorerAccessCard matchId={match.id} scorerName={match.scorerName} />}
+        {isOrganizer && <ScorerAccessCard matchId={match.id} />}
 
         {match.notes && (
           <section className="mt-4 rounded-2xl bg-gray-50 p-4 sm:p-5">
@@ -185,14 +162,6 @@ function MatchDetailsPage() {
           submitting={details.saving}
           onClose={() => setRescheduling(false)}
           onSubmit={onReschedule}
-        />
-      )}
-      {addingScorer && (
-        <AddScorerModal
-          match={match}
-          submitting={details.saving}
-          onClose={() => setAddingScorer(false)}
-          onSubmit={onAddScorer}
         />
       )}
     </TournamentPageShell>

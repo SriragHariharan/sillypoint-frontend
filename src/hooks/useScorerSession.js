@@ -6,13 +6,13 @@ import { useScorerStore } from '../store/scorerStore'
 
 export function useScorerSession(linkToken) {
   const hasSession = useScorerStore((state) => Boolean(state.accessToken) && state.linkToken === linkToken)
-  const loadedScorer = useScorerStore((state) => state.scorer)
+  const loadedMatch = useScorerStore((state) => state.match)
   const refreshKey = useScorerStore((state) => state.refreshKey)
   const requestRefresh = useScorerStore((state) => state.requestRefresh)
 
   const key = `${linkToken}|${refreshKey}`
   const [result, setResult] = useState(() => ({
-    key: useScorerStore.getState().scorer ? key : null,
+    key: useScorerStore.getState().match ? key : null,
     failed: false,
   }))
 
@@ -47,7 +47,7 @@ export function useScorerSession(linkToken) {
   let status = 'ready'
   if (!hasSession) status = 'unauthenticated'
   else if (loaded && result.failed) status = 'error'
-  else if (!loaded && !loadedScorer) status = 'loading'
+  else if (!loaded && !loadedMatch) status = 'loading'
 
   return { status, retry: requestRefresh }
 }

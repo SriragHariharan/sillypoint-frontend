@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getErrorMessage } from '../lib/api'
-import { addMatchScorer, fetchMatchDetails, rescheduleMatch } from '../lib/matchApi'
+import { fetchMatchDetails, rescheduleMatch } from '../lib/matchApi'
 import { notifyError, notifyInfo } from '../lib/notify'
 
 export function useMatchDetails(id) {
@@ -50,6 +50,5 @@ export function useMatchDetails(id) {
     saving,
     retry: () => setReloadKey((value) => value + 1),
     reschedule: (values) => save(() => rescheduleMatch(id, values), 'Match rescheduled.'),
-    addScorer: (values) => save(() => addMatchScorer(id, values), 'Scorer added.'),
   }
 }

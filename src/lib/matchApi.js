@@ -9,9 +9,6 @@ export const fetchMatchDetails = (id, signal) =>
 export const rescheduleMatch = (id, { matchDate, matchTime }) =>
   api.patch(`/matches/${id}/reschedule`, { matchDate, matchTime }).then((response) => response.data.match)
 
-export const addMatchScorer = (id, { name, mobile }) =>
-  api.post(`/matches/${id}/scorer`, { name, mobile }).then((response) => response.data.match)
-
 export const fetchScorerAccess = (id, signal) =>
   api.get(`/matches/${id}/scorer/access`, { signal }).then((response) => response.data)
 

@@ -1,10 +1,9 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-const noDetails = { scorer: null, match: null, scoringOpensAt: null, serverOffsetMs: 0 }
+const noDetails = { match: null, scoringOpensAt: null, serverOffsetMs: 0 }
 
-const detailsOf = ({ scorer, match, serverTime, scoringOpensAt }) => ({
-  scorer,
+const detailsOf = ({ match, serverTime, scoringOpensAt }) => ({
   match,
   scoringOpensAt,
   serverOffsetMs: Date.parse(serverTime) - Date.now(),

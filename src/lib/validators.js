@@ -92,17 +92,6 @@ export const captainMobileValidation = {
   required: 'Enter the captain mobile number',
 }
 
-export const scorerNameValidation = {
-  required: 'Enter the scorer name',
-  maxLength: { value: 60, message: 'Scorer name must be at most 60 characters' },
-  validate: (value) => value.trim().length >= 2 || 'Scorer name must be at least 2 characters',
-}
-
-export const scorerMobileValidation = {
-  ...mobileValidation,
-  required: 'Enter the scorer mobile number',
-}
-
 export const scorerPinValidation = {
   required: 'Enter the 6-digit PIN',
   pattern: {
