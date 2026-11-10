@@ -12,7 +12,7 @@ import OversModal from './OversModal'
 import TossModal from './TossModal'
 
 const actionClass =
-  'flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
+  'flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none disabled:hover:bg-gray-300'
 
 function ScorerMatchActions({ match }) {
   const { token } = useParams()
@@ -57,29 +57,43 @@ function ScorerMatchActions({ match }) {
     navigate(`/scorer/${token}/scoring`)
   }
 
+  const locked = Boolean(match.scoringStartedAt)
   const toss = tossSummary(match)
   const overs = oversSummary(match)
   const { total } = squadLimits(match.tournament)
 
   return (
     <div className="mt-5 space-y-3">
-      <Link to={`/scorer/${token}/players`} className={actionClass}>
-        <Users className="h-4 w-4 shrink-0" aria-hidden="true" />
-        Add players
-        {squads && (
-          <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
-            {savedCount(squads.teamA)}/{total} · {savedCount(squads.teamB)}/{total}
-          </span>
-        )}
-      </Link>
+      {locked && (
+        <p className="rounded-xl bg-gray-50 px-3 py-2 text-center text-xs font-semibold text-gray-600">
+          Scoring has started, so the players, toss and overs can no longer be changed.
+        </p>
+      )}
 
-      <button type="button" onClick={() => setTossOpen(true)} className={actionClass}>
+      {locked ? (
+        <button type="button" disabled className={actionClass}>
+          <Users className="h-4 w-4 shrink-0" aria-hidden="true" />
+          Add players
+        </button>
+      ) : (
+        <Link to={`/scorer/${token}/players`} className={actionClass}>
+          <Users className="h-4 w-4 shrink-0" aria-hidden="true" />
+          Add players
+          {squads && (
+            <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
+              {savedCount(squads.teamA)}/{total} · {savedCount(squads.teamB)}/{total}
+            </span>
+          )}
+        </Link>
+      )}
+
+      <button type="button" disabled={locked} onClick={() => setTossOpen(true)} className={actionClass}>
         <Coins className="h-4 w-4 shrink-0" aria-hidden="true" />
         Toss
       </button>
       {toss && <p className="text-center text-xs font-semibold text-gray-700">{toss}</p>}
 
-      <button type="button" onClick={() => setOversOpen(true)} className={actionClass}>
+      <button type="button" disabled={locked} onClick={() => setOversOpen(true)} className={actionClass}>
         <Timer className="h-4 w-4 shrink-0" aria-hidden="true" />
         Overs per side
       </button>
@@ -87,7 +101,7 @@ function ScorerMatchActions({ match }) {
 
       <button type="button" onClick={startScoring} className={actionClass}>
         <Play className="h-4 w-4 shrink-0" aria-hidden="true" />
-        Start scoring
+        {locked ? 'Continue scoring' : 'Start scoring'}
       </button>
 
       {oversOpen && (

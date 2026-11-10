@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AddScorerModal from '../components/AddScorerModal'
 import MatchDetailsSkeleton from '../components/MatchDetailsSkeleton'
+import MatchScorecardSection from '../components/MatchScorecardSection'
 import MatchTeamSide from '../components/MatchTeamSide'
 import RescheduleMatchModal from '../components/RescheduleMatchModal'
 import ScorerAccessCard from '../components/ScorerAccessCard'
@@ -165,6 +166,8 @@ function MatchDetailsPage() {
             )}
           </div>
         </section>
+
+        <MatchScorecardSection match={match} />
 
         {isOrganizer && match.scorerName && <ScorerAccessCard matchId={match.id} scorerName={match.scorerName} />}
 

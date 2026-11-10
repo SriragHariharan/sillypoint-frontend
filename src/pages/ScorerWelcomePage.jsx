@@ -30,7 +30,7 @@ function ScorerWelcomePage() {
   return (
     <AuthLayout
       title={`Welcome, ${scorer.name}`}
-      subtitle="You are the scorer for this match. Live scoring is coming soon."
+      subtitle="You are the scorer for this match. Set up the players, toss and overs, then start scoring."
     >
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
         <p className="text-sm font-bold text-gray-900">
