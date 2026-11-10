@@ -17,3 +17,6 @@ export const createTeam = (values) => api.post('/teams', toFormData(values)).the
 
 export const updateTeam = (id, values) =>
   api.patch(`/teams/${id}`, toFormData(values)).then((response) => response.data)
+
+export const fetchTeamMatches = (id, params, signal) =>
+  api.get(`/teams/${id}/matches`, { params, signal }).then((response) => response.data)

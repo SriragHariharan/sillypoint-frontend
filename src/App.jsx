@@ -19,6 +19,7 @@ import ScorerLoginPage from './pages/ScorerLoginPage'
 import ScorerWelcomePage from './pages/ScorerWelcomePage'
 import ScorerPlayersPage from './pages/ScorerPlayersPage'
 import ScorerScoringPage from './pages/ScorerScoringPage'
+import TeamDetailsPage from './pages/TeamDetailsPage'
 import TeamsPage from './pages/TeamsPage'
 import AddTeamPage from './pages/AddTeamPage'
 import EditTeamPage from './pages/EditTeamPage'
@@ -93,6 +94,14 @@ function App() {
           element={
             <RequireAuth>
               <AddTeamPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/teams/:id"
+          element={
+            <RequireAuth>
+              <TeamDetailsPage />
             </RequireAuth>
           }
         />
