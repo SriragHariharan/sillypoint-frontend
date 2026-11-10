@@ -11,6 +11,7 @@ import MobileEntryPage from './pages/MobileEntryPage'
 import VerifyOtpPage from './pages/VerifyOtpPage'
 import DashboardPage from './pages/DashboardPage'
 import AddTournamentPage from './pages/AddTournamentPage'
+import MyTournamentsPage from './pages/MyTournamentsPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailsPage from './pages/TournamentDetailsPage'
 import MatchDetailsPage from './pages/MatchDetailsPage'
@@ -68,6 +69,14 @@ function App() {
           element={
             <RequireAuth>
               <AddTournamentPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/my-tournaments"
+          element={
+            <RequireAuth>
+              <MyTournamentsPage />
             </RequireAuth>
           }
         />

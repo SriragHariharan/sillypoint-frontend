@@ -50,7 +50,7 @@ function AppNavbar({ bottomTabs = true }) {
                     }`}
                   >
                     <Icon path={link.icon} />
-                    {isCreate ? 'Create tournament' : link.label}
+                    {link.desktopLabel ?? link.label}
                   </Link>
                 </li>
               )
@@ -68,7 +68,7 @@ function AppNavbar({ bottomTabs = true }) {
           aria-label="Primary"
           className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden"
         >
-          <ul className="grid grid-cols-4">
+          <ul className="grid grid-cols-5">
             {NAV_LINKS.map((link) => {
               const active = link.isActive(pathname)
               return (

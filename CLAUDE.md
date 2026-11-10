@@ -72,7 +72,7 @@ working on this app:
   `PUT`/`DELETE /users/me/avatar`, toasts, and `updateUser({ avatar })` in `authStore` so the navbar,
   dashboard and other views update instantly). The photo also shows on the dashboard profile card and
   as the organizer photo on tournament details. With `bottomTabs` (default) it also renders a
-  fixed mobile bottom tab bar (Dashboard, Tournaments, Create) — pages using it must add `pb-16 sm:pb-0`
+  fixed mobile bottom tab bar (Dashboard, Tournaments, Mine, Teams, Create) — pages using it must add `pb-16 sm:pb-0`
   to their root so content isn't hidden (`DashboardPage`, `AddTournamentPage`). `Navbar` is the switch
   for public pages shared by both audiences (`/tournaments*`): `AppNavbar` without tabs when
   authenticated (so it doesn't clash with the sticky "Add my team" bar), a logo-only bar while the
@@ -87,6 +87,7 @@ working on this app:
   from `GET /tournaments?organizerId=<me>` totals), quick actions, and the user's recent
   tournaments as `TournamentCard`s with shimmer, empty and retry states. It uses the `user` from
   `useAuthStore`.
+- `MyTournamentsPage` (`/my-tournaments`, behind `RequireAuth`, `AppNavbar`; nav link "My tournaments" ("Mine" on the mobile bottom tab; `NAV_LINKS` entries may carry a `desktopLabel`), plus a "View all" link on the Dashboard's "Your tournaments" block): every tournament the logged-in user created, including past and cancelled ones, via `GET /tournaments?organizerId=<me>` (no extra backend endpoint; the list endpoint already filters by organizer). It shares the list with the public `TournamentsPage` through `useTournamentList({ organizerId? })` (`src/hooks/useTournamentList.js`: URL-synced `q` / `status`, 300 ms debounced search, page size 12, Load more, retry) and the `TournamentList` component (search box, status chips, count, skeletons, error, empty state with page-specific text and optional action, grid of `TournamentCard`). Cards open the normal tournament details page.
 - `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
   (no `RequireAuth`) and mobile-first. `TournamentDetailsPage` only composes `Tournament*` components
   (`TournamentHeader`, `TournamentTabs`, `TournamentTeamsTab`, `TournamentMatchesTab`, `TournamentSidebar`, …)

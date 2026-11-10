@@ -159,7 +159,7 @@ function ProfileMenu() {
                 onClick={close}
                 className={`${menuItemClass} text-gray-700 hover:bg-red-50 hover:text-red-600`}
               >
-                {link.label === 'Create' ? 'Create tournament' : link.label}
+                {link.desktopLabel ?? link.label}
               </Link>
             ))}
           </div>

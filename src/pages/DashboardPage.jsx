@@ -150,9 +150,16 @@ function DashboardPage() {
             <section aria-label="Your tournaments">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold">Your tournaments</h2>
-                {!loading && data.total > RECENT_COUNT && (
-                  <span className="text-xs text-gray-500">
-                    Showing {RECENT_COUNT} of {data.total}
+                {!loading && data.total > 0 && (
+                  <span className="flex items-center gap-3 text-xs text-gray-500">
+                    {data.total > RECENT_COUNT && (
+                      <span>
+                        Showing {RECENT_COUNT} of {data.total}
+                      </span>
+                    )}
+                    <Link to="/my-tournaments" className="text-sm font-semibold text-red-600 transition hover:text-red-700">
+                      View all
+                    </Link>
                   </span>
                 )}
               </div>
