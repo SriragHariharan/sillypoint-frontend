@@ -25,6 +25,9 @@ function EnrolledTeamCard({ team, canRemove, onRemove }) {
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-gray-900">{team.name}</p>
           <p className="truncate text-xs text-gray-600">Manager: {team.manager_name}</p>
+          {team.manager_mobile && (
+            <p className="truncate text-xs font-semibold text-gray-900">+91 {team.manager_mobile}</p>
+          )}
         </div>
         {canRemove && !confirming && (
           <button type="button" onClick={() => setConfirming(true)} className={`shrink-0 ${compactSecondaryButtonClass}`}>

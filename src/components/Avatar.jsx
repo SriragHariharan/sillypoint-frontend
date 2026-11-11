@@ -3,6 +3,7 @@ const sizes = {
   sm: 'h-10 w-10 text-sm',
   md: 'h-14 w-14 text-lg',
   lg: 'h-20 w-20 text-2xl',
+  xl: 'h-22 w-22 text-3xl sm:h-26 sm:w-26',
 }
 
 const initialsOf = (name) =>

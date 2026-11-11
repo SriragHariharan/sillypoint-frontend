@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getErrorMessage } from '../lib/api'
 import { notifyError, notifyInfo } from '../lib/notify'
+import { useAuthStore } from '../store/authStore'
 import { addTournamentTeams, fetchTournamentTeams, removeTournamentTeam } from '../lib/tournamentApi'
 
 export function useTournamentTeams(id) {
@@ -8,7 +9,9 @@ export function useTournamentTeams(id) {
   const [enrolled, setEnrolled] = useState({ key: null, teams: [], failed: false })
   const [adding, setAdding] = useState(false)
 
-  const key = `${id}|${reloadKey}`
+  // The organizer also gets the managers' mobiles, so load again once the session is known (or changes)
+  const userId = useAuthStore((state) => state.user?.id ?? null)
+  const key = `${id}|${reloadKey}|${userId}`
 
   useEffect(() => {
     const controller = new AbortController()

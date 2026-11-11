@@ -7,7 +7,6 @@ import RegistrationClosedNote from '../components/RegistrationClosedNote'
 import NotFoundScreen from '../components/NotFoundScreen'
 import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import TournamentHeader from '../components/TournamentHeader'
-import TournamentInfoGrid from '../components/TournamentInfoGrid'
 import TournamentMatchesTab from '../components/TournamentMatchesTab'
 import TournamentOverviewTab from '../components/TournamentOverviewTab'
 import TournamentPageShell from '../components/TournamentPageShell'
@@ -93,13 +92,12 @@ function TournamentDetailsPage() {
         <TournamentHeader tournament={tournament} />
         {showClosedNote && <RegistrationClosedNote lastRegistrationDate={tournament.lastRegistrationDate} />}
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <TournamentInfoGrid tournament={tournament} />
-            <TournamentTabs tab={tab} onChange={setTab} teamCount={teams.teams.length} />
+        <TournamentTabs tab={tab} onChange={setTab} teamCount={teams.teams.length} />
 
-            <div className="mt-5" role="tabpanel">
-              {tab === 'overview' && <TournamentOverviewTab description={tournament.description} />}
+        <div className="mt-5 grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div role="tabpanel">
+              {tab === 'overview' && <TournamentOverviewTab tournament={tournament} />}
               {tab === 'teams' && (
                 <TournamentTeamsTab
                   teams={teams.teams}

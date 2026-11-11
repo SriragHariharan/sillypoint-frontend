@@ -1,12 +1,15 @@
-import { CalendarDays, MapPin, Ticket, Trophy, UserPlus, Users } from 'lucide-react'
+import { CalendarClock, Ticket, Trophy, UserPlus, Users } from 'lucide-react'
 import { formatRupees } from '../lib/formatCurrency'
-import { formatDateRange } from '../lib/formatDate'
+import { formatDate } from '../lib/formatDate'
 import { cardClass, iconTileClass } from '../lib/premiumStyles'
 
 function TournamentInfoGrid({ tournament }) {
   const info = [
-    { label: 'Location', value: tournament.location, icon: MapPin },
-    { label: 'Dates', value: formatDateRange(tournament.startDate, tournament.endDate), icon: CalendarDays },
+    {
+      label: 'Last date to register',
+      value: `${formatDate(tournament.lastRegistrationDate)}${tournament.registrationClosed ? ' (closed)' : ''}`,
+      icon: CalendarClock,
+    },
     {
       label: 'Registration fee',
       value: tournament.registrationFee === 0 ? 'Free' : formatRupees(tournament.registrationFee),

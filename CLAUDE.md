@@ -93,7 +93,8 @@ working on this app:
 - `MyTournamentsPage` (`/my-tournaments`, behind `RequireAuth`, `AppNavbar`; nav link "My tournaments" ("Mine" on the mobile bottom tab; `NAV_LINKS` entries may carry a `desktopLabel`), plus a "View all" link on the Dashboard's "Your tournaments" block): every tournament the logged-in user created, including past and cancelled ones, via `GET /tournaments?organizerId=<me>` (no extra backend endpoint; the list endpoint already filters by organizer). It shares the list with the public `TournamentsPage` through `useTournamentList({ organizerId? })` (`src/hooks/useTournamentList.js`: URL-synced `q` / `status`, 300 ms debounced search, page size 12, Load more, retry) and the `TournamentList` component (search box, status chips, count, skeletons, error, empty state with page-specific text and optional action, grid of `TournamentCard`). Cards open the normal tournament details page.
 - `TournamentsPage` (`/tournaments`) and `TournamentDetailsPage` (`/tournaments/:id`) are **public**
   (no `RequireAuth`) and mobile-first. `TournamentDetailsPage` only composes `Tournament*` components
-  (`TournamentHeader`, `TournamentTabs`, `TournamentTeamsTab`, `TournamentMatchesTab`, `TournamentSidebar`, …)
+  (`TournamentHeader` (logo, status, name, and the location and dates below the name), `TournamentTabs`, `TournamentOverviewTab`, `TournamentTeamsTab`, `TournamentMatchesTab`, `TournamentSidebar`, …).
+  The tab bar sits directly under the header; the Overview tab holds all the details (`TournamentInfoGrid`: last date to register, fee, prize money, players and substitutes per side; the location and dates live in `TournamentHeader`) and the description, while Teams and Matches are their own tabs (no info cards above the tabs). The sidebar (organizer, manage, deadline callout + Add my team) stays beside the tab content
   and the `useTournamentDetails` / `useTournamentTeams` / `useTournamentMatches` / `useAddTeamFlow` hooks, which own
   the data loading and flows; tab definitions are in `src/lib/tournamentTabs.js`. Both are backed by the real API through `fetchTournaments` /
   `fetchTournamentDetails` in `src/lib/tournamentApi.js` (`GET /tournaments?q&status&page&limit` →
@@ -110,7 +111,7 @@ working on this app:
   `ManageTournament` offers Reschedule (`PATCH /tournaments/:id/reschedule`) and Cancel
   (`POST /tournaments/:id/cancel`) and Edit prize money (`PATCH /tournaments/:id`, only `prizeMoney`; the registration fee set at creation can never change) while the tournament is upcoming or live. "Add my team" sends logged-out users to `/login`, adds
   a single team directly, or opens `AddTeamsModal` for several (`POST /tournaments/:id/teams`);
-  `EnrolledTeamCard` shows Remove (`DELETE /tournaments/:id/teams/:teamId`) to the organizer and to
+  `EnrolledTeamCard` shows the manager name, plus the manager mobile only for the tournament's organizer (the API returns `manager_mobile` only to them; `useTournamentTeams` reloads when the logged-in user changes), and Remove (`DELETE /tournaments/:id/teams/:teamId`) to the organizer and to
   whoever added the team. Tournaments carry `registrationFee` (0 shows "Free") and `prizeMoney` (hidden when 0) on cards and details, and `playersPerSide` / `substitutesPerSide` (shown as "Players per side" / "Substitutes per side", "None" when 0) in `TournamentInfoGrid` on the details page. `FeaturedTournaments` shows tournaments still open for registration (`GET /tournaments?registrationOpen=true`, closing soonest first) on the
   landing page. The Navbar hash links are absolute (`/#features`) so they work from non-landing
   pages. Creating a tournament navigates to its details page.

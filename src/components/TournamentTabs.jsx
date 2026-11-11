@@ -5,7 +5,7 @@ function TournamentTabs({ tab, onChange, teamCount }) {
     <div
       role="tablist"
       aria-label="Tournament sections"
-      className="mt-6 flex gap-1 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex"
+      className="mt-5 flex gap-1 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex"
     >
       {TABS.map((item) => (
         <button
