@@ -28,11 +28,11 @@ function FeaturedTournaments() {
   if (tournaments?.length === 0) return null
 
   return (
-    <section id="tournaments" className="relative scroll-mt-16 overflow-hidden bg-gray-950 py-16 sm:py-24">
+    <section id="tournaments" className="relative scroll-mt-16 overflow-hidden bg-gray-50 py-16 sm:py-24">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(55% 45% at 50% 60%, rgba(166, 25, 46, 0.2), transparent 70%)' }}
+        style={{ background: 'radial-gradient(55% 45% at 50% 60%, rgba(166, 25, 46, 0.07), transparent 70%)' }}
       />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -41,7 +41,7 @@ function FeaturedTournaments() {
             eyebrow="Happening now"
             title={
               <>
-                On <span className="text-red-500">Sillypoint</span> right now
+                On <span className="text-red-600">Sillypoint</span> right now
               </>
             }
           >
@@ -49,7 +49,7 @@ function FeaturedTournaments() {
           </SectionHeading>
           <Link
             to="/tournaments"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
           >
             View all tournaments
             <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-0.5" />
@@ -61,8 +61,8 @@ function FeaturedTournaments() {
           className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
         >
           {tournaments === null
-            ? Array.from({ length: FEATURED_COUNT }, (_, index) => <TournamentCardSkeleton key={index} dark />)
-            : tournaments.map((tournament) => <TournamentCard key={tournament.id} tournament={tournament} dark />)}
+            ? Array.from({ length: FEATURED_COUNT }, (_, index) => <TournamentCardSkeleton key={index} />)
+            : tournaments.map((tournament) => <TournamentCard key={tournament.id} tournament={tournament} />)}
         </div>
       </div>
     </section>

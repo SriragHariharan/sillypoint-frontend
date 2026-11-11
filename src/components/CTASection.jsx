@@ -2,8 +2,8 @@ const RINGS = [90, 150, 210, 270]
 
 function CTASection() {
   return (
-    <section id="get-started" className="scroll-mt-16 bg-gray-950 px-5 pb-16 sm:px-6 sm:pb-24">
-      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-6 py-14 text-center shadow-2xl shadow-red-950/60 ring-1 ring-white/15 sm:px-12 sm:py-20">
+    <section id="get-started" className="scroll-mt-16 bg-white px-5 pb-16 sm:px-6 sm:pb-24">
+      <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-6 py-14 text-center shadow-2xl shadow-red-600/25 ring-1 ring-white/15 sm:px-12 sm:py-20">
         <svg
           aria-hidden="true"
           viewBox="0 0 600 600"

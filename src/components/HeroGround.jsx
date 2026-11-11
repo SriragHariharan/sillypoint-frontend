@@ -54,8 +54,8 @@ function Ground({ still }) {
     <svg viewBox="0 0 600 600" className="absolute inset-0 h-full w-full" role="presentation">
       <defs>
         <radialGradient id="hero-vignette" cx="50%" cy="50%" r="50%">
-          <stop offset="55%" stopColor="#000000" stopOpacity="0" />
-          <stop offset="100%" stopColor="#000000" stopOpacity="0.55" />
+          <stop offset="55%" stopColor="#6b7280" stopOpacity="0" />
+          <stop offset="100%" stopColor="#6b7280" stopOpacity="0.18" />
         </radialGradient>
         <filter id="hero-glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="4" />
@@ -63,26 +63,26 @@ function Ground({ still }) {
       </defs>
 
       {STRIPES.map((radius, index) => (
-        <circle key={radius} cx={CX} cy={CY} r={radius} fill={index % 2 === 0 ? '#111827' : '#192231'} />
+        <circle key={radius} cx={CX} cy={CY} r={radius} fill={index % 2 === 0 ? '#f3f4f6' : '#fafafa'} />
       ))}
       <circle cx={CX} cy={CY} r="290" fill="url(#hero-vignette)" />
 
       <g className="origin-center animate-orbit motion-reduce:animate-none [transform-box:fill-box]">
-        <circle cx={CX} cy={CY} r="294" fill="none" stroke="#ffffff" strokeOpacity="0.18" strokeWidth="2" strokeDasharray="2 12" />
+        <circle cx={CX} cy={CY} r="294" fill="none" stroke="#9ca3af" strokeOpacity="0.6" strokeWidth="2" strokeDasharray="2 12" />
       </g>
-      <circle cx={CX} cy={CY} r="150" fill="none" stroke="#ffffff" strokeOpacity="0.14" strokeWidth="1.5" strokeDasharray="6 8" />
+      <circle cx={CX} cy={CY} r="150" fill="none" stroke="#9ca3af" strokeOpacity="0.5" strokeWidth="1.5" strokeDasharray="6 8" />
       <circle cx={CX} cy={CY} r={ROPE_RADIUS} fill="none" stroke={RED} strokeWidth="4" />
 
-      <path d={GLOW_ARC} fill="none" stroke="#f87171" strokeWidth="9" strokeLinecap="round" filter="url(#hero-glow)" opacity={still ? 0.9 : 0}>
+      <path d={GLOW_ARC} fill="none" stroke="#dd5964" strokeWidth="9" strokeLinecap="round" filter="url(#hero-glow)" opacity={still ? 0.9 : 0}>
         {loop('opacity', '0;0;1;0.35;0;0', '0;0.32;0.34;0.5;0.6;1')}
       </path>
 
-      <rect x="270" y="185" width="60" height="230" rx="4" fill="#ffffff" fillOpacity="0.06" stroke="#ffffff" strokeOpacity="0.14" />
-      <g stroke="#ffffff" strokeOpacity="0.45" strokeWidth="1.5">
+      <rect x="270" y="185" width="60" height="230" rx="4" fill="#ffffff" fillOpacity="0.95" stroke="#d1d5db" strokeOpacity="1" />
+      <g stroke="#6b7280" strokeOpacity="0.6" strokeWidth="1.5">
         <line x1="262" y1="215" x2="338" y2="215" />
         <line x1="262" y1="385" x2="338" y2="385" />
       </g>
-      <g stroke="#ffffff" strokeOpacity="0.8" strokeWidth="1.5">
+      <g stroke="#374151" strokeOpacity="0.9" strokeWidth="1.5">
         {[292, 300, 308].map((x) => (
           <g key={x}>
             <line x1={x} y1="184" x2={x} y2="194" />
@@ -92,25 +92,25 @@ function Ground({ still }) {
       </g>
 
       {FIELDERS.map(([x, y], index) => (
-        <circle key={index} cx={x} cy={y} r="5" fill="#ffffff" opacity="0.4">
+        <circle key={index} cx={x} cy={y} r="5" fill="#6b7280" opacity="0.4">
           {still ? null : (
             <animate attributeName="opacity" values="0.22;0.6;0.22" dur="4s" begin={`${(index * 0.45).toFixed(2)}s`} repeatCount="indefinite" />
           )}
         </circle>
       ))}
 
-      <circle cx="300" cy={still ? 192 : 150} r="7" fill="#ffffff">
+      <circle cx="300" cy={still ? 192 : 150} r="7" fill="#111827">
         {loop('cy', '150;192;192;150;150', '0;0.1;0.6;0.7;1')}
       </circle>
-      <circle cx="313" cy="398" r="7" fill="#ef4444" />
+      <circle cx="313" cy="398" r="7" fill="#a6192e" />
 
-      <circle cx="300" cy="396" r="0" fill="none" stroke="#ffffff" strokeWidth="3" opacity="0">
+      <circle cx="300" cy="396" r="0" fill="none" stroke="#9ca3af" strokeWidth="3" opacity="0">
         {loop('r', '0;0;30;30', '0;0.2;0.27;1')}
         {loop('opacity', '0;0.9;0;0', '0;0.2;0.27;1')}
       </circle>
 
       {[0, 0.045].map((offset, index) => (
-        <circle key={index} cx={LANDING.x} cy={LANDING.y} r="0" fill="none" stroke="#f87171" strokeWidth={index === 0 ? 4 : 2} opacity="0">
+        <circle key={index} cx={LANDING.x} cy={LANDING.y} r="0" fill="none" stroke="#dd5964" strokeWidth={index === 0 ? 4 : 2} opacity="0">
           {loop('r', '0;0;80;80', `0;${0.32 + offset};${0.5 + offset};1`)}
           {loop('opacity', '0;0.9;0;0', `0;${0.32 + offset};${0.5 + offset};1`)}
         </circle>
@@ -122,7 +122,7 @@ function Ground({ still }) {
         </g>
       ) : (
         TRAIL.map(({ delay, opacity, radius }) => (
-          <g key={delay} opacity="0" style={{ filter: delay === 0 ? 'drop-shadow(0 0 6px rgba(248, 113, 113, 0.9))' : undefined }}>
+          <g key={delay} opacity="0" style={{ filter: delay === 0 ? 'drop-shadow(0 0 6px rgba(194, 31, 55, 0.55))' : undefined }}>
             <animateMotion
               dur={LOOP}
               begin={`${delay}s`}
@@ -150,7 +150,7 @@ function Ground({ still }) {
           {still ? null : (
             <animateTransform attributeName="transform" type="scale" values="0;0;1.25;1;1;0;0" keyTimes="0;0.32;0.36;0.4;0.62;0.68;1" dur={LOOP} repeatCount="indefinite" />
           )}
-          <text textAnchor="middle" fontSize="46" fontWeight="900" fill="#ffffff" stroke={RED} strokeWidth="1.5" letterSpacing="2">
+          <text textAnchor="middle" fontSize="46" fontWeight="900" fill={RED} stroke="#ffffff" strokeWidth="4" paintOrder="stroke" letterSpacing="2">
             SIX
           </text>
         </g>

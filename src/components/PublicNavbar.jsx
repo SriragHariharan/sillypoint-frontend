@@ -23,15 +23,10 @@ const THEMES = {
     header: 'sticky top-0 border-b border-gray-100 bg-white/90 backdrop-blur',
     panel: 'border-t border-gray-100 bg-white',
   },
-  dark: {
-    brand: 'text-white',
-    link: 'text-gray-200 hover:bg-white/10 hover:text-white',
-    active: 'bg-white/10 text-white',
-    login: 'text-gray-200 hover:text-white',
-    toggle: 'text-white hover:bg-white/10',
-    outline: 'border-white/25 text-white hover:border-white hover:bg-white/10',
-    header: 'fixed inset-x-0 top-0 border-b border-white/10 bg-gray-950/55 backdrop-blur-xl',
-    panel: 'border-t border-white/10 bg-gray-950/70 backdrop-blur-xl',
+  glass: {
+    ...lightText,
+    header: 'fixed inset-x-0 top-0 border-b border-gray-200/70 bg-white/70 backdrop-blur-xl',
+    panel: 'border-t border-gray-200/70 bg-white/90 backdrop-blur-xl',
   },
 }
 
@@ -52,13 +47,13 @@ function NavItem({ link, active, className, onClick, theme }) {
   )
 }
 
-// With `glass` the bar floats over the dark page as frosted glass
+// With `glass` the bar floats over the page as frosted glass
 function PublicNavbar({ glass = false }) {
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
   const authenticated = useAuthStore((state) => state.status === 'authenticated')
 
-  const theme = THEMES[glass ? 'dark' : 'solid']
+  const theme = THEMES[glass ? 'glass' : 'solid']
   const isActive = (link) => Boolean(link.to) && pathname.startsWith(link.to)
   const close = () => setOpen(false)
 
