@@ -12,6 +12,7 @@ import ScorerAccessCard from '../components/ScorerAccessCard'
 import TournamentPageShell from '../components/TournamentPageShell'
 import { useMatchDetails } from '../hooks/useMatchDetails'
 import { formatMatchDateTime } from '../lib/formatDate'
+import { isMatchCompleted } from '../lib/matchResult'
 import { matchStageLabel } from '../lib/matchStages'
 import { useAuthStore } from '../store/authStore'
 
@@ -62,7 +63,8 @@ function MatchDetailsPage() {
   const open = tournament.status === 'upcoming' || tournament.status === 'live'
   const isOrganizer = Boolean(user) && user.id === tournament.organizerId
   const notStarted = new Date(match.scheduledAt).getTime() > openedAt
-  const canReschedule = isOrganizer && open && notStarted
+  const canReschedule =
+    isOrganizer && open && notStarted && !match.scoringStartedAt && !isMatchCompleted(match)
 
   return (
     <TournamentPageShell bottomTabs>
