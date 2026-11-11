@@ -1,22 +1,11 @@
 import { useScorecard } from '../hooks/useScorecard'
-import RetryPanel from './RetryPanel'
-import ScorecardView from './ScorecardView'
-import Skeleton from './Skeleton'
+import ScorecardBody from './ScorecardBody'
 
+// A match's scorecard that loads itself (the scorer's screen); the public match page shares one fetch with its top card
 function ScorecardPanel({ matchId, refreshKey }) {
   const { scorecard, loading, failed, retry } = useScorecard(matchId, refreshKey)
 
-  if (loading) {
-    return (
-      <div aria-busy="true">
-        <span className="sr-only">Loading the scorecard…</span>
-        <Skeleton className="h-40 rounded-2xl" />
-      </div>
-    )
-  }
-  if (!scorecard) return <RetryPanel message={failed ? "Couldn't load the scorecard." : 'No scorecard yet.'} onRetry={retry} />
-
-  return <ScorecardView scorecard={scorecard} />
+  return <ScorecardBody scorecard={scorecard} loading={loading} failed={failed} retry={retry} />
 }
 
 export default ScorecardPanel

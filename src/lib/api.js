@@ -38,6 +38,8 @@ const bearerTokenFor = (url) =>
   url?.startsWith('/scorer/') ? useScorerStore.getState().accessToken : useAuthStore.getState().accessToken
 
 api.interceptors.request.use((config) => {
+  // Public reads (polled often) go without a token: no preflight request, no pointless refresh
+  if (config.skipAuth) return config
   const accessToken = bearerTokenFor(config.url)
   if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
   return config

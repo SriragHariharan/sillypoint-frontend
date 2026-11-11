@@ -8,8 +8,11 @@ import NotFoundScreen from '../components/NotFoundScreen'
 import RingsBackdrop from '../components/RingsBackdrop'
 import ScorerAccessCard from '../components/ScorerAccessCard'
 import TournamentPageShell from '../components/TournamentPageShell'
+import MatchStatusBand from '../components/MatchStatusBand'
 import { useMatchDetails } from '../hooks/useMatchDetails'
+import { useScorecard } from '../hooks/useScorecard'
 import { formatMatchDateTime } from '../lib/formatDate'
+import { inningsOfTeam, isMatchCompleted, isMatchLive, liveLine, winnerOf } from '../lib/matchResult'
 import { matchStageLabel } from '../lib/matchStages'
 import { useAuthStore } from '../store/authStore'
 
@@ -17,6 +20,11 @@ function MatchDetailsPage() {
   const { id } = useParams()
   const user = useAuthStore((state) => state.user)
   const details = useMatchDetails(id)
+  // One fetch feeds the top card and the scorecards below; polls itself while the match is live
+  const scorecardState = useScorecard(details.match?.id, 0, {
+    live: isMatchLive(details.match),
+    enabled: Boolean(details.match?.scoringStartedAt),
+  })
 
   if (details.loading) {
     return (
@@ -53,6 +61,24 @@ function MatchDetailsPage() {
   const stage = matchStageLabel(match.stage)
   const isOrganizer = Boolean(user) && user.id === tournament.organizerId
 
+  // The scorecard's copy of the match is the freshest (result and winner appear the moment the match ends)
+  const { scorecard, loading: scoresLoading } = scorecardState
+  const state = scorecard?.match ?? match
+  const started = Boolean(state.scoringStartedAt)
+  const winner = winnerOf(state)
+  const sideProps = (team) => {
+    const innings = inningsOfTeam(scorecard, team.id)
+    return {
+      team,
+      onDark: true,
+      innings,
+      scoreLoading: started && scoresLoading,
+      yetToBat: started && scorecard !== null && !innings,
+      winner: winner?.id === team.id,
+      dim: Boolean(winner) && winner.id !== team.id,
+    }
+  }
+
   return (
     <TournamentPageShell bottomTabs>
       <main className="mx-auto max-w-3xl px-5 pb-16 pt-5 sm:px-6 sm:pt-8">
@@ -84,13 +110,20 @@ function MatchDetailsPage() {
 
           <div className="relative px-4 py-6 sm:px-8 sm:py-8">
             <div className="flex items-start gap-3 sm:gap-6">
-              <MatchTeamSide team={match.teamA} onDark />
+              <MatchTeamSide {...sideProps(match.teamA)} />
               <span className="mt-6 shrink-0 rounded-full bg-white px-3 py-1 text-xs font-black tracking-wider text-red-700">
                 VS
               </span>
-              <MatchTeamSide team={match.teamB} onDark />
+              <MatchTeamSide {...sideProps(match.teamB)} />
             </div>
           </div>
+
+          <MatchStatusBand
+            live={isMatchLive(state)}
+            completed={isMatchCompleted(state)}
+            resultSummary={state.resultSummary}
+            liveText={liveLine(scorecard)}
+          />
 
           <div className="relative border-t border-white/15 bg-red-950/30 px-4 py-4 sm:px-6">
             <dl className="grid gap-3 sm:grid-cols-2 sm:gap-x-8">
@@ -112,7 +145,7 @@ function MatchDetailsPage() {
           </div>
         </section>
 
-        <MatchScorecardSection match={match} />
+        <MatchScorecardSection match={match} state={scorecardState} />
 
         {isOrganizer && <ScorerAccessCard matchId={match.id} />}
 

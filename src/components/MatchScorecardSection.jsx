@@ -1,16 +1,14 @@
-import { cardClass, infoNoteClass } from '../lib/premiumStyles'
-import ScorecardPanel from './ScorecardPanel'
+import { cardClass } from '../lib/premiumStyles'
+import ScorecardBody from './ScorecardBody'
 
-function MatchScorecardSection({ match }) {
+// Only the scorecards: the score, status and result are on the match's top card
+function MatchScorecardSection({ match, state }) {
   if (!match.scoringStartedAt) return null
 
   return (
     <section className={`${cardClass} mt-4 p-4 sm:p-6`}>
-      {match.resultSummary && (
-        <p className={`${infoNoteClass} mb-5 text-center text-sm font-black text-red-700`}>{match.resultSummary}</p>
-      )}
       <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-red-700">Scorecard</h2>
-      <ScorecardPanel matchId={match.id} refreshKey={0} />
+      <ScorecardBody {...state} />
     </section>
   )
 }

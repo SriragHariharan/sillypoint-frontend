@@ -9,7 +9,7 @@ import Avatar from './Avatar'
 function TeamSide({ team, winner = false }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-2 text-center">
-      <span className={`inline-flex rounded-xl ${winner ? 'ring-2 ring-red-600 ring-offset-2' : ''}`}>
+      <span className={`inline-flex rounded-xl ${winner ? 'ring-2 ring-amber-400 ring-offset-2' : ''}`}>
         <Avatar src={team.logo} name={team.name} size="md" rounded="rounded-xl" />
       </span>
       <span className={`w-full truncate text-sm font-bold ${winner ? 'text-red-700' : 'text-gray-900'}`}>

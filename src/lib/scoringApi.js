@@ -27,4 +27,5 @@ export const undoBall = (inningsNumber, expectedVersion) => change(inningsNumber
 
 export const endInnings = (inningsNumber, expectedVersion) => change(inningsNumber, 'end', { expectedVersion })
 
-export const fetchScorecard = (matchId, signal) => api.get(`/matches/${matchId}/scorecard`, { signal }).then(dataOf)
+export const fetchScorecard = (matchId, signal) =>
+  api.get(`/matches/${matchId}/scorecard`, { signal, skipAuth: true }).then(dataOf)
