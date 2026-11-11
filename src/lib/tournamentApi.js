@@ -42,3 +42,6 @@ export const addTournamentTeams = (id, teamIds) =>
   api.post(`/tournaments/${id}/teams`, { team_ids: teamIds }).then((response) => response.data.teams)
 
 export const removeTournamentTeam = (id, teamId) => api.delete(`/tournaments/${id}/teams/${teamId}`)
+
+export const fetchTournamentStandings = (id, signal) =>
+  api.get(`/tournaments/${id}/standings`, { signal }).then((response) => response.data.standings)

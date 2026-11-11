@@ -5,7 +5,7 @@ function TournamentTabs({ tab, onChange, teamCount }) {
     <div
       role="tablist"
       aria-label="Tournament sections"
-      className="mt-5 flex gap-1 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex"
+      className="mt-5 flex gap-0.5 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex"
     >
       {TABS.map((item) => (
         <button
@@ -14,7 +14,7 @@ function TournamentTabs({ tab, onChange, teamCount }) {
           role="tab"
           aria-selected={tab === item.value}
           onClick={() => onChange(item.value)}
-          className={`min-h-11 flex-1 rounded-full px-3 text-sm font-semibold transition sm:flex-none sm:px-6 ${
+          className={`min-h-11 flex-1 whitespace-nowrap rounded-full px-1.5 text-[13px] font-semibold transition sm:flex-none sm:px-6 sm:text-sm ${
             tab === item.value
               ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
               : 'text-gray-600 hover:text-red-600'

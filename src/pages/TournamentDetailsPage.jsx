@@ -10,6 +10,7 @@ import TournamentHeader from '../components/TournamentHeader'
 import TournamentMatchesTab from '../components/TournamentMatchesTab'
 import TournamentOverviewTab from '../components/TournamentOverviewTab'
 import TournamentPageShell from '../components/TournamentPageShell'
+import TournamentPointsTab from '../components/TournamentPointsTab'
 import TournamentSidebar from '../components/TournamentSidebar'
 import TournamentTabs from '../components/TournamentTabs'
 import TournamentTeamsTab from '../components/TournamentTeamsTab'
@@ -94,7 +95,7 @@ function TournamentDetailsPage() {
         <TournamentTabs tab={tab} onChange={setTab} teamCount={teams.teams.length} />
 
         <div className={`mt-5 grid gap-6 ${showAddTeam ? 'lg:grid-cols-3' : ''}`}>
-          <div className={showAddTeam ? 'lg:col-span-2' : 'max-w-3xl'}>
+          <div className={`min-w-0 ${showAddTeam ? 'lg:col-span-2' : 'max-w-3xl'}`}>
             <div role="tabpanel">
               {tab === 'overview' && <TournamentOverviewTab tournament={tournament} />}
               {tab === 'teams' && (
@@ -117,6 +118,7 @@ function TournamentDetailsPage() {
                   onAddMatch={matches.openAddMatch}
                 />
               )}
+              {tab === 'points' && <TournamentPointsTab tournamentId={id} />}
             </div>
           </div>
 
