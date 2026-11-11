@@ -6,13 +6,15 @@ import PageHeader from '../components/PageHeader'
 import TournamentList from '../components/TournamentList'
 import { useTournamentList } from '../hooks/useTournamentList'
 import { primaryButtonClass } from '../lib/premiumStyles'
+import { useAuthStore } from '../store/authStore'
 
 function TournamentsPage() {
   const list = useTournamentList()
+  const authenticated = useAuthStore((state) => state.status === 'authenticated')
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
+    <div className={`min-h-screen bg-white text-gray-900 ${authenticated ? 'pb-16 sm:pb-0' : ''}`}>
+      <Navbar bottomTabs />
 
       <main className="mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-6 sm:pt-10">
         <PageHeader

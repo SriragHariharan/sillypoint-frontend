@@ -7,7 +7,7 @@ import RingsBackdrop from '../components/RingsBackdrop'
 import ScorerMatchActions from '../components/ScorerMatchActions'
 import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
-import { isConcluded } from '../lib/matchResult'
+import { isMatchCompleted } from '../lib/matchResult'
 import { secondaryButtonClass } from '../lib/premiumStyles'
 import { isScoringOpen } from '../lib/scoringWindow'
 import { useScorerStore } from '../store/scorerStore'
@@ -31,15 +31,15 @@ function ScorerWelcomePage() {
     return <ScorerWaitingScreen onLogOut={logOut} />
   }
 
-  const concluded = isConcluded(match)
+  const completed = isMatchCompleted(match)
 
   return (
     <AuthLayout
       eyebrow="Scorer"
-      title={concluded ? 'Match completed' : 'Welcome, scorer'}
+      title={completed ? 'Match completed' : 'Welcome, scorer'}
       subtitle={
-        concluded
-          ? 'This match has been concluded and scoring is closed.'
+        completed
+          ? 'This match is over and scoring is closed.'
           : 'You are the scorer for this match. Set up the players, toss and overs, then start scoring.'
       }
     >
@@ -61,7 +61,7 @@ function ScorerWelcomePage() {
         </div>
       </div>
 
-      {concluded ? <ConcludedResult match={match} /> : <ScorerMatchActions match={match} />}
+      {completed ? <ConcludedResult match={match} /> : <ScorerMatchActions match={match} />}
 
       <button type="button" onClick={logOut} className={`mt-5 w-full ${secondaryButtonClass}`}>
         Log out

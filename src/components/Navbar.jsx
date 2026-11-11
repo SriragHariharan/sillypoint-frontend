@@ -3,10 +3,10 @@ import { useAuthStore } from '../store/authStore'
 import AppNavbar from './AppNavbar'
 import PublicNavbar from './PublicNavbar'
 
-function Navbar() {
+function Navbar({ bottomTabs = false }) {
   const status = useAuthStore((state) => state.status)
 
-  if (status === 'authenticated') return <AppNavbar bottomTabs={false} />
+  if (status === 'authenticated') return <AppNavbar bottomTabs={bottomTabs} />
 
   if (status === 'loading') {
     return (

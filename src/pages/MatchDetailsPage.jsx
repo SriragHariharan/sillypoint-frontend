@@ -28,7 +28,7 @@ function MatchDetailsPage() {
 
   if (details.loading) {
     return (
-      <TournamentPageShell>
+      <TournamentPageShell bottomTabs>
         <MatchDetailsSkeleton />
       </TournamentPageShell>
     )
@@ -36,7 +36,7 @@ function MatchDetailsPage() {
 
   if (details.failed) {
     return (
-      <TournamentPageShell>
+      <TournamentPageShell bottomTabs>
         <LoadErrorScreen title="Couldn't load this match" onRetry={details.retry} />
       </TournamentPageShell>
     )
@@ -46,7 +46,7 @@ function MatchDetailsPage() {
 
   if (!match) {
     return (
-      <TournamentPageShell>
+      <TournamentPageShell bottomTabs>
         <NotFoundScreen
           title="Match not found"
           message="It may have been removed or the link is wrong."
@@ -65,7 +65,7 @@ function MatchDetailsPage() {
   const canReschedule = isOrganizer && open && notStarted
 
   return (
-    <TournamentPageShell>
+    <TournamentPageShell bottomTabs>
       <main className="mx-auto max-w-3xl px-5 pb-16 pt-5 sm:px-6 sm:pt-8">
         <Link
           to={`/tournaments/${tournament.id}?tab=matches`}

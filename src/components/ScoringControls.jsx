@@ -58,9 +58,13 @@ function ScoringControls({ scoring, current, players }) {
       )}
       {sheet === END && (
         <ConfirmModal
-          title="End this innings?"
-          message="The innings will be closed with the score as it is now. You can still undo the last ball afterwards."
-          confirmLabel="End innings"
+          title={current.number === 2 ? 'End the match?' : 'End this innings?'}
+          message={
+            current.number === 2
+              ? 'The match ends with the score as it is now and the result becomes final. It cannot be undone.'
+              : 'The innings will be closed with the score as it is now. You can still undo the last ball afterwards.'
+          }
+          confirmLabel={current.number === 2 ? 'End match' : 'End innings'}
           busy={busy}
           onClose={close}
           onConfirm={() => finishWith(scoring.finish)}
