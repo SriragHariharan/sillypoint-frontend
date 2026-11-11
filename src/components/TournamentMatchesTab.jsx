@@ -17,7 +17,7 @@ function MatchList({ matches, loading, failed, onRetry, canAddMatch }) {
   }
 
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
+    <ul className="grid gap-4 sm:grid-cols-2">
       {matches.map((match) => (
         <MatchCard key={match.id} match={match} />
       ))}

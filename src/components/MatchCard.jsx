@@ -8,8 +8,8 @@ import Avatar from './Avatar'
 function TeamSide({ team }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-2 text-center">
-      <Avatar src={team.logo} name={team.name} size="sm" rounded="rounded-xl" />
-      <span className="w-full truncate text-sm font-semibold text-gray-900">{team.name}</span>
+      <Avatar src={team.logo} name={team.name} size="md" rounded="rounded-xl" />
+      <span className="w-full truncate text-sm font-bold text-gray-900">{team.name}</span>
     </div>
   )
 }
@@ -18,27 +18,29 @@ function MatchCard({ match }) {
   const stage = matchStageLabel(match.stage)
 
   return (
-    <li className={`${cardClass} ${cardHoverClass}`}>
-      <Link to={`/matches/${match.id}`} className="block rounded-2xl p-4">
+    <li className={`${cardClass} ${cardHoverClass} overflow-hidden`}>
+      <Link to={`/matches/${match.id}`} className="block">
         {stage && (
-          <p className="mb-3 flex justify-center">
+          <div className="border-b border-gray-200 bg-gray-50 px-4 py-2">
             <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">{stage}</span>
-          </p>
+          </div>
         )}
-        <div className="flex items-center gap-3">
-          <TeamSide team={match.teamA} />
-          <span className="shrink-0 rounded-full bg-red-600 px-2.5 py-1 text-xs font-black tracking-wider text-white">
-            VS
-          </span>
-          <TeamSide team={match.teamB} />
+        <div className="p-4 sm:p-5">
+          <div className="flex items-center gap-3">
+            <TeamSide team={match.teamA} />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-600 text-xs font-black tracking-wider text-white shadow-md shadow-red-600/20">
+              VS
+            </span>
+            <TeamSide team={match.teamB} />
+          </div>
+          {match.notes && (
+            <p className="mt-3 line-clamp-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>
+          )}
         </div>
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
+        <p className="flex items-center justify-center gap-1.5 border-t border-red-100 bg-red-50/60 px-4 py-2.5 text-xs font-semibold text-gray-700">
           <Calendar className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
           {formatMatchDateTime(match.scheduledAt)}
         </p>
-        {match.notes && (
-          <p className="mt-2 line-clamp-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>
-        )}
       </Link>
     </li>
   )

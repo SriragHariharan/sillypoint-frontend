@@ -20,6 +20,11 @@ export const compactSecondaryButtonClass =
 
 export const cardClass = 'rounded-2xl border border-gray-200 bg-white shadow-sm'
 
+export const topAccentClass =
+  'relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-red-600'
+
+export const statTileClass = `${cardClass} p-4 ${topAccentClass}`
+
 export const cardHoverClass =
   'transition hover:-translate-y-0.5 hover:border-red-600 hover:shadow-md'
 

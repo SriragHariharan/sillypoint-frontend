@@ -1,11 +1,12 @@
 import { CalendarClock } from 'lucide-react'
 import { formatDate } from '../lib/formatDate'
+import { topAccentClass } from '../lib/premiumStyles'
 
 function RegistrationDeadline({ date, compact = false, className = '' }) {
   return (
     <div
       className={`flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 ${
-        compact ? 'px-3 py-2' : 'px-4 py-3'
+        compact ? 'px-3 py-2' : `p-4 ${topAccentClass}`
       } ${className}`}
     >
       <span
@@ -17,7 +18,7 @@ function RegistrationDeadline({ date, compact = false, className = '' }) {
       </span>
       <div className="min-w-0">
         <p className="text-[11px] font-bold uppercase tracking-wider text-red-700">Last date to register</p>
-        <p className={`font-black leading-tight text-gray-900 ${compact ? 'text-base' : 'text-lg'}`}>
+        <p className={`font-black leading-tight text-gray-900 ${compact ? 'text-base' : 'text-xl'}`}>
           {formatDate(date)}
         </p>
       </div>

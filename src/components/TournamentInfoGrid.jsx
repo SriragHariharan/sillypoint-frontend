@@ -1,16 +1,31 @@
 import { CalendarClock, Ticket, Trophy, UserPlus, Users } from 'lucide-react'
 import { formatRupees } from '../lib/formatCurrency'
 import { formatDate } from '../lib/formatDate'
-import { cardClass, iconTileClass } from '../lib/premiumStyles'
-import Avatar from './Avatar'
+import { statTileClass } from '../lib/premiumStyles'
+
+function InfoTile({ label, value, icon: Icon, closed = false, className = '' }) {
+  return (
+    <div className={`${statTileClass} ${className}`}>
+      <span className="absolute right-3 top-3.5 flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-600">
+        <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+      </span>
+      <div className="flex flex-col-reverse pr-11">
+        <dt className="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
+        <dd className="break-words text-lg font-black leading-tight text-gray-900 sm:text-xl">
+          {value}
+          {closed && (
+            <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 align-middle text-[11px] font-bold uppercase tracking-wide text-gray-600">
+              Closed
+            </span>
+          )}
+        </dd>
+      </div>
+    </div>
+  )
+}
 
 function TournamentInfoGrid({ tournament }) {
-  const info = [
-    {
-      label: 'Last date to register',
-      value: `${formatDate(tournament.lastRegistrationDate)}${tournament.registrationClosed ? ' (closed)' : ''}`,
-      icon: CalendarClock,
-    },
+  const stats = [
     {
       label: 'Registration fee',
       value: tournament.registrationFee === 0 ? 'Free' : formatRupees(tournament.registrationFee),
@@ -25,34 +40,19 @@ function TournamentInfoGrid({ tournament }) {
       value: tournament.substitutesPerSide === 0 ? 'None' : String(tournament.substitutesPerSide),
       icon: UserPlus,
     },
-    {
-      label: 'Organizer contact',
-      value: (
-        <a
-          href={`tel:+91${tournament.organizer.mobile}`}
-          className="text-red-600 transition hover:text-red-700"
-        >
-          +91 {tournament.organizer.mobile}
-        </a>
-      ),
-      leading: <Avatar src={tournament.organizer.avatar} size="sm" rounded="rounded-xl" />,
-    },
   ]
 
   return (
-    <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {info.map(({ label, value, icon: Icon, leading }) => (
-        <div key={label} className={`${cardClass} flex items-center gap-3 p-3.5`}>
-          {leading ?? (
-            <span className={iconTileClass}>
-              <Icon className="h-5 w-5" aria-hidden="true" />
-            </span>
-          )}
-          <div className="min-w-0">
-            <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
-            <dd className="mt-0.5 break-words text-sm font-semibold text-gray-900">{value}</dd>
-          </div>
-        </div>
+    <dl className="grid grid-cols-2 gap-3 sm:gap-4 [&>*:last-child:nth-child(even)]:col-span-2">
+      <InfoTile
+        label="Last date to register"
+        value={formatDate(tournament.lastRegistrationDate)}
+        icon={CalendarClock}
+        closed={tournament.registrationClosed}
+        className="col-span-2"
+      />
+      {stats.map((stat) => (
+        <InfoTile key={stat.label} {...stat} />
       ))}
     </dl>
   )
