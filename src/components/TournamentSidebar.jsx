@@ -2,6 +2,7 @@ import { cardClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
 import AddTeamButton from './AddTeamButton'
 import ManageTournament from './ManageTournament'
+import RegistrationDeadline from './RegistrationDeadline'
 
 function TournamentSidebar({ tournament, canManage, showAddTeam, onAddTeam, addTeamDisabled, onChanged }) {
   const { organizer } = tournament
@@ -35,7 +36,10 @@ function TournamentSidebar({ tournament, canManage, showAddTeam, onAddTeam, addT
       )}
 
       {showAddTeam && (
-        <AddTeamButton onClick={onAddTeam} disabled={addTeamDisabled} className="mt-4 hidden w-full sm:block" />
+        <div className="mt-4 hidden sm:block">
+          <RegistrationDeadline date={tournament.lastRegistrationDate} className="mb-3" />
+          <AddTeamButton onClick={onAddTeam} disabled={addTeamDisabled} className="w-full" />
+        </div>
       )}
     </aside>
   )

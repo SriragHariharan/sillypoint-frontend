@@ -12,6 +12,7 @@ export const createTournament = ({
   location,
   startDate,
   endDate,
+  lastRegistrationDate,
   registrationFee,
   prizeMoney,
   playersPerSide,
@@ -24,6 +25,7 @@ export const createTournament = ({
   formData.append('location', location)
   formData.append('startDate', startDate)
   formData.append('endDate', endDate)
+  formData.append('lastRegistrationDate', lastRegistrationDate)
   formData.append('registrationFee', registrationFee)
   formData.append('prizeMoney', prizeMoney)
   formData.append('playersPerSide', playersPerSide)

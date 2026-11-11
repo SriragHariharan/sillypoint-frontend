@@ -39,6 +39,7 @@ function AddTournamentPage() {
       description: '',
       logo: null,
       location: '',
+      lastRegistrationDate: '',
       startDate: '',
       endDate: '',
       registrationFee: '0',

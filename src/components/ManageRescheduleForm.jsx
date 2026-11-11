@@ -1,6 +1,6 @@
 import { useForm, useWatch } from 'react-hook-form'
 import { inputClass, labelClass } from '../lib/formStyles'
-import { endDateValidation, startDateValidation, todayISO } from '../lib/validators'
+import { endDateValidation, rescheduleStartValidation, todayISO } from '../lib/validators'
 import FieldError from './FieldError'
 import ModalFooter from './ModalFooter'
 
@@ -23,9 +23,9 @@ function ManageRescheduleForm({ tournament, busy, onSubmit, onBack }) {
         <input
           id="rescheduleStart"
           type="date"
-          min={todayISO()}
+          min={tournament.lastRegistrationDate > todayISO() ? tournament.lastRegistrationDate : todayISO()}
           className={inputClass(errors.startDate)}
-          {...register('startDate', { ...startDateValidation, deps: ['endDate'] })}
+          {...register('startDate', rescheduleStartValidation(tournament.lastRegistrationDate))}
         />
         <FieldError error={errors.startDate} />
       </div>

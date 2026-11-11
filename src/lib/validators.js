@@ -138,6 +138,24 @@ export const startDateValidation = {
   validate: (value) => value >= todayISO() || 'Start date cannot be in the past',
 }
 
+export const lastRegistrationDateValidation = (getStartDate) => ({
+  required: 'Select the last date of registration',
+  validate: (value) => {
+    if (value < todayISO()) return 'Last date of registration cannot be in the past'
+    const start = getStartDate()
+    return !start || value <= start || 'Must be on or before the start date'
+  },
+})
+
+export const rescheduleStartValidation = (lastRegistrationDate) => ({
+  required: startDateValidation.required,
+  validate: (value) => {
+    if (value < todayISO()) return 'Start date cannot be in the past'
+    return value >= lastRegistrationDate || 'Start date cannot be before the last date of registration'
+  },
+  deps: ['endDate'],
+})
+
 export const endDateValidation = (getStartDate) => ({
   required: 'Select the end date',
   validate: (value) => {

@@ -3,6 +3,7 @@ import AddMatchModal from '../components/AddMatchModal'
 import AddTeamsModal from '../components/AddTeamsModal'
 import LoadErrorScreen from '../components/LoadErrorScreen'
 import MobileAddTeamBar from '../components/MobileAddTeamBar'
+import RegistrationClosedNote from '../components/RegistrationClosedNote'
 import NotFoundScreen from '../components/NotFoundScreen'
 import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import TournamentHeader from '../components/TournamentHeader'
@@ -80,15 +81,17 @@ function TournamentDetailsPage() {
   const isOrganizer = Boolean(user) && user.id === tournament.organizer.id
   const canManage = tournament.status === 'upcoming' || tournament.status === 'live'
   const canAddMatch = isOrganizer && canManage
-  const showAddTeam =
-    !isOrganizer && authStatus !== 'loading' && tournament.status !== 'cancelled' && tournament.status !== 'completed'
+  const acceptsTeams = tournament.status !== 'cancelled' && tournament.status !== 'completed'
+  const showAddTeam = !isOrganizer && authStatus !== 'loading' && acceptsTeams && !tournament.registrationClosed
+  const showClosedNote = !isOrganizer && acceptsTeams && tournament.registrationClosed
 
   return (
     <TournamentPageShell>
       <main
-        className={`mx-auto max-w-6xl px-5 pt-5 sm:px-6 sm:pb-16 sm:pt-8 ${showAddTeam ? 'pb-32' : 'pb-16'}`}
+        className={`mx-auto max-w-6xl px-5 pt-5 sm:px-6 sm:pb-16 sm:pt-8 ${showAddTeam ? 'pb-44' : 'pb-16'}`}
       >
         <TournamentHeader tournament={tournament} />
+        {showClosedNote && <RegistrationClosedNote lastRegistrationDate={tournament.lastRegistrationDate} />}
 
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
@@ -131,7 +134,13 @@ function TournamentDetailsPage() {
         </div>
       </main>
 
-      {showAddTeam && <MobileAddTeamBar onClick={addTeam.onAddTeam} disabled={addTeam.busy} />}
+      {showAddTeam && (
+        <MobileAddTeamBar
+          onClick={addTeam.onAddTeam}
+          disabled={addTeam.busy}
+          lastRegistrationDate={tournament.lastRegistrationDate}
+        />
+      )}
       {matches.showAddMatch && (
         <AddMatchModal
           teams={teams.teams}
