@@ -13,11 +13,8 @@ function FeaturedTournaments() {
 
   useEffect(() => {
     const controller = new AbortController()
-    const request = (status) =>
-      fetchTournaments({ status, limit: FEATURED_COUNT }, controller.signal).then((data) => data.tournaments)
-
-    Promise.all([request('live'), request('upcoming')])
-      .then(([live, upcoming]) => setTournaments([...live, ...upcoming].slice(0, FEATURED_COUNT)))
+    fetchTournaments({ registrationOpen: true, limit: FEATURED_COUNT }, controller.signal)
+      .then((data) => setTournaments(data.tournaments))
       .catch((error) => {
         if (error?.code !== 'ERR_CANCELED') setTournaments([])
       })
@@ -38,14 +35,15 @@ function FeaturedTournaments() {
       <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Happening now"
+            eyebrow="Registrations open"
             title={
               <>
-                On <span className="text-red-600">Sillypoint</span> right now
+                Join a tournament on <span className="text-red-600">Sillypoint</span>
               </>
             }
           >
-            Follow live tournaments or find one to join. No account needed to browse.
+            These tournaments are still taking teams. Find one and register before the last date. No account needed to
+            browse.
           </SectionHeading>
           <Link
             to="/tournaments"

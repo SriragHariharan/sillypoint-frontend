@@ -111,7 +111,7 @@ working on this app:
   (`POST /tournaments/:id/cancel`) and Edit prize money (`PATCH /tournaments/:id`, only `prizeMoney`; the registration fee set at creation can never change) while the tournament is upcoming or live. "Add my team" sends logged-out users to `/login`, adds
   a single team directly, or opens `AddTeamsModal` for several (`POST /tournaments/:id/teams`);
   `EnrolledTeamCard` shows Remove (`DELETE /tournaments/:id/teams/:teamId`) to the organizer and to
-  whoever added the team. Tournaments carry `registrationFee` (0 shows "Free") and `prizeMoney` (hidden when 0) on cards and details, and `playersPerSide` / `substitutesPerSide` (shown as "Players per side" / "Substitutes per side", "None" when 0) in `TournamentInfoGrid` on the details page. `FeaturedTournaments` shows live/upcoming tournaments on the
+  whoever added the team. Tournaments carry `registrationFee` (0 shows "Free") and `prizeMoney` (hidden when 0) on cards and details, and `playersPerSide` / `substitutesPerSide` (shown as "Players per side" / "Substitutes per side", "None" when 0) in `TournamentInfoGrid` on the details page. `FeaturedTournaments` shows tournaments still open for registration (`GET /tournaments?registrationOpen=true`, closing soonest first) on the
   landing page. The Navbar hash links are absolute (`/#features`) so they work from non-landing
   pages. Creating a tournament navigates to its details page.
 ## Scoring (scorer)
