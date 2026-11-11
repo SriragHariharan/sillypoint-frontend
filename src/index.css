@@ -2,6 +2,18 @@
 
 @custom-variant short (@media (max-height: 700px));
 
+/* Scrollbars are hidden everywhere (page and every scrolling element); scrolling still works by wheel, touch and keys */
+@layer base {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @theme {
   --color-red-50: #fdf1f2;
   --color-red-100: #fbdfe1;
