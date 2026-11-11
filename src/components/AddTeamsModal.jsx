@@ -52,7 +52,7 @@ function AddTeamsModal({ teams, addedIds, adding, onClose, onConfirm }) {
                 <Avatar src={team.logo} name={team.name} size="sm" rounded="rounded-xl" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold text-gray-900">{team.name}</span>
-                  <span className="block truncate text-xs text-gray-600">Captain: {team.captain_name}</span>
+                  <span className="block truncate text-xs text-gray-600">Manager: {team.manager_name}</span>
                 </span>
                 {added && (
                   <span className="shrink-0 rounded-full bg-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-700">

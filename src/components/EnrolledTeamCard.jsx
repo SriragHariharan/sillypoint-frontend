@@ -24,7 +24,7 @@ function EnrolledTeamCard({ team, canRemove, onRemove }) {
         <Avatar src={team.logo} name={team.name} size="sm" rounded="rounded-xl" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-gray-900">{team.name}</p>
-          <p className="truncate text-xs text-gray-600">Captain: {team.captain_name}</p>
+          <p className="truncate text-xs text-gray-600">Manager: {team.manager_name}</p>
         </div>
         {canRemove && !confirming && (
           <button type="button" onClick={() => setConfirming(true)} className={`shrink-0 ${compactSecondaryButtonClass}`}>

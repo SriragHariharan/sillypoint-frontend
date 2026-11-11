@@ -69,7 +69,7 @@ function TeamDetailsPage() {
                 <>
                   <h1 className={`truncate text-2xl ${headingClass}`}>{team?.name}</h1>
                   <p className="mt-0.5 truncate text-sm text-gray-600">
-                    Captain {team?.captain_name} · +91 {team?.captain_mobile}
+                    Manager {team?.manager_name} · +91 {team?.manager_mobile}
                   </p>
                 </>
               )}

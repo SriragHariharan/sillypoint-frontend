@@ -24,7 +24,7 @@ function AddTeamPage() {
   }
 
   return (
-    <AppFormShell eyebrow="New team" title="Add team" subtitle="Enter your team and captain details.">
+    <AppFormShell eyebrow="New team" title="Add team" subtitle="Enter your team and manager details.">
       <TeamForm submitting={submitting} submitLabel="Add team" submittingLabel="Adding…" onSubmit={onSubmit} />
     </AppFormShell>
   )

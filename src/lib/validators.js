@@ -81,15 +81,15 @@ export const teamNameValidation = {
   validate: (value) => value.trim().length >= 2 || 'Team name must be at least 2 characters',
 }
 
-export const captainNameValidation = {
-  required: 'Enter the captain name',
-  maxLength: { value: 60, message: 'Captain name must be at most 60 characters' },
-  validate: (value) => value.trim().length > 0 || 'Enter the captain name',
+export const managerNameValidation = {
+  required: 'Enter the manager name',
+  maxLength: { value: 60, message: 'Manager name must be at most 60 characters' },
+  validate: (value) => value.trim().length > 0 || 'Enter the manager name',
 }
 
-export const captainMobileValidation = {
+export const managerMobileValidation = {
   ...mobileValidation,
-  required: 'Enter the captain mobile number',
+  required: 'Enter the manager mobile number',
 }
 
 export const scorerPinValidation = {

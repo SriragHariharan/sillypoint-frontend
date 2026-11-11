@@ -92,7 +92,7 @@ function EditTeamPage() {
   }
 
   return (
-    <AppFormShell eyebrow="Team settings" title="Edit team" subtitle="Update your team and captain details.">
+    <AppFormShell eyebrow="Team settings" title="Edit team" subtitle="Update your team and manager details.">
       {content}
     </AppFormShell>
   )

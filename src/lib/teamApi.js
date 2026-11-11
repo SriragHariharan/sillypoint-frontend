@@ -1,10 +1,10 @@
 import { api } from './api'
 
-const toFormData = ({ name, captainName, captainMobile, logo }) => {
+const toFormData = ({ name, managerName, managerMobile, logo }) => {
   const formData = new FormData()
   formData.append('name', name)
-  formData.append('captain_name', captainName)
-  formData.append('captain_mobile', captainMobile)
+  formData.append('manager_name', managerName)
+  formData.append('manager_mobile', managerMobile)
   if (logo) formData.append('logo', logo)
   return formData
 }

@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form'
 import { inputClass, labelClass } from '../lib/formStyles'
 import { primaryButtonClass } from '../lib/premiumStyles'
 import {
-  captainMobileValidation,
-  captainNameValidation,
+  managerMobileValidation,
+  managerNameValidation,
   teamNameValidation,
 } from '../lib/validators'
 import FieldError from './FieldError'
@@ -19,8 +19,8 @@ function TeamForm({ team, submitting, submitLabel, submittingLabel, onSubmit }) 
   } = useForm({
     defaultValues: {
       name: team?.name ?? '',
-      captainName: team?.captain_name ?? '',
-      captainMobile: team?.captain_mobile ?? '',
+      managerName: team?.manager_name ?? '',
+      managerMobile: team?.manager_mobile ?? '',
       logo: null,
     },
   })
@@ -51,36 +51,36 @@ function TeamForm({ team, submitting, submitLabel, submittingLabel, onSubmit }) 
       />
 
       <div>
-        <label htmlFor="captainName" className={labelClass}>
-          Captain name
+        <label htmlFor="managerName" className={labelClass}>
+          Team manager name
         </label>
         <input
-          id="captainName"
+          id="managerName"
           type="text"
           placeholder="Rahul"
-          className={inputClass(errors.captainName)}
-          {...register('captainName', captainNameValidation)}
+          className={inputClass(errors.managerName)}
+          {...register('managerName', managerNameValidation)}
         />
-        <FieldError error={errors.captainName} />
+        <FieldError error={errors.managerName} />
       </div>
 
       <div>
-        <label htmlFor="captainMobile" className={labelClass}>
-          Captain mobile (WhatsApp)
+        <label htmlFor="managerMobile" className={labelClass}>
+          Team manager mobile (WhatsApp)
         </label>
         <input
-          id="captainMobile"
+          id="managerMobile"
           type="tel"
           inputMode="numeric"
           maxLength={10}
           placeholder="9876543210"
-          className={inputClass(errors.captainMobile)}
-          {...register('captainMobile', captainMobileValidation)}
+          className={inputClass(errors.managerMobile)}
+          {...register('managerMobile', managerMobileValidation)}
         />
         <p className="mt-1.5 text-xs text-gray-500">
           Team notifications will be sent to this number on WhatsApp.
         </p>
-        <FieldError error={errors.captainMobile} />
+        <FieldError error={errors.managerMobile} />
       </div>
 
       <button type="submit" disabled={submitting} className={`w-full ${primaryButtonClass}`}>
