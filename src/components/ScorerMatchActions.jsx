@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSquads } from '../hooks/useSquads'
 import { notifyError, notifyInfo } from '../lib/notify'
 import { oversSummary } from '../lib/overs'
+import { primaryButtonClass } from '../lib/premiumStyles'
 import { saveOvers, saveToss } from '../lib/scorerApi'
 import { handleScorerError } from '../lib/scorerErrors'
 import { isMatchReady, savedCount, squadLimits, tossSummary } from '../lib/squad'
@@ -11,8 +12,7 @@ import { useScorerStore } from '../store/scorerStore'
 import OversModal from './OversModal'
 import TossModal from './TossModal'
 
-const actionClass =
-  'flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none disabled:hover:bg-gray-300'
+const actionClass = `flex w-full items-center justify-center gap-2 px-5 ${primaryButtonClass}`
 
 function ScorerMatchActions({ match }) {
   const { token } = useParams()

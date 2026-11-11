@@ -1,19 +1,10 @@
-const RINGS = [90, 150, 210, 270]
+import RingsBackdrop from './RingsBackdrop'
 
 function CTASection() {
   return (
     <section id="get-started" className="scroll-mt-16 bg-white px-5 pb-16 sm:px-6 sm:pb-24">
       <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-6 py-14 text-center shadow-2xl shadow-red-600/25 ring-1 ring-white/15 sm:px-12 sm:py-20">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 600 600"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2"
-        >
-          {RINGS.map((radius) => (
-            <circle key={radius} cx="300" cy="300" r={radius} fill="none" stroke="#ffffff" strokeOpacity="0.1" strokeWidth="2" />
-          ))}
-          <circle cx="300" cy="300" r="300" fill="none" stroke="#ffffff" strokeOpacity="0.16" strokeWidth="2" strokeDasharray="2 12" />
-        </svg>
+        <RingsBackdrop className="h-[42rem] w-[42rem]" />
 
         <div className="relative">
           <h2 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">

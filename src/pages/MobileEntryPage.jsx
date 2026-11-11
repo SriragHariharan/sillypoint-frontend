@@ -1,10 +1,13 @@
+import { MessageCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
 import { getErrorMessage } from '../lib/api'
 import { requestOtp } from '../lib/authApi'
+import { fieldAddonClass, fieldGroupClass, labelClass } from '../lib/formStyles'
 import { notifyError } from '../lib/notify'
+import { primaryButtonClass } from '../lib/premiumStyles'
 import { useAuthStore } from '../store/authStore'
 import { mobileValidation } from '../lib/validators'
 
@@ -35,22 +38,17 @@ function MobileEntryPage() {
 
   return (
     <AuthLayout
+      eyebrow="Welcome to Sillypoint"
       title="Log in or sign up"
       subtitle="Enter your mobile number and we'll send you an OTP."
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
-          <label htmlFor="mobile" className="mb-1.5 block text-sm font-medium text-gray-700">
+          <label htmlFor="mobile" className={labelClass}>
             Mobile number
           </label>
-          <div
-            className={`flex items-center overflow-hidden rounded-xl border focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100 ${
-              errors.mobile ? 'border-red-400' : 'border-gray-300'
-            }`}
-          >
-            <span className="border-r border-gray-300 bg-gray-50 px-3 py-3 text-sm font-medium text-gray-600">
-              +91
-            </span>
+          <div className={fieldGroupClass(Boolean(errors.mobile))}>
+            <span className={fieldAddonClass}>+91</span>
             <input
               id="mobile"
               type="tel"
@@ -66,17 +64,16 @@ function MobileEntryPage() {
           )}
         </div>
 
-        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3">
-          <p className="text-xs font-medium text-gray-700">
+        <div className="flex items-start gap-3 rounded-2xl border border-red-100 bg-red-50/60 px-4 py-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-red-600 shadow-sm">
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <p className="pt-1 text-xs font-medium text-gray-700">
             Your OTP and tournament notifications will be sent to this mobile number on WhatsApp.
           </p>
         </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
-        >
+        <button type="submit" disabled={submitting} className={`w-full ${primaryButtonClass}`}>
           {submitting ? 'Sending OTP…' : 'Request OTP'}
         </button>
       </form>

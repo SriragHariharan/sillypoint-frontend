@@ -4,9 +4,11 @@ import { useCountdown } from '../hooks/useCountdown'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { formatDuration } from '../lib/formatTime'
 import { matchStageLabel } from '../lib/matchStages'
+import { secondaryButtonClass } from '../lib/premiumStyles'
 import { useScorerStore } from '../store/scorerStore'
 import AuthLayout from './AuthLayout'
 import MatchTeamSide from './MatchTeamSide'
+import RingsBackdrop from './RingsBackdrop'
 
 function DetailRow({ icon: Icon, label, children }) {
   return (
@@ -36,25 +38,29 @@ function ScorerWaitingScreen({ onLogOut }) {
 
   return (
     <AuthLayout
+      eyebrow="Scorer"
       title="Scoring isn't open yet"
       subtitle="You can start scoring 30 minutes before the match begins. This page opens up by itself."
     >
-      <div className="rounded-xl bg-red-600 px-4 py-4 text-center text-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-red-100">Scoring opens in</p>
-        <p className="mt-1 text-3xl font-extrabold tabular-nums" role="timer">
-          {formatDuration(secondsLeft)}
-        </p>
-        <p className="mt-1 text-xs text-red-100">at {formatMatchDateTime(scoringOpensAt)}</p>
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-4 py-6 text-center text-white shadow-lg shadow-red-600/25 ring-1 ring-white/15">
+        <RingsBackdrop className="h-[26rem] w-[26rem]" />
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-wider text-red-100">Scoring opens in</p>
+          <p className="mt-1 text-4xl font-black tabular-nums" role="timer">
+            {formatDuration(secondsLeft)}
+          </p>
+          <p className="mt-1 text-xs text-red-100">at {formatMatchDateTime(scoringOpensAt)}</p>
+        </div>
       </div>
 
-      <section className="mt-5 overflow-hidden rounded-2xl border border-gray-200">
+      <section className="mt-5 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="flex items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
           <span className="flex min-w-0 items-center gap-2 text-sm font-bold text-gray-900">
             <Trophy className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
             <span className="truncate">{match.tournament.name}</span>
           </span>
           {stage && (
-            <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
+            <span className="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
               {stage}
             </span>
           )}
@@ -81,11 +87,7 @@ function ScorerWaitingScreen({ onLogOut }) {
         </dl>
       </section>
 
-      <button
-        type="button"
-        onClick={onLogOut}
-        className="mt-5 w-full rounded-full border border-gray-300 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
-      >
+      <button type="button" onClick={onLogOut} className={`mt-5 w-full ${secondaryButtonClass}`}>
         Log out
       </button>
     </AuthLayout>

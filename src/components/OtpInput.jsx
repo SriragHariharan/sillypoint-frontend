@@ -53,8 +53,8 @@ function OtpInput({ length = 4, value = '', onChange, autoFocus = false, error =
           onFocus={(event) => event.target.select()}
           onPaste={handlePaste}
           aria-label={`${name ?? 'digit'} ${index + 1}`}
-          className={`h-12 w-12 rounded-xl border text-center text-lg font-bold text-gray-900 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100 sm:h-14 sm:w-14 ${
-            error ? 'border-red-400' : 'border-gray-300'
+          className={`h-14 w-12 rounded-xl border text-center text-xl font-black text-gray-900 shadow-sm outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-100 sm:h-16 sm:w-14 ${
+            error ? 'border-red-400 bg-white' : digit ? 'border-red-600 bg-red-50' : 'border-gray-300 bg-white'
           }`}
         />
       ))}

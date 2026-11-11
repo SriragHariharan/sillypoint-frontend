@@ -23,7 +23,7 @@ function AppToast({ t, type = 'error', message }) {
   return (
     <div
       role={variant.role}
-      className={`pointer-events-auto relative flex w-[calc(100vw-2rem)] max-w-md items-start gap-3 overflow-hidden rounded-xl border bg-white py-3.5 pl-5 pr-3 shadow-xl ${variant.card} ${
+      className={`pointer-events-auto relative flex w-[calc(100vw-2rem)] max-w-md items-start gap-3 overflow-hidden rounded-2xl border bg-white py-3.5 pl-5 pr-3 shadow-xl shadow-red-600/10 ${variant.card} ${
         t.visible ? 'animate-toast-in' : 'opacity-0 transition duration-150'
       }`}
     >

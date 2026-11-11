@@ -1,3 +1,4 @@
+import { Clock } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
@@ -7,7 +8,9 @@ import { useCountdown } from '../hooks/useCountdown'
 import { getErrorMessage } from '../lib/api'
 import { resendOtp, verifyOtp } from '../lib/authApi'
 import { formatTime } from '../lib/formatTime'
+import { labelClass } from '../lib/formStyles'
 import { notifyError, notifyInfo } from '../lib/notify'
+import { primaryButtonClass, secondaryButtonClass } from '../lib/premiumStyles'
 import { setSessionFlag } from '../lib/sessionFlag'
 import { useAuthStore } from '../store/authStore'
 import { otpValidation } from '../lib/validators'
@@ -77,10 +80,14 @@ function VerifyOtpPage() {
   }
 
   return (
-    <AuthLayout title="Verify OTP" subtitle={`Enter the 4-digit code sent to +91 ${mobile} on WhatsApp.`}>
+    <AuthLayout
+      eyebrow="Verify your number"
+      title="Verify OTP"
+      subtitle={`Enter the 4-digit code sent to +91 ${mobile} on WhatsApp.`}
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">OTP</label>
+          <label className={labelClass}>OTP</label>
           <Controller
             name="otp"
             control={control}
@@ -102,8 +109,11 @@ function VerifyOtpPage() {
 
         <p
           role="timer"
-          className={`text-sm font-medium ${expired ? 'text-red-600' : 'text-gray-600'}`}
+          className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium ${
+            expired ? 'bg-red-50 text-red-700' : 'bg-gray-100 text-gray-600'
+          }`}
         >
+          <Clock className="h-4 w-4 shrink-0" aria-hidden="true" />
           {expired ? (
             'OTP expired. Request a new code.'
           ) : (
@@ -113,16 +123,12 @@ function VerifyOtpPage() {
           )}
         </p>
 
-        <button
-          type="submit"
-          disabled={expired || submitting}
-          className="w-full rounded-full bg-red-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
-        >
+        <button type="submit" disabled={expired || submitting} className={`w-full ${primaryButtonClass}`}>
           {submitting ? 'Verifying…' : 'Verify OTP'}
         </button>
       </form>
 
-      <p className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
+      <p className="mt-5 rounded-2xl border border-red-100 bg-red-50/60 px-4 py-3 text-xs font-medium text-red-700">
         Please don&apos;t refresh or close this page while verifying your OTP.
       </p>
 
@@ -130,7 +136,7 @@ function VerifyOtpPage() {
         type="button"
         onClick={onResend}
         disabled={resendSeconds > 0 || resending}
-        className="mt-5 w-full text-center text-sm font-semibold text-red-600 transition hover:text-red-700 disabled:cursor-not-allowed disabled:font-medium disabled:text-gray-400 disabled:hover:text-gray-400"
+        className={`mt-5 w-full ${secondaryButtonClass}`}
       >
         {resending
           ? 'Sending…'

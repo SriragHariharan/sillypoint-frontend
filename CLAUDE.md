@@ -147,6 +147,20 @@ and related shades), so normal `red-*` utility classes (`bg-red-600`, `text-red-
 etc.) automatically pick up the custom tone — don't hardcode hex colors in components, use `red-*`
 utilities so the palette stays centralized in one place.
 
+## Design system (default for every page)
+
+The landing page's **premium red & white style is the default for all pages, new and existing** —
+build or restyle any page/component in it (load the `premium-ui` skill, `.claude/skills/premium-ui/SKILL.md`,
+for the full recipe). The essentials:
+
+- White surfaces, alternating with `bg-gray-50`; never a dark section or `dark` variants.
+- Soft low-opacity red radial glows (`redGlow()` in `src/lib/premiumStyles.js`, inline `style`, `aria-hidden pointer-events-none absolute inset-0`), optional faint dotted orbit / concentric ring SVG motifs (`RingsBackdrop`).
+- Pill eyebrow (`eyebrowClass`) + black-weight headline (`headingClass`) with one red accent word; body `text-gray-600`.
+- White cards `rounded-2xl border border-gray-200 bg-white shadow-sm`, red hover border (`hover:border-red-600 hover:shadow-md`) when clickable; glass (`bg-white/90 backdrop-blur`) for floating surfaces.
+- Buttons are rounded-full: `primaryButtonClass` (red, `shadow-red-600/25`) and `secondaryButtonClass` (white, gray border, red on hover). Inputs: `inputClass` / `fieldGroupClass` (`formStyles.js`). Don't paste these class strings again; import them.
+- Red gradient panel with rings (`from-red-600 via-red-700 to-red-900`) for the one hero moment on a page (CTA, countdown).
+- Mobile-first, `motion-reduce:` on every animation, `aria-hidden` on decoration, lucide icons only.
+
 ## Auth
 
 Login and signup are the **same flow**, matching the backend: **mobile number + OTP only** — no
@@ -201,9 +215,14 @@ email, no password, no PIN, ever.
   don't stack. Style follows the theme: error = red accent + solid red badge, info = black accent +
   black badge (no other hues). Only field-level validation errors (react-hook-form) stay inline
   under their input.
-- `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared centered-card shell for the auth
-  pages (logo, heading, subheading, back-to-home link) — reuse it for any future
-  account-related page rather than rebuilding the card chrome.
+- `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared premium shell for the auth and
+  scorer-access screens (red glows + faint orbit rings on white, glass card with a red gradient
+  stripe, optional `eyebrow` pill, black-weight heading, subheading, back-to-home pill) — reuse it
+  for any future account-related page rather than rebuilding the card chrome. Fields use
+  `inputClass` / `fieldGroupClass` / `fieldAddonClass` (`src/lib/formStyles.js`, the `+91` and PIN
+  fields), buttons use `primaryButtonClass` / `secondaryButtonClass` (`src/lib/premiumStyles.js`,
+  add `w-full` / `px-*` at the call site). `OtpInput` boxes tint red once filled.
+  `ScorerWaitingScreen` shows the countdown on the red gradient ring panel (`RingsBackdrop`).
 - Adding a protected page: put it in `src/pages/`, wrap its `<Route>` element in `RequireAuth`, and
   call the API only through `src/lib/api.js` so token refresh works automatically.
 

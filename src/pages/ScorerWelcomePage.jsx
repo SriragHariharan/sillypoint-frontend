@@ -4,6 +4,7 @@ import AuthLayout from '../components/AuthLayout'
 import ScorerMatchActions from '../components/ScorerMatchActions'
 import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
+import { secondaryButtonClass } from '../lib/premiumStyles'
 import { isScoringOpen } from '../lib/scoringWindow'
 import { useScorerStore } from '../store/scorerStore'
 
@@ -28,15 +29,20 @@ function ScorerWelcomePage() {
 
   return (
     <AuthLayout
+      eyebrow="Scorer"
       title="Welcome, scorer"
       subtitle="You are the scorer for this match. Set up the players, toss and overs, then start scoring."
     >
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
+      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center shadow-sm">
         <p className="text-sm font-bold text-gray-900">
-          {match.teamA.name} <span className="text-red-600">vs</span> {match.teamB.name}
+          {match.teamA.name}{' '}
+          <span className="mx-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white">
+            VS
+          </span>{' '}
+          {match.teamB.name}
         </p>
         <p className="mt-2 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
-          <Calendar className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <Calendar className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
           {formatMatchDateTime(match.scheduledAt)}
         </p>
         <p className="mt-1 text-xs text-gray-600">{match.tournament.name}</p>
@@ -44,11 +50,7 @@ function ScorerWelcomePage() {
 
       <ScorerMatchActions match={match} />
 
-      <button
-        type="button"
-        onClick={logOut}
-        className="mt-5 w-full rounded-full border border-gray-300 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
-      >
+      <button type="button" onClick={logOut} className={`mt-5 w-full ${secondaryButtonClass}`}>
         Log out
       </button>
     </AuthLayout>
