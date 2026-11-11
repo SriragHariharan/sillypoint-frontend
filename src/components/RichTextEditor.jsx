@@ -1,17 +1,13 @@
 import { useEditor, useEditorState, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { Bold, Italic, List, ListOrdered, Underline } from 'lucide-react'
 
 const TOOLS = [
-  { key: 'bold', label: 'Bold', content: <span className="font-bold">B</span>, run: (c) => c.toggleBold() },
-  { key: 'italic', label: 'Italic', content: <span className="italic">I</span>, run: (c) => c.toggleItalic() },
-  {
-    key: 'underline',
-    label: 'Underline',
-    content: <span className="underline">U</span>,
-    run: (c) => c.toggleUnderline(),
-  },
-  { key: 'bulletList', label: 'Bullet list', content: '•≡', run: (c) => c.toggleBulletList() },
-  { key: 'orderedList', label: 'Numbered list', content: '1.', run: (c) => c.toggleOrderedList() },
+  { key: 'bold', label: 'Bold', icon: Bold, run: (c) => c.toggleBold() },
+  { key: 'italic', label: 'Italic', icon: Italic, run: (c) => c.toggleItalic() },
+  { key: 'underline', label: 'Underline', icon: Underline, run: (c) => c.toggleUnderline() },
+  { key: 'bulletList', label: 'Bullet list', icon: List, run: (c) => c.toggleBulletList() },
+  { key: 'orderedList', label: 'Numbered list', icon: ListOrdered, run: (c) => c.toggleOrderedList() },
 ]
 
 function RichTextEditor({ id, value, onChange, placeholder }) {
@@ -40,9 +36,9 @@ function RichTextEditor({ id, value, onChange, placeholder }) {
   if (!editor) return null
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-300 focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100">
+    <div className="overflow-hidden rounded-xl border border-gray-300 bg-white shadow-sm transition focus-within:border-red-600 focus-within:ring-2 focus-within:ring-red-100 hover:border-gray-400 focus-within:hover:border-red-600">
       <div className="flex gap-1 border-b border-gray-200 bg-gray-50 p-1.5">
-        {TOOLS.map(({ key, label, content, run }) => (
+        {TOOLS.map(({ key, label, icon: Icon, run }) => (
           <button
             key={key}
             type="button"
@@ -51,11 +47,11 @@ function RichTextEditor({ id, value, onChange, placeholder }) {
             aria-pressed={active[key]}
             onMouseDown={(event) => event.preventDefault()}
             onClick={() => run(editor.chain().focus()).run()}
-            className={`h-8 min-w-8 rounded-md px-2 text-sm transition ${
-              active[key] ? 'bg-red-600 text-white' : 'text-gray-700 hover:bg-gray-200'
+            className={`flex h-9 min-w-9 items-center justify-center rounded-lg transition ${
+              active[key] ? 'bg-red-600 text-white shadow-sm' : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
             }`}
           >
-            {content}
+            <Icon className="h-4 w-4" aria-hidden="true" />
           </button>
         ))}
       </div>

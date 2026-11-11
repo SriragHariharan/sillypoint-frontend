@@ -24,7 +24,7 @@ function HeroHud() {
               {label}
             </span>
           ))}
-          <span className="flex h-6 min-w-6 animate-chip-late items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-extrabold text-white motion-reduce:animate-none sm:h-7 sm:min-w-7 sm:text-xs">
+          <span className="flex h-6 min-w-6 animate-chip-late items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-black text-white motion-reduce:animate-none sm:h-7 sm:min-w-7 sm:text-xs">
             6
           </span>
         </div>

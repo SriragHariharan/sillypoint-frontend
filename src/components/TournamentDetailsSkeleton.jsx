@@ -17,14 +17,14 @@ function TournamentDetailsSkeleton() {
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="grid grid-cols-2 gap-3">
-            <Skeleton className="col-span-2 h-16 rounded-xl sm:col-span-1" />
-            <Skeleton className="col-span-2 h-16 rounded-xl sm:col-span-1" />
+            <Skeleton className="col-span-2 h-[4.5rem] rounded-2xl sm:col-span-1" />
+            <Skeleton className="col-span-2 h-[4.5rem] rounded-2xl sm:col-span-1" />
           </div>
 
-          <div className="mt-6 flex gap-2 border-b border-gray-200 pb-3">
-            <Skeleton className="h-5 flex-1 rounded sm:w-24 sm:flex-none" />
-            <Skeleton className="h-5 flex-1 rounded sm:w-24 sm:flex-none" />
-            <Skeleton className="h-5 flex-1 rounded sm:w-24 sm:flex-none" />
+          <div className="mt-6 flex gap-1 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex">
+            <Skeleton className="h-11 flex-1 rounded-full sm:w-24 sm:flex-none" />
+            <Skeleton className="h-11 flex-1 rounded-full sm:w-24 sm:flex-none" />
+            <Skeleton className="h-11 flex-1 rounded-full sm:w-24 sm:flex-none" />
           </div>
 
           <div className="mt-5 space-y-3">
@@ -35,7 +35,7 @@ function TournamentDetailsSkeleton() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 p-4 sm:p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
           <Skeleton className="h-3 w-20 rounded" />
           <div className="mt-3 flex items-center gap-3">
             <Skeleton className="h-14 w-14 shrink-0 rounded-full" />

@@ -1,9 +1,11 @@
+import { Phone, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { cardClass, cardHoverClass, compactSecondaryButtonClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
 
 function TeamCard({ team }) {
   return (
-    <div className="relative rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-red-600 sm:p-5">
+    <div className={`${cardClass} ${cardHoverClass} relative p-4 sm:p-5`}>
       <div className="flex items-start gap-3">
         <Avatar src={team.logo} name={team.name} rounded="rounded-xl" />
         <div className="min-w-0 flex-1">
@@ -16,7 +18,7 @@ function TeamCard({ team }) {
         <Link
           to={`/teams/${team.id}/edit`}
           aria-label={`Edit ${team.name}`}
-          className="relative z-10 shrink-0 rounded-full border border-gray-300 px-3.5 py-1.5 text-xs font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600"
+          className={`relative z-10 shrink-0 ${compactSecondaryButtonClass}`}
         >
           Edit
         </Link>
@@ -24,12 +26,18 @@ function TeamCard({ team }) {
 
       <dl className="mt-4 space-y-1.5 text-sm text-gray-600">
         <div className="flex gap-2">
-          <dt className="font-medium text-gray-700">Captain:</dt>
-          <dd className="truncate">{team.captain_name}</dd>
+          <dt className="sr-only">Captain</dt>
+          <dd className="flex min-w-0 items-center gap-2">
+            <User className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+            <span className="truncate">Captain: {team.captain_name}</span>
+          </dd>
         </div>
         <div className="flex gap-2">
-          <dt className="font-medium text-gray-700">Mobile:</dt>
-          <dd>+91 {team.captain_mobile}</dd>
+          <dt className="sr-only">Mobile</dt>
+          <dd className="flex items-center gap-2">
+            <Phone className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+            +91 {team.captain_mobile}
+          </dd>
         </div>
       </dl>
     </div>

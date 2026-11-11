@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAvatar } from '../hooks/useAvatar'
 import { NAV_LINKS } from '../lib/navLinks'
+import { compactPrimaryButtonClass, compactSecondaryButtonClass } from '../lib/premiumStyles'
 import { signOut } from '../lib/session'
 import { useAuthStore } from '../store/authStore'
 import Avatar from './Avatar'
@@ -93,12 +94,13 @@ function ProfileMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-72 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
+          className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl border border-gray-200 bg-white/95 p-2 shadow-2xl shadow-red-600/10 backdrop-blur-xl"
         >
+          <div className="-mx-2 -mt-2 mb-1 h-1 bg-gradient-to-r from-red-700 via-red-500 to-red-700" />
           <div className="flex items-center gap-3 px-3 py-2.5">
             <Avatar src={avatar} size="md" />
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Signed in as</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-red-700">Signed in as</p>
               <p className="mt-0.5 truncate text-sm font-bold text-gray-900">+91 {mobile}</p>
             </div>
           </div>
@@ -123,7 +125,7 @@ function ProfileMenu() {
                       type="button"
                       onClick={onRemove}
                       disabled={working}
-                      className="rounded-full bg-red-600 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+                      className={`py-2 ${compactPrimaryButtonClass}`}
                     >
                       {busy === 'removing' ? 'Removing…' : 'Yes, remove'}
                     </button>
@@ -131,7 +133,7 @@ function ProfileMenu() {
                       type="button"
                       onClick={() => setConfirmingRemove(false)}
                       disabled={working}
-                      className="rounded-full border border-gray-300 py-2 text-sm font-semibold text-gray-700 transition hover:border-red-600 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                      className={`py-2 ${compactSecondaryButtonClass}`}
                     >
                       Cancel
                     </button>

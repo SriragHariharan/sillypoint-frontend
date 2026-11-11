@@ -5,7 +5,7 @@ function BowlerCard({ current, busy, onChange }) {
     <div className="flex items-center justify-between gap-2 px-3 py-2">
       {bowler ? (
         <span className="min-w-0 truncate text-sm">
-          <span className="mr-1.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Bowling</span>
+          <span className="mr-1.5 text-[10px] font-semibold uppercase tracking-wider text-red-700">Bowling</span>
           <span className="font-bold text-gray-900">{bowler.name}</span>
         </span>
       ) : (
@@ -22,7 +22,7 @@ function BowlerCard({ current, busy, onChange }) {
             type="button"
             onClick={onChange}
             disabled={busy}
-            className="rounded-full border border-gray-300 px-2.5 py-1 text-[11px] font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-full border border-gray-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-gray-800 shadow-sm transition hover:border-red-600 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Change
           </button>

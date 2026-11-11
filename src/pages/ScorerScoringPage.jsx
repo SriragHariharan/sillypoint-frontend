@@ -69,12 +69,12 @@ function ScorerScoringPage() {
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-gray-50">
-      <header className="shrink-0 border-b border-gray-200 bg-white">
+      <header className="shrink-0 border-b border-gray-200 bg-white shadow-[inset_0_2px_0_0_#a6192e]">
         <div className="mx-auto flex h-11 max-w-5xl items-center justify-between gap-2 px-3">
           <Link to={backTo} className="shrink-0 text-sm font-medium text-gray-500 transition hover:text-red-600">
             ← Back
           </Link>
-          <p className="min-w-0 truncate text-sm font-extrabold text-gray-900">
+          <p className="min-w-0 truncate text-sm font-black text-gray-900">
             {match.teamA.name} <span className="text-red-600">vs</span> {match.teamB.name}
           </p>
           {current ? (

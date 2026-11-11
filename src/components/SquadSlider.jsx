@@ -30,8 +30,8 @@ function SquadSlider({ tabs, total, goTo, children }) {
             role="tab"
             aria-selected={active === index}
             onClick={() => slideTo(trackRef.current, index)}
-            className={`relative flex min-w-0 items-center gap-2 rounded-xl border px-2.5 py-2 text-left transition ${
-              active === index ? 'border-red-600 bg-red-600 text-white shadow-sm' : 'border-gray-300 bg-white text-gray-800'
+            className={`relative flex min-w-0 items-center gap-2 rounded-2xl border px-2.5 py-2 text-left transition ${
+              active === index ? 'border-red-600 bg-red-600 text-white shadow-lg shadow-red-600/25' : 'border-gray-300 bg-white text-gray-800'
             }`}
           >
             <Avatar src={tab.logo} name={tab.label} size="xs" rounded="rounded-lg" />

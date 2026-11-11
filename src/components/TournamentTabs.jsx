@@ -2,7 +2,11 @@ import { TABS } from '../lib/tournamentTabs'
 
 function TournamentTabs({ tab, onChange, teamCount }) {
   return (
-    <div role="tablist" aria-label="Tournament sections" className="mt-6 flex border-b border-gray-200">
+    <div
+      role="tablist"
+      aria-label="Tournament sections"
+      className="mt-6 flex gap-1 rounded-full border border-gray-200 bg-gray-50 p-1 sm:inline-flex"
+    >
       {TABS.map((item) => (
         <button
           key={item.value}
@@ -10,10 +14,10 @@ function TournamentTabs({ tab, onChange, teamCount }) {
           role="tab"
           aria-selected={tab === item.value}
           onClick={() => onChange(item.value)}
-          className={`flex-1 border-b-2 px-3 py-3 text-sm font-semibold transition sm:flex-none sm:px-6 ${
+          className={`min-h-11 flex-1 rounded-full px-3 text-sm font-semibold transition sm:flex-none sm:px-6 ${
             tab === item.value
-              ? 'border-red-600 text-red-600'
-              : 'border-transparent text-gray-500 hover:text-gray-800'
+              ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+              : 'text-gray-600 hover:text-red-600'
           }`}
         >
           {item.value === 'teams' && teamCount > 0 ? `${item.label} (${teamCount})` : item.label}

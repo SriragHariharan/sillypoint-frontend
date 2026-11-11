@@ -68,7 +68,7 @@ function ScorerWaitingScreen({ onLogOut }) {
 
         <div className="flex items-start gap-3 px-4 py-5">
           <MatchTeamSide team={match.teamA} />
-          <span className="mt-6 shrink-0 rounded-full bg-red-600 px-3 py-1 text-xs font-extrabold tracking-wider text-white">
+          <span className="mt-6 shrink-0 rounded-full bg-red-600 px-3 py-1 text-xs font-black tracking-wider text-white">
             VS
           </span>
           <MatchTeamSide team={match.teamB} />

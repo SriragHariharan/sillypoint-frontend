@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { predictCrease, totalRunsOf } from '../lib/scoringRules'
 import ChoiceGrid from './ChoiceGrid'
+import ModalFooter from './ModalFooter'
 import ModalShell from './ModalShell'
 
 const BALL_TYPES = [
@@ -56,24 +57,13 @@ function BallSheet({ mode, current, busy, onClose, onSubmit }) {
       subtitle={isOverthrowMode ? 'Runs after the fielder threw the ball' : undefined}
       onClose={busy ? undefined : onClose}
       footer={
-        <>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className="flex-1 rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600 disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => onSubmit(payload)}
-            disabled={busy || !canSave}
-            className="flex-1 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {busy ? 'Saving…' : 'Save ball'}
-          </button>
-        </>
+        <ModalFooter
+          onCancel={onClose}
+          cancelDisabled={busy}
+          onConfirm={() => onSubmit(payload)}
+          confirmDisabled={busy || !canSave}
+          confirmLabel={busy ? 'Saving…' : 'Save ball'}
+        />
       }
     >
       {isOverthrowMode && <ChoiceGrid label="Type of ball" options={BALL_TYPES} value={ballType} onChange={setBallType} columns={5} />}
@@ -112,7 +102,7 @@ function BallSheet({ mode, current, busy, onClose, onSubmit }) {
         columns={isOverthrowMode ? 4 : 5}
       />
 
-      <p className="rounded-xl bg-gray-50 px-3 py-3 text-sm text-gray-700">
+      <p className="rounded-2xl border border-red-100 bg-red-50/60 px-3 py-3 text-sm text-gray-700">
         <span className="font-semibold text-gray-900">{totalRunsOf(payload)} {totalRunsOf(payload) === 1 ? 'run' : 'runs'}</span> from this ball.{' '}
         {next?.striker ? `${next.striker.name} will be on strike.` : 'A new batter will be chosen next.'}
       </p>

@@ -1,10 +1,15 @@
+import { Plus, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppNavbar from '../components/AppNavbar'
+import EmptyState from '../components/EmptyState'
+import PageHeader from '../components/PageHeader'
+import RetryPanel from '../components/RetryPanel'
 import TeamCard from '../components/TeamCard'
 import TeamCardSkeleton from '../components/TeamCardSkeleton'
 import { getErrorMessage } from '../lib/api'
 import { notifyError } from '../lib/notify'
+import { primaryButtonClass } from '../lib/premiumStyles'
 import { fetchTeams } from '../lib/teamApi'
 
 const SKELETON_COUNT = 3
@@ -36,18 +41,21 @@ function TeamsPage() {
       <AppNavbar />
 
       <main className="mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-6 sm:pt-10">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">My teams</h1>
-            <p className="mt-1 text-sm text-gray-600">Teams you manage.</p>
-          </div>
-          <Link
-            to="/teams/new"
-            className="shrink-0 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-          >
-            + Add Team
-          </Link>
-        </div>
+        <PageHeader
+          eyebrow="Your squads"
+          title={
+            <>
+              My <span className="text-red-600">teams</span>
+            </>
+          }
+          subtitle="Teams you manage."
+          action={
+            <Link to="/teams/new" className={`inline-flex items-center gap-2 px-5 ${primaryButtonClass}`}>
+              <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
+              Add Team
+            </Link>
+          }
+        />
 
         {loading ? (
           <div aria-busy="true" className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
@@ -57,27 +65,22 @@ function TeamsPage() {
             ))}
           </div>
         ) : result.failed ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-gray-300 px-6 py-12 text-center">
-            <p className="font-semibold text-gray-900">Couldn&apos;t load teams</p>
-            <p className="mt-1 text-sm text-gray-600">Check your connection and try again.</p>
-            <button
-              type="button"
-              onClick={() => setReloadKey((value) => value + 1)}
-              className="mt-5 rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
-            >
-              Retry
-            </button>
+          <div className="mt-6">
+            <RetryPanel message="Couldn't load teams" onRetry={() => setReloadKey((value) => value + 1)} />
           </div>
         ) : result.teams.length === 0 ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-gray-300 px-6 py-12 text-center">
-            <p className="font-semibold text-gray-900">No teams yet</p>
-            <p className="mt-1 text-sm text-gray-600">Add your first team to get started.</p>
-            <Link
-              to="/teams/new"
-              className="mt-5 inline-block rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
+          <div className="mt-6">
+            <EmptyState
+              icon={Users}
+              title="No teams yet"
+              action={
+                <Link to="/teams/new" className={`inline-block px-6 ${primaryButtonClass}`}>
+                  Add Team
+                </Link>
+              }
             >
-              Add Team
-            </Link>
+              Add your first team to get started.
+            </EmptyState>
           </div>
         ) : (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">

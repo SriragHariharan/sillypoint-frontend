@@ -1,19 +1,19 @@
-import { Calendar, MapPin, Trophy } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Trophy } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import LoadErrorScreen from '../components/LoadErrorScreen'
 import MatchDetailsSkeleton from '../components/MatchDetailsSkeleton'
 import MatchScorecardSection from '../components/MatchScorecardSection'
 import MatchTeamSide from '../components/MatchTeamSide'
+import NotFoundScreen from '../components/NotFoundScreen'
 import RescheduleMatchModal from '../components/RescheduleMatchModal'
+import RingsBackdrop from '../components/RingsBackdrop'
 import ScorerAccessCard from '../components/ScorerAccessCard'
 import TournamentPageShell from '../components/TournamentPageShell'
 import { useMatchDetails } from '../hooks/useMatchDetails'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { matchStageLabel } from '../lib/matchStages'
 import { useAuthStore } from '../store/authStore'
-
-const actionClass =
-  'rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600'
 
 function MatchDetailsPage() {
   const { id } = useParams()
@@ -37,17 +37,7 @@ function MatchDetailsPage() {
   if (details.failed) {
     return (
       <TournamentPageShell>
-        <main className="mx-auto max-w-md px-5 py-20 text-center">
-          <h1 className="text-2xl font-extrabold text-gray-900">Couldn&apos;t load this match</h1>
-          <p className="mt-2 text-sm text-gray-600">Check your connection and try again.</p>
-          <button
-            type="button"
-            onClick={details.retry}
-            className="mt-6 rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-          >
-            Retry
-          </button>
-        </main>
+        <LoadErrorScreen title="Couldn't load this match" onRetry={details.retry} />
       </TournamentPageShell>
     )
   }
@@ -57,16 +47,12 @@ function MatchDetailsPage() {
   if (!match) {
     return (
       <TournamentPageShell>
-        <main className="mx-auto max-w-md px-5 py-20 text-center">
-          <h1 className="text-2xl font-extrabold text-gray-900">Match not found</h1>
-          <p className="mt-2 text-sm text-gray-600">It may have been removed or the link is wrong.</p>
-          <Link
-            to="/tournaments"
-            className="mt-6 inline-block rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-          >
-            Browse tournaments
-          </Link>
-        </main>
+        <NotFoundScreen
+          title="Match not found"
+          message="It may have been removed or the link is wrong."
+          to="/tournaments"
+          label="Browse tournaments"
+        />
       </TournamentPageShell>
     )
   }
@@ -83,60 +69,65 @@ function MatchDetailsPage() {
       <main className="mx-auto max-w-3xl px-5 pb-16 pt-5 sm:px-6 sm:pt-8">
         <Link
           to={`/tournaments/${tournament.id}?tab=matches`}
-          className="text-sm font-medium text-gray-500 transition hover:text-red-600"
+          className="-ml-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-gray-600 transition hover:bg-red-50 hover:text-red-600"
         >
-          ← All matches
+          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+          All matches
         </Link>
 
-        <section className="mt-5 overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between gap-3 border-b border-gray-200 px-4 py-3 sm:px-6">
+        <section className="relative mt-4 overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 text-white shadow-2xl shadow-red-600/25 ring-1 ring-white/15">
+          <RingsBackdrop className="h-[42rem] w-[42rem]" />
+
+          <div className="relative flex items-center justify-between gap-3 border-b border-white/15 px-4 py-3 sm:px-6">
             <Link
               to={`/tournaments/${tournament.id}`}
-              className="flex min-w-0 items-center gap-2 text-sm font-bold text-gray-900 transition hover:text-red-600"
+              className="flex min-w-0 items-center gap-2 text-sm font-bold text-white transition hover:text-red-100"
             >
-              <Trophy className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+              <Trophy className="h-4 w-4 shrink-0 text-red-100" aria-hidden="true" />
               <span className="truncate">{tournament.name}</span>
             </Link>
             {stage && (
-              <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">
+              <span className="shrink-0 rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold text-white">
                 {stage}
               </span>
             )}
           </div>
 
-          <div className="px-4 py-6 sm:px-8 sm:py-8">
+          <div className="relative px-4 py-6 sm:px-8 sm:py-8">
             <div className="flex items-start gap-3 sm:gap-6">
-              <MatchTeamSide team={match.teamA} />
-              <span className="mt-6 shrink-0 rounded-full bg-red-600 px-3 py-1 text-xs font-extrabold tracking-wider text-white">
+              <MatchTeamSide team={match.teamA} onDark />
+              <span className="mt-6 shrink-0 rounded-full bg-white px-3 py-1 text-xs font-black tracking-wider text-red-700">
                 VS
               </span>
-              <MatchTeamSide team={match.teamB} />
+              <MatchTeamSide team={match.teamB} onDark />
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 border-t border-gray-200 bg-gray-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div className="relative flex flex-col gap-4 border-t border-white/15 bg-red-950/30 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <dl className="grid gap-3 sm:grid-cols-2 sm:gap-x-8">
               <div className="flex items-start gap-2.5">
-                <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+                <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-red-100" aria-hidden="true" />
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Date &amp; time</dt>
-                  <dd className="mt-0.5 text-sm font-semibold text-gray-900">
-                    {formatMatchDateTime(match.scheduledAt)}
-                  </dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-red-100">Date &amp; time</dt>
+                  <dd className="mt-0.5 text-sm font-semibold text-white">{formatMatchDateTime(match.scheduledAt)}</dd>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red-100" aria-hidden="true" />
                 <div className="min-w-0">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">Location</dt>
-                  <dd className="mt-0.5 text-sm font-semibold text-gray-900">{tournament.location}</dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-red-100">Location</dt>
+                  <dd className="mt-0.5 text-sm font-semibold text-white">{tournament.location}</dd>
                 </div>
               </div>
             </dl>
 
             {canReschedule && (
               <div className="flex shrink-0 flex-col gap-2">
-                <button type="button" onClick={() => setRescheduling(true)} className={actionClass}>
+                <button
+                  type="button"
+                  onClick={() => setRescheduling(true)}
+                  className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-red-700 shadow-lg shadow-red-950/30 transition hover:bg-red-50"
+                >
                   Reschedule match
                 </button>
               </div>
@@ -149,8 +140,8 @@ function MatchDetailsPage() {
         {isOrganizer && <ScorerAccessCard matchId={match.id} />}
 
         {match.notes && (
-          <section className="mt-4 rounded-2xl bg-gray-50 p-4 sm:p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Special notes</h2>
+          <section className="mt-4 rounded-2xl border border-red-100 bg-red-50/60 p-4 sm:p-5">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-red-700">Special notes</h2>
             <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-gray-700">{match.notes}</p>
           </section>
         )}

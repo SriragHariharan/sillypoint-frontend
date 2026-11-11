@@ -2,6 +2,7 @@ import { Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { matchStageLabel } from '../lib/matchStages'
+import { cardClass, cardHoverClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
 import StatusBadge from './StatusBadge'
 
@@ -17,7 +18,7 @@ function Side({ side, own }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 text-center">
       <Avatar src={side.logo} name={side.name} size="sm" rounded="rounded-xl" />
-      <span className={`w-full truncate text-sm ${own ? 'font-extrabold text-red-600' : 'font-semibold text-gray-900'}`}>
+      <span className={`w-full truncate text-sm ${own ? 'font-black text-red-600' : 'font-semibold text-gray-900'}`}>
         {side.name}
       </span>
       <span className="text-xs font-semibold text-gray-600">{scoreText(side.score)}</span>
@@ -49,7 +50,7 @@ function TeamMatchCard({ match, teamId, now }) {
   const stage = matchStageLabel(match.stage)
 
   return (
-    <li className="rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-red-600">
+    <li className={`${cardClass} ${cardHoverClass}`}>
       <Link to={`/matches/${match.id}`} className="block rounded-2xl p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="min-w-0 truncate text-xs font-semibold text-gray-500">
@@ -61,7 +62,7 @@ function TeamMatchCard({ match, teamId, now }) {
 
         <div className="mt-4 flex items-start gap-3">
           <Side side={match.teamA} own={match.teamA.id === teamId} />
-          <span className="mt-2 shrink-0 rounded-full bg-red-600 px-2.5 py-1 text-xs font-extrabold tracking-wider text-white">
+          <span className="mt-2 shrink-0 rounded-full bg-red-600 px-2.5 py-1 text-xs font-black tracking-wider text-white">
             VS
           </span>
           <Side side={match.teamB} own={match.teamB.id === teamId} />
@@ -69,7 +70,7 @@ function TeamMatchCard({ match, teamId, now }) {
 
         {match.resultSummary && <p className="mt-3 text-center text-sm font-bold text-gray-900">{match.resultSummary}</p>}
         <p className="mt-2 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
-          <Calendar className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <Calendar className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
           {formatMatchDateTime(match.scheduledAt)}
         </p>
       </Link>

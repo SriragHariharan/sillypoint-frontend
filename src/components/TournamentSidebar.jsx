@@ -1,3 +1,4 @@
+import { cardClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
 import AddTeamButton from './AddTeamButton'
 import ManageTournament from './ManageTournament'
@@ -7,8 +8,8 @@ function TournamentSidebar({ tournament, canManage, showAddTeam, onAddTeam, addT
 
   return (
     <aside className="lg:sticky lg:top-24 lg:self-start">
-      <section className="rounded-2xl border border-gray-200 p-4 sm:p-5">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Organizer</h2>
+      <section className={`${cardClass} p-4 sm:p-5`}>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-red-700">Organizer</h2>
         <div className="mt-3 flex items-center gap-3">
           <Avatar src={organizer.avatar} size="md" />
           <div className="min-w-0">

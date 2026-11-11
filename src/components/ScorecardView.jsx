@@ -4,7 +4,9 @@ import { BattingTable, BowlingTable, ExtrasAndWickets } from './ScorecardTables'
 
 const tabClass = (active) =>
   `flex-1 rounded-full px-3 py-2 text-sm font-semibold transition ${
-    active ? 'bg-red-600 text-white' : 'border border-gray-300 text-gray-800 hover:border-red-600 hover:text-red-600'
+    active
+      ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+      : 'border border-gray-300 bg-white text-gray-800 hover:border-red-600 hover:text-red-600'
   }`
 
 function InningsCard({ innings }) {
@@ -13,8 +15,8 @@ function InningsCard({ innings }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-base font-extrabold text-gray-900">{innings.battingTeam.name}</h3>
-        <p className="text-base font-extrabold text-gray-900">
+        <h3 className="text-base font-black text-gray-900">{innings.battingTeam.name}</h3>
+        <p className="text-base font-black text-gray-900">
           {innings.total.runs}/{innings.total.wickets}{' '}
           <span className="text-sm font-medium text-gray-500">({innings.total.overs} ov)</span>
         </p>

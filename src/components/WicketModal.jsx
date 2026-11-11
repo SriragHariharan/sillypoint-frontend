@@ -7,6 +7,7 @@ import {
   wicketTypesFor,
 } from '../lib/scoringRules'
 import ChoiceGrid from './ChoiceGrid'
+import ModalFooter from './ModalFooter'
 import ModalShell from './ModalShell'
 import Select from './Select'
 
@@ -54,24 +55,13 @@ function WicketModal({ current, fielders, busy, onClose, onSubmit }) {
       subtitle={current.isFreeHit ? 'Free hit: only a run out or obstructing the field is possible' : undefined}
       onClose={busy ? undefined : onClose}
       footer={
-        <>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className="flex-1 rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600 disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit(submit)}
-            disabled={busy || !ready}
-            className="flex-1 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {busy ? 'Saving…' : 'Save wicket'}
-          </button>
-        </>
+        <ModalFooter
+          onCancel={onClose}
+          cancelDisabled={busy}
+          onConfirm={handleSubmit(submit)}
+          confirmDisabled={busy || !ready}
+          confirmLabel={busy ? 'Saving…' : 'Save wicket'}
+        />
       }
     >
       <Controller

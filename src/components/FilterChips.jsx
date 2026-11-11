@@ -15,7 +15,7 @@ function FilterChips({ options, value, onChange, label }) {
             onClick={() => onChange(option.value)}
             className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
               active
-                ? 'border-red-600 bg-red-600 text-white'
+                ? 'border-red-600 bg-red-600 text-white shadow-md shadow-red-600/20'
                 : 'border-gray-300 bg-white text-gray-700 hover:border-red-600 hover:text-red-600'
             }`}
           >

@@ -1,13 +1,13 @@
 import { useParams, useSearchParams } from 'react-router-dom'
 import AddMatchModal from '../components/AddMatchModal'
 import AddTeamsModal from '../components/AddTeamsModal'
+import LoadErrorScreen from '../components/LoadErrorScreen'
 import MobileAddTeamBar from '../components/MobileAddTeamBar'
+import NotFoundScreen from '../components/NotFoundScreen'
 import TournamentDetailsSkeleton from '../components/TournamentDetailsSkeleton'
 import TournamentHeader from '../components/TournamentHeader'
 import TournamentInfoGrid from '../components/TournamentInfoGrid'
-import TournamentLoadError from '../components/TournamentLoadError'
 import TournamentMatchesTab from '../components/TournamentMatchesTab'
-import TournamentNotFound from '../components/TournamentNotFound'
 import TournamentOverviewTab from '../components/TournamentOverviewTab'
 import TournamentPageShell from '../components/TournamentPageShell'
 import TournamentSidebar from '../components/TournamentSidebar'
@@ -57,7 +57,7 @@ function TournamentDetailsPage() {
   if (details.failed) {
     return (
       <TournamentPageShell>
-        <TournamentLoadError onRetry={details.retry} />
+        <LoadErrorScreen title="Couldn't load this tournament" onRetry={details.retry} />
       </TournamentPageShell>
     )
   }
@@ -67,7 +67,12 @@ function TournamentDetailsPage() {
   if (!tournament) {
     return (
       <TournamentPageShell>
-        <TournamentNotFound />
+        <NotFoundScreen
+          title="Tournament not found"
+          message="It may have been removed or the link is wrong."
+          to="/tournaments"
+          label="Browse tournaments"
+        />
       </TournamentPageShell>
     )
   }

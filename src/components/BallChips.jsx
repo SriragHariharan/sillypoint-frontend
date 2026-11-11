@@ -2,7 +2,7 @@ const MAX_COMPACT_CHIPS = 10
 
 const chipClass = (label) => {
   if (label.includes('W')) return 'bg-red-600 text-white'
-  if (label === '4' || label === '6') return 'bg-gray-900 text-white'
+  if (label === '4' || label === '6') return 'bg-red-100 text-red-700'
   if (label.startsWith('Wd') || label.startsWith('Nb')) return 'bg-gray-200 text-gray-900'
   if (label === 'Ret') return 'bg-gray-100 text-gray-600'
   return 'border border-gray-300 bg-white text-gray-800'
@@ -14,7 +14,7 @@ function BallChips({ balls, title, compact = false }) {
 
     return (
       <div className="flex h-7 items-center gap-1 overflow-hidden">
-        <span className="shrink-0 pr-1 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Over</span>
+        <span className="shrink-0 pr-1 text-[10px] font-semibold uppercase tracking-wider text-red-700">Over</span>
         {balls.length === 0 && <span className="text-xs text-gray-500">No balls yet</span>}
         {shown.length < balls.length && <span className="shrink-0 text-xs text-gray-400">…</span>}
         {shown.map((label, index) => (

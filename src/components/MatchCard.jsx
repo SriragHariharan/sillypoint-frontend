@@ -2,6 +2,7 @@ import { Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatMatchDateTime } from '../lib/formatDate'
 import { matchStageLabel } from '../lib/matchStages'
+import { cardClass, cardHoverClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
 
 function TeamSide({ team }) {
@@ -17,25 +18,27 @@ function MatchCard({ match }) {
   const stage = matchStageLabel(match.stage)
 
   return (
-    <li className="rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:border-red-600">
+    <li className={`${cardClass} ${cardHoverClass}`}>
       <Link to={`/matches/${match.id}`} className="block rounded-2xl p-4">
-      {stage && (
-        <p className="mb-3 flex justify-center">
-          <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700">{stage}</span>
+        {stage && (
+          <p className="mb-3 flex justify-center">
+            <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">{stage}</span>
+          </p>
+        )}
+        <div className="flex items-center gap-3">
+          <TeamSide team={match.teamA} />
+          <span className="shrink-0 rounded-full bg-red-600 px-2.5 py-1 text-xs font-black tracking-wider text-white">
+            VS
+          </span>
+          <TeamSide team={match.teamB} />
+        </div>
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
+          <Calendar className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+          {formatMatchDateTime(match.scheduledAt)}
         </p>
-      )}
-      <div className="flex items-center gap-3">
-        <TeamSide team={match.teamA} />
-        <span className="shrink-0 rounded-full bg-red-600 px-2.5 py-1 text-xs font-extrabold tracking-wider text-white">
-          VS
-        </span>
-        <TeamSide team={match.teamB} />
-      </div>
-      <p className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
-        <Calendar className="h-4 w-4 shrink-0" aria-hidden="true" />
-        {formatMatchDateTime(match.scheduledAt)}
-      </p>
-      {match.notes && <p className="mt-2 line-clamp-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>}
+        {match.notes && (
+          <p className="mt-2 line-clamp-2 whitespace-pre-line text-center text-xs text-gray-600">{match.notes}</p>
+        )}
       </Link>
     </li>
   )

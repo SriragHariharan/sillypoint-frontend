@@ -1,14 +1,8 @@
 import logo from '../assets/app_logo.png'
-import { redGlow } from '../lib/premiumStyles'
 
 function FullPageLoader() {
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden bg-white">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{ background: redGlow('45% 45%', '50% 50%', 0.1) }}
-      />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white">
       <div className="relative flex h-20 w-20 items-center justify-center">
         <svg
           aria-hidden="true"
@@ -19,7 +13,7 @@ function FullPageLoader() {
         </svg>
         <img src={logo} alt="Sillypoint" className="h-10 w-10 animate-pulse rounded-md" />
       </div>
-      <p className="relative text-sm font-medium text-gray-500">Loading…</p>
+      <p className="text-sm font-medium text-gray-500">Loading…</p>
     </div>
   )
 }

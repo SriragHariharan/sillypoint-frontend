@@ -1,4 +1,9 @@
+import { Search, SearchX, Trophy } from 'lucide-react'
+import { fieldGroupClass } from '../lib/formStyles'
+import { secondaryButtonClass } from '../lib/premiumStyles'
+import EmptyState from './EmptyState'
 import FilterChips from './FilterChips'
+import RetryPanel from './RetryPanel'
 import TournamentCard from './TournamentCard'
 import TournamentCardSkeleton from './TournamentCardSkeleton'
 
@@ -18,14 +23,17 @@ function TournamentList({ list, emptyTitle, emptyText, emptyAction }) {
   return (
     <>
       <div className="mt-5 space-y-3">
-        <input
-          type="search"
-          value={list.search}
-          onChange={(event) => list.setSearch(event.target.value)}
-          placeholder="Search by name or venue"
-          aria-label="Search tournaments"
-          className="w-full rounded-xl border border-gray-300 px-3 py-3 text-sm text-gray-900 outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
-        />
+        <div className={fieldGroupClass(false)}>
+          <Search className="ml-3 h-4 w-4 shrink-0 text-gray-400" aria-hidden="true" />
+          <input
+            type="search"
+            value={list.search}
+            onChange={(event) => list.setSearch(event.target.value)}
+            placeholder="Search by name or venue"
+            aria-label="Search tournaments"
+            className="w-full bg-transparent px-3 py-3 text-sm text-gray-900 outline-none"
+          />
+        </div>
 
         <FilterChips label="Filter by status" options={STATUS_OPTIONS} value={list.status} onChange={list.setStatus} />
       </div>
@@ -49,24 +57,18 @@ function TournamentList({ list, emptyTitle, emptyText, emptyAction }) {
           ))}
         </div>
       ) : failed ? (
-        <div className="mt-6 rounded-2xl border border-dashed border-gray-300 px-6 py-12 text-center">
-          <p className="font-semibold text-gray-900">Couldn&apos;t load tournaments</p>
-          <p className="mt-1 text-sm text-gray-600">Check your connection and try again.</p>
-          <button
-            type="button"
-            onClick={list.retry}
-            className="mt-5 rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
-          >
-            Retry
-          </button>
+        <div className="mt-6">
+          <RetryPanel message="Couldn't load tournaments" onRetry={list.retry} />
         </div>
       ) : items.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-dashed border-gray-300 px-6 py-12 text-center">
-          <p className="font-semibold text-gray-900">{hasFilters ? 'No tournaments match your filters' : emptyTitle}</p>
-          <p className="mt-1 text-sm text-gray-600">
+        <div className="mt-6">
+          <EmptyState
+            icon={hasFilters ? SearchX : Trophy}
+            title={hasFilters ? 'No tournaments match your filters' : emptyTitle}
+            action={hasFilters ? undefined : emptyAction}
+          >
             {hasFilters ? 'Try a different search or clear the filters.' : emptyText}
-          </p>
-          {!hasFilters && emptyAction}
+          </EmptyState>
         </div>
       ) : (
         <>
@@ -83,7 +85,7 @@ function TournamentList({ list, emptyTitle, emptyText, emptyAction }) {
                 type="button"
                 onClick={list.loadMore}
                 disabled={loadingMore}
-                className="rounded-full border border-gray-300 px-8 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className={`px-8 ${secondaryButtonClass}`}
               >
                 {loadingMore ? 'Loading…' : 'Load more'}
               </button>

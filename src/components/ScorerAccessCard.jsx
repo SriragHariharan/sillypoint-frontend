@@ -2,6 +2,7 @@ import { Copy, Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { useScorerAccess } from '../hooks/useScorerAccess'
 import { notifyError, notifyInfo } from '../lib/notify'
+import { cardClass, compactPrimaryButtonClass } from '../lib/premiumStyles'
 import { scorerLinkUrl } from '../lib/scorerApi'
 import Skeleton from './Skeleton'
 
@@ -67,9 +68,9 @@ function ScorerAccessCard({ matchId }) {
   const link = access ? scorerLinkUrl(access.linkToken) : ''
 
   return (
-    <section className="mt-3 rounded-xl border border-gray-200 bg-white px-3 py-2">
+    <section className={`${cardClass} mt-3 px-3 py-2`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Scorer access</h2>
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-red-700">Scorer access</h2>
         <p className="hidden truncate text-[11px] text-gray-500 min-[380px]:block">The scorer logs in with the PIN only</p>
       </div>
 
@@ -83,11 +84,7 @@ function ScorerAccessCard({ matchId }) {
       {!loading && failed && (
         <div className="flex items-center justify-between gap-3 py-1.5">
           <p className="text-sm text-gray-600">Couldn&apos;t load scorer access.</p>
-          <button
-            type="button"
-            onClick={retry}
-            className="rounded-full bg-red-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-red-700"
-          >
+          <button type="button" onClick={retry} className={compactPrimaryButtonClass}>
             Retry
           </button>
         </div>

@@ -1,5 +1,6 @@
 import { Navigate, useParams } from 'react-router-dom'
 import FullPageLoader from '../components/FullPageLoader'
+import PageHeader from '../components/PageHeader'
 import RetryPanel from '../components/RetryPanel'
 import SquadForm from '../components/SquadForm'
 import { useSquads } from '../hooks/useSquads'
@@ -25,11 +26,16 @@ function ScorerPlayersPage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-28">
       <main className="mx-auto w-full max-w-5xl px-3 py-5 sm:px-6 sm:py-8">
-        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">Players</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          {match.teamA.name} vs {match.teamB.name}. Name up to {allowed} per team; you can come back and change them any
-          time.
-        </p>
+        <PageHeader
+          size="md"
+          eyebrow="Squads"
+          title={
+            <>
+              Match <span className="text-red-600">players</span>
+            </>
+          }
+          subtitle={`${match.teamA.name} vs ${match.teamB.name}. Name up to ${allowed} per team; you can come back and change them any time.`}
+        />
 
         <div className="mt-5">
           {failed || !squads ? (

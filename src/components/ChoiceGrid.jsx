@@ -14,10 +14,10 @@ function ChoiceGrid({ label, options, value, onChange, columns = 4 }) {
               role="radio"
               aria-checked={selected}
               onClick={() => onChange(option.value)}
-              className={`rounded-xl border px-2 py-2.5 text-sm short:py-2 font-semibold transition ${
+              className={`rounded-xl border px-2 py-2.5 text-sm short:py-2 font-semibold shadow-sm transition ${
                 selected
-                  ? 'border-red-600 bg-red-600 text-white'
-                  : 'border-gray-300 bg-white text-gray-800 hover:border-red-600 hover:text-red-600'
+                  ? 'border-red-600 bg-red-600 text-white shadow-red-600/25'
+                  : 'border-gray-300 bg-white text-gray-800 hover:border-red-600 hover:bg-red-50 hover:text-red-600'
               }`}
             >
               {option.label}

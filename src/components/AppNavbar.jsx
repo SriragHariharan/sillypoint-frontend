@@ -25,11 +25,11 @@ function AppNavbar({ bottomTabs = true }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-gray-200/70 bg-white/80 backdrop-blur-xl">
         <nav aria-label="Main" className="mx-auto flex max-w-6xl items-center gap-4 px-5 py-2.5 sm:px-6">
           <Link to="/home" className="flex items-center gap-2">
             <img src={logo} alt="" className="h-8 w-8 rounded-md" />
-            <span className="text-lg font-bold tracking-tight text-gray-900">Sillypoint</span>
+            <span className="text-lg font-black tracking-tight text-gray-900">Sillypoint</span>
           </Link>
 
           <ul className="ml-4 hidden items-center gap-1 sm:flex">
@@ -44,10 +44,10 @@ function AppNavbar({ bottomTabs = true }) {
                     aria-label={link.desktopLabel ?? link.label}
                     title={link.desktopLabel ?? link.label}
                     className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition lg:px-3.5 ${
-                      active
-                        ? 'bg-red-50 text-red-600'
-                        : isCreate
-                          ? 'text-red-600 hover:bg-red-50'
+                      isCreate
+                        ? 'bg-red-600 text-white shadow-md shadow-red-600/20 hover:bg-red-700'
+                        : active
+                          ? 'bg-red-50 text-red-600'
                           : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
@@ -68,7 +68,7 @@ function AppNavbar({ bottomTabs = true }) {
       {bottomTabs && (
         <nav
           aria-label="Primary"
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-12px_rgba(166,25,46,0.2)] backdrop-blur-xl sm:hidden"
         >
           <ul className="grid grid-cols-5">
             {NAV_LINKS.map((link) => {
@@ -78,8 +78,10 @@ function AppNavbar({ bottomTabs = true }) {
                   <Link
                     to={link.to}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex flex-col items-center gap-1 py-2.5 text-[11px] font-semibold transition ${
-                      active ? 'text-red-600' : 'text-gray-500 active:text-red-600'
+                    className={`relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-semibold transition ${
+                      active
+                        ? 'text-red-600 before:absolute before:inset-x-6 before:top-0 before:h-0.5 before:rounded-full before:bg-red-600'
+                        : 'text-gray-500 active:text-red-600'
                     }`}
                   >
                     <Icon path={link.icon} />

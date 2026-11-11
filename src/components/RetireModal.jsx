@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ChoiceGrid from './ChoiceGrid'
+import ModalFooter from './ModalFooter'
 import ModalShell from './ModalShell'
 
 const TYPES = [
@@ -17,24 +18,13 @@ function RetireModal({ current, busy, onClose, onSubmit }) {
       subtitle="Retired hurt can come back later. Retired out counts as a wicket."
       onClose={busy ? undefined : onClose}
       footer={
-        <>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className="flex-1 rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-800 transition hover:border-red-600 hover:text-red-600 disabled:opacity-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => onSubmit(playerId, type)}
-            disabled={busy}
-            className="flex-1 rounded-full bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {busy ? 'Saving…' : 'Retire batter'}
-          </button>
-        </>
+        <ModalFooter
+          onCancel={onClose}
+          cancelDisabled={busy}
+          onConfirm={() => onSubmit(playerId, type)}
+          confirmDisabled={busy}
+          confirmLabel={busy ? 'Saving…' : 'Retire batter'}
+        />
       }
     >
       <ChoiceGrid

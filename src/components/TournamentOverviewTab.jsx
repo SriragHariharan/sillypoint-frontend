@@ -1,6 +1,13 @@
+import { FileText } from 'lucide-react'
+import EmptyState from './EmptyState'
+
 function TournamentOverviewTab({ description }) {
   if (!description) {
-    return <p className="text-sm text-gray-600">The organizer hasn&apos;t added a description yet.</p>
+    return (
+      <EmptyState icon={FileText} title="No description yet">
+        The organizer hasn&apos;t added a description yet.
+      </EmptyState>
+    )
   }
 
   return (

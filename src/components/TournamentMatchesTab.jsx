@@ -1,4 +1,6 @@
-import EmptyNote from './EmptyNote'
+import { CalendarX, Plus } from 'lucide-react'
+import { primaryButtonClass } from '../lib/premiumStyles'
+import EmptyState from './EmptyState'
 import LoadingCards from './LoadingCards'
 import MatchCard from './MatchCard'
 import RetryPanel from './RetryPanel'
@@ -8,9 +10,9 @@ function MatchList({ matches, loading, failed, onRetry, canAddMatch }) {
   if (failed) return <RetryPanel message="Couldn't load matches" onRetry={onRetry} />
   if (matches.length === 0) {
     return (
-      <EmptyNote>
+      <EmptyState icon={CalendarX} title="No matches yet">
         {canAddMatch ? 'No matches scheduled yet. Add the first one.' : 'No matches have been scheduled yet.'}
-      </EmptyNote>
+      </EmptyState>
     )
   }
 
@@ -31,8 +33,9 @@ function TournamentMatchesTab({ canAddMatch, onAddMatch, ...listProps }) {
           <button
             type="button"
             onClick={onAddMatch}
-            className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+            className={`inline-flex items-center gap-2 px-5 ${primaryButtonClass}`}
           >
+            <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
             Add Match
           </button>
         </div>

@@ -17,7 +17,7 @@ function Avatar({ src, name, size = 'md', rounded = 'rounded-full' }) {
   const box = `${sizes[size]} ${rounded} shrink-0`
 
   if (src) {
-    return <img src={src} alt={name ?? ''} className={`${box} border border-gray-200 object-cover`} />
+    return <img src={src} alt={name ?? ''} className={`${box} border border-gray-200 object-cover shadow-sm`} />
   }
 
   return (

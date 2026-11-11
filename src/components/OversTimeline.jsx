@@ -6,7 +6,7 @@ function OversTimeline({ overs }) {
   return (
     <ul className="space-y-4">
       {overs.map((over) => (
-        <li key={over.over} className="rounded-xl border border-gray-200 p-3">
+        <li key={over.over} className="rounded-2xl border border-gray-200 bg-white p-3 shadow-sm">
           <div className="mb-2 flex items-center justify-between gap-3 text-sm">
             <span className="font-bold text-gray-900">
               Over {over.over} <span className="font-medium text-gray-500">· {over.bowler}</span>

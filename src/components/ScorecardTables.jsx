@@ -1,4 +1,4 @@
-const headClass = 'px-2 py-2 text-right text-xs font-semibold uppercase tracking-wide text-gray-500'
+const headClass = 'px-2 py-2 text-right text-xs font-semibold uppercase tracking-wide text-red-700'
 const cellClass = 'px-2 py-2.5 text-right text-sm text-gray-800'
 
 const statusText = (line) => (line.status === 'not_out' ? 'not out' : line.howOut)
@@ -8,9 +8,9 @@ export function BattingTable({ batting, didNotBat }) {
     <div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[420px] text-left">
-          <thead className="border-b border-gray-200">
+          <thead className="border-b border-gray-200 bg-gray-50">
             <tr>
-              <th className="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Batter</th>
+              <th className="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-red-700">Batter</th>
               {['R', 'B', '4s', '6s', 'SR'].map((label) => (
                 <th key={label} className={headClass}>
                   {label}
@@ -49,9 +49,9 @@ export function BowlingTable({ bowling }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[440px] text-left">
-        <thead className="border-b border-gray-200">
+        <thead className="border-b border-gray-200 bg-gray-50">
           <tr>
-            <th className="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Bowler</th>
+            <th className="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-red-700">Bowler</th>
             {['O', 'M', 'R', 'W', 'Wd', 'Nb', 'Econ'].map((label) => (
               <th key={label} className={headClass}>
                 {label}

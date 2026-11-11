@@ -10,21 +10,22 @@ const EXTRAS = [
 ]
 
 const baseClass =
-  'h-full min-h-10 rounded-xl border px-1 font-bold transition disabled:cursor-not-allowed disabled:opacity-50'
-const outlineBase = `${baseClass} border-gray-300 bg-white text-gray-900 hover:border-red-600 hover:text-red-600`
-const outlineClass = `${outlineBase} text-xs sm:text-sm`
-const runClass = `${outlineBase} text-lg short:text-base`
-const wicketClass = `${baseClass} border-red-600 bg-red-600 text-xs text-white hover:bg-red-700 sm:text-sm`
+  'h-full min-h-10 rounded-xl border px-1 shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50'
+const outlineBase = `${baseClass} border-gray-300 bg-white text-gray-900 hover:border-red-600 hover:bg-red-50 hover:text-red-600`
+const outlineClass = `${outlineBase} font-bold text-xs sm:text-sm`
+const runClass = `${outlineBase} font-black text-lg short:text-base`
+const boundaryClass = `${baseClass} border-red-200 bg-red-50 font-black text-lg text-red-700 hover:border-red-600 short:text-base`
+const wicketClass = `${baseClass} border-red-600 bg-red-600 font-bold text-xs text-white shadow-red-600/25 hover:bg-red-700 sm:text-sm`
 
 function RunPad({ disabled, canUndo, freeHit, endDisabled, onRun, onOpen, onWicket, onUndo, onRetire, onEnd }) {
   return (
     <section
       className={`grid min-h-0 flex-1 grid-cols-4 grid-rows-4 gap-1.5 rounded-2xl border bg-gray-50 p-1.5 shadow-sm max-h-[30rem] ${
-        freeHit ? 'border-red-600' : 'border-gray-200'
+        freeHit ? 'border-red-600 ring-2 ring-red-200' : 'border-gray-200'
       }`}
     >
       {RUNS.map((runs) => (
-        <button key={runs} type="button" disabled={disabled} onClick={() => onRun(runs)} className={runClass}>
+        <button key={runs} type="button" disabled={disabled} onClick={() => onRun(runs)} className={runs === 4 || runs === 6 ? boundaryClass : runClass}>
           {runs}
         </button>
       ))}

@@ -36,7 +36,7 @@ function ScorerWelcomePage() {
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center shadow-sm">
         <p className="text-sm font-bold text-gray-900">
           {match.teamA.name}{' '}
-          <span className="mx-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-extrabold tracking-wider text-white">
+          <span className="mx-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-black tracking-wider text-white">
             VS
           </span>{' '}
           {match.teamB.name}

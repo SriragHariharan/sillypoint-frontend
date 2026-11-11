@@ -154,12 +154,14 @@ build or restyle any page/component in it (load the `premium-ui` skill, `.claude
 for the full recipe). The essentials:
 
 - White surfaces, alternating with `bg-gray-50`; never a dark section or `dark` variants.
-- Soft low-opacity red radial glows (`redGlow()` in `src/lib/premiumStyles.js`, inline `style`, `aria-hidden pointer-events-none absolute inset-0`), optional faint dotted orbit / concentric ring SVG motifs (`RingsBackdrop`).
+- No red radial glows or gradient backgrounds behind headers, cards, forms, loaders or the scoring page (they looked bad). The soft glow exists only in the landing sections (`Hero`, `FeaturedTournaments`, `HowItWorks`); don't add it elsewhere. Decoration is limited to faint dotted orbit rings and the concentric-ring red panel (`RingsBackdrop`).
 - Pill eyebrow (`eyebrowClass`) + black-weight headline (`headingClass`) with one red accent word; body `text-gray-600`.
 - White cards `rounded-2xl border border-gray-200 bg-white shadow-sm`, red hover border (`hover:border-red-600 hover:shadow-md`) when clickable; glass (`bg-white/90 backdrop-blur`) for floating surfaces.
 - Buttons are rounded-full: `primaryButtonClass` (red, `shadow-red-600/25`) and `secondaryButtonClass` (white, gray border, red on hover). Inputs: `inputClass` / `fieldGroupClass` (`formStyles.js`). Don't paste these class strings again; import them.
 - Red gradient panel with rings (`from-red-600 via-red-700 to-red-900`) for the one hero moment on a page (CTA, countdown).
 - Mobile-first, `motion-reduce:` on every animation, `aria-hidden` on decoration, lucide icons only.
+- **Shared building blocks (use these, don't rebuild them):** `PageHeader` (eyebrow + black headline + subtitle + action, for every list/app page), `EmptyState` (solid card with icon tile; never a dashed box), `RetryPanel` (load errors), `LoadErrorScreen` / `NotFoundScreen` (full-page states), `AppFormShell` (flat-on-mobile, glass card from `sm`; Add/Edit forms) with `LogoField`, `ModalShell` + `ModalFooter` (every dialog; `busy` blocks Escape/backdrop close, `size` = `sm|md|xl`, submit buttons outside the form use `form="<id>"`), `MatchScheduleFields` (date + time), `StatTile`, `RingsBackdrop`. Style constants live in `src/lib/premiumStyles.js` (`primaryButtonClass`, `secondaryButtonClass`, `dangerOutlineButtonClass`, compact variants for card actions, `cardClass` / `cardHoverClass`, `iconTileClass`, `infoNoteClass`) and `src/lib/formStyles.js`.
+- **The scoring page is the exception for layout, not for style:** restyle `ScorerScoringPage`, `ScoringScreen` and its children with colors, borders, shadows and font weight only. Never change paddings, font sizes, heights, grid/flex structure or the `short:` overrides (see "Scoring (scorer)"); the pad uses its own button classes, not `primaryButtonClass` (which carries `py-3`).
 
 ## Auth
 
@@ -216,7 +218,7 @@ email, no password, no PIN, ever.
   black badge (no other hues). Only field-level validation errors (react-hook-form) stay inline
   under their input.
 - `AuthLayout` (`src/components/AuthLayout.jsx`) is the shared premium shell for the auth and
-  scorer-access screens (red glows + faint orbit rings on white, glass card with a red gradient
+  scorer-access screens (faint orbit rings on plain white, glass card with a red gradient
   stripe, optional `eyebrow` pill, black-weight heading, subheading, back-to-home pill) — reuse it
   for any future account-related page rather than rebuilding the card chrome. Fields use
   `inputClass` / `fieldGroupClass` / `fieldAddonClass` (`src/lib/formStyles.js`, the `+91` and PIN

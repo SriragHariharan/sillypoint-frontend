@@ -1,14 +1,11 @@
 import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
-import { eyebrowClass, headingClass, redGlow } from '../lib/premiumStyles'
-
-const GLOW = `${redGlow('55% 60%', '12% 18%', 0.1)}, ${redGlow('45% 50%', '90% 85%', 0.06)}`
+import { eyebrowClass, headingClass } from '../lib/premiumStyles'
 
 function AuthLayout({ eyebrow, title, subtitle, children }) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white px-5 py-10 sm:px-6">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: GLOW }} />
       <svg
         aria-hidden="true"
         viewBox="0 0 600 600"

@@ -5,19 +5,19 @@ function ScoreHeader({ current, teamName, oversPerSide }) {
   const chasing = current.target !== null && current.status === 'in_progress'
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white px-3 py-2.5 shadow-sm short:py-2">
+    <section className="rounded-2xl border border-gray-200 bg-white px-3 py-2.5 shadow-[inset_0_3px_0_0_#a6192e] short:py-2">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+          <p className="truncate text-[11px] font-semibold uppercase tracking-wider text-red-700">
             {current.number === 1 ? '1st innings' : '2nd innings'} · {teamName}
           </p>
-          <p className="text-4xl font-extrabold leading-none tracking-tight text-gray-900 short:text-3xl">
+          <p className="text-4xl font-black leading-none tracking-tight text-gray-900 short:text-3xl">
             {current.runs}/{current.wickets}
           </p>
         </div>
         <div className="shrink-0 text-right">
           {current.isFreeHit && (
-            <span className="mb-1 inline-block rounded-full bg-gray-900 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white">
+            <span className="mb-1 inline-block rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-white">
               Free hit
             </span>
           )}
