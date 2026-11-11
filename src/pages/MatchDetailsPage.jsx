@@ -12,7 +12,7 @@ import MatchStatusBand from '../components/MatchStatusBand'
 import { useMatchDetails } from '../hooks/useMatchDetails'
 import { useScorecard } from '../hooks/useScorecard'
 import { formatMatchDateTime } from '../lib/formatDate'
-import { inningsOfTeam, isMatchCompleted, isMatchLive, liveLine, winnerOf } from '../lib/matchResult'
+import { inningsOfTeam, isMatchCompleted, isMatchLive, liveLine, superOverOfTeam, winnerOf } from '../lib/matchResult'
 import { matchStageLabel } from '../lib/matchStages'
 import { useAuthStore } from '../store/authStore'
 
@@ -72,6 +72,7 @@ function MatchDetailsPage() {
       team,
       onDark: true,
       innings,
+      superOver: superOverOfTeam(scorecard, team.id),
       scoreLoading: started && scoresLoading,
       yetToBat: started && scorecard !== null && !innings,
       winner: winner?.id === team.id,

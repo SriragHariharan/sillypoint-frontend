@@ -32,7 +32,7 @@ function ScoringScreen({ scoring }) {
   return (
     <div className="flex h-full min-h-[18rem] flex-col gap-2 landscape:grid landscape:grid-cols-2 landscape:grid-rows-[minmax(0,1fr)] landscape:gap-3 lg:grid lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)] lg:gap-3">
       <div className="flex shrink-0 flex-col gap-2 landscape:justify-center lg:justify-center">
-        <ScoreHeader current={current} teamName={teamById(match, current.battingTeamId).name} oversPerSide={match.oversPerSide} />
+        <ScoreHeader current={current} teamName={teamById(match, current.battingTeamId).name} />
         <section className="divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
           <CreaseCard current={current} preview={preview} busy={busy} onSwap={scoring.swap} />
           <BowlerCard current={current} busy={busy} onChange={() => setChangingBowler(true)} />

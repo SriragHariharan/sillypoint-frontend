@@ -1,6 +1,7 @@
 import { CheckCircle2, Trophy } from 'lucide-react'
 import { primaryButtonClass } from '../lib/premiumStyles'
-import { teamById } from '../lib/scoringTeams'
+import { inningsLabel, teamById } from '../lib/scoringTeams'
+import DecidedByChip from './DecidedByChip'
 
 function MatchResultCard({ data, onBack }) {
   const { match, innings } = data
@@ -13,9 +14,15 @@ function MatchResultCard({ data, onBack }) {
         <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
         Match completed
       </p>
+      {match.decidedBy && (
+        <div className="mt-2">
+          <DecidedByChip decidedBy={match.decidedBy} />
+        </div>
+      )}
       <ul className="mt-4 space-y-1.5 text-sm text-gray-700">
         {innings.map((entry) => (
           <li key={entry.number}>
+            {entry.isSuperOver && <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-red-700">{inningsLabel(entry.number)}:</span>}
             <span className="font-bold text-gray-900">{teamById(match, entry.battingTeamId).name}</span> {entry.runs}/{entry.wickets} (
             {entry.overs} ov)
           </li>

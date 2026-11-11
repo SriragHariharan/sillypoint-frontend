@@ -17,7 +17,9 @@ function InningsHeaderBand({ innings }) {
       <div className="flex items-center gap-3">
         <Avatar src={battingTeam.logo} name={battingTeam.name} size="sm" rounded="rounded-xl" />
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-red-100">Batting</p>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-red-100">
+            {innings.isSuperOver ? 'Super Over · Batting' : 'Batting'}
+          </p>
           <h3 className="truncate text-base font-black sm:text-lg">{battingTeam.name}</h3>
         </div>
         {live ? (

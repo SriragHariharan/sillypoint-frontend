@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { winnerOf } from '../lib/matchResult'
 import { cardClass, iconTileClass, secondaryButtonClass } from '../lib/premiumStyles'
 import Avatar from './Avatar'
+import DecidedByChip from './DecidedByChip'
 
 function ConcludedResult({ match }) {
   const winner = winnerOf(match)
@@ -24,6 +25,7 @@ function ConcludedResult({ match }) {
       )}
 
       {match.resultSummary && <p className="mt-2 text-sm font-semibold text-gray-700">{match.resultSummary}</p>}
+      {match.decidedBy && <DecidedByChip decidedBy={match.decidedBy} className="mt-3" />}
 
       <Link to={`/matches/${match.id}`} className={`mt-5 inline-block px-6 ${secondaryButtonClass}`}>
         View scorecard

@@ -9,6 +9,8 @@ import WicketModal from './WicketModal'
 const WICKET = 'wicket'
 const RETIRE = 'retire'
 const END = 'end'
+// The second innings and the second Super Over innings decide the match when they end
+const DECIDING_INNINGS = [2, 4]
 
 function ScoringControls({ scoring, current, players }) {
   const [sheet, setSheet] = useState(null)
@@ -16,6 +18,7 @@ function ScoringControls({ scoring, current, players }) {
   const creaseReady = current.pending !== 'batter'
   const blocked = busy || current.pending !== null || current.status !== 'in_progress'
 
+  const decides = DECIDING_INNINGS.includes(current.number)
   const close = () => setSheet(null)
   const finishWith = async (request) => {
     if (await request()) close()
@@ -58,13 +61,13 @@ function ScoringControls({ scoring, current, players }) {
       )}
       {sheet === END && (
         <ConfirmModal
-          title={current.number === 2 ? 'End the match?' : 'End this innings?'}
+          title={decides ? 'End the match?' : 'End this innings?'}
           message={
-            current.number === 2
+            decides
               ? 'The match ends with the score as it is now and the result becomes final. It cannot be undone.'
               : 'The innings will be closed with the score as it is now. You can still undo the last ball afterwards.'
           }
-          confirmLabel={current.number === 2 ? 'End match' : 'End innings'}
+          confirmLabel={decides ? 'End match' : 'End innings'}
           busy={busy}
           onClose={close}
           onConfirm={() => finishWith(scoring.finish)}

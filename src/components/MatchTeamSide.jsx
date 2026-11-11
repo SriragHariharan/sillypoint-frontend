@@ -1,6 +1,16 @@
 import { Trophy } from 'lucide-react'
 import Avatar from './Avatar'
 
+function SuperOverLine({ innings, onDark }) {
+  if (!innings) return null
+  return (
+    <span className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${onDark ? 'bg-white/15 text-white' : 'bg-red-50 text-red-700'}`}>
+      Super Over {innings.total.runs}/{innings.total.wickets}
+      <span className="font-semibold opacity-80">({innings.total.overs} ov)</span>
+    </span>
+  )
+}
+
 function Score({ innings, loading, yetToBat, onDark, dim }) {
   const muted = onDark ? 'text-red-100' : 'text-gray-500'
 
@@ -31,6 +41,7 @@ function MatchTeamSide({
   team,
   onDark = false,
   innings = null,
+  superOver = null,
   scoreLoading = false,
   yetToBat = false,
   winner = false,
@@ -54,6 +65,7 @@ function MatchTeamSide({
           {team.name}
         </span>
         <Score innings={innings} loading={scoreLoading} yetToBat={yetToBat} onDark={onDark} dim={dim} />
+        <SuperOverLine innings={superOver} onDark={onDark} />
       </div>
     </div>
   )

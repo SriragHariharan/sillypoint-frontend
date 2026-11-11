@@ -29,7 +29,14 @@ function InningsTab({ entry, active, onSelect }) {
       }`}
     >
       <Avatar src={entry.battingTeam.logo} name={entry.battingTeam.name} size="xs" rounded="rounded-lg" />
-      <span className="min-w-0 flex-1 truncate text-sm font-bold">{entry.battingTeam.name}</span>
+      <span className="min-w-0 flex-1">
+        {entry.isSuperOver && (
+          <span className={`block text-[10px] font-bold uppercase tracking-wider ${active ? 'text-red-100' : 'text-red-700'}`}>
+            Super Over
+          </span>
+        )}
+        <span className="block truncate text-sm font-bold">{entry.battingTeam.name}</span>
+      </span>
       <span className="shrink-0 text-sm font-black tabular-nums">
         {entry.total.runs}/{entry.total.wickets}
       </span>
@@ -80,7 +87,7 @@ function ScorecardView({ scorecard }) {
   return (
     <div>
       {innings.length > 1 && (
-        <div className="mb-4 flex gap-2">
+        <div className={innings.length > 2 ? 'mb-4 grid grid-cols-2 gap-2' : 'mb-4 flex gap-2'}>
           {innings.map((entry, position) => (
             <InningsTab key={entry.number} entry={entry} active={position === index} onSelect={() => setSelected(position)} />
           ))}
