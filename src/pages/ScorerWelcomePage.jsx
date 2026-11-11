@@ -1,11 +1,13 @@
 import { Calendar } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import ConcludedResult from '../components/ConcludedResult'
 import MatchTeamSide from '../components/MatchTeamSide'
 import RingsBackdrop from '../components/RingsBackdrop'
 import ScorerMatchActions from '../components/ScorerMatchActions'
 import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
+import { isConcluded } from '../lib/matchResult'
 import { secondaryButtonClass } from '../lib/premiumStyles'
 import { isScoringOpen } from '../lib/scoringWindow'
 import { useScorerStore } from '../store/scorerStore'
@@ -29,11 +31,17 @@ function ScorerWelcomePage() {
     return <ScorerWaitingScreen onLogOut={logOut} />
   }
 
+  const concluded = isConcluded(match)
+
   return (
     <AuthLayout
       eyebrow="Scorer"
-      title="Welcome, scorer"
-      subtitle="You are the scorer for this match. Set up the players, toss and overs, then start scoring."
+      title={concluded ? 'Match completed' : 'Welcome, scorer'}
+      subtitle={
+        concluded
+          ? 'This match has been concluded and scoring is closed.'
+          : 'You are the scorer for this match. Set up the players, toss and overs, then start scoring.'
+      }
     >
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-4 py-5 text-center text-white shadow-lg shadow-red-600/25 ring-1 ring-white/15">
         <RingsBackdrop className="h-[26rem] w-[26rem]" />
@@ -53,7 +61,7 @@ function ScorerWelcomePage() {
         </div>
       </div>
 
-      <ScorerMatchActions match={match} />
+      {concluded ? <ConcludedResult match={match} /> : <ScorerMatchActions match={match} />}
 
       <button type="button" onClick={logOut} className={`mt-5 w-full ${secondaryButtonClass}`}>
         Log out

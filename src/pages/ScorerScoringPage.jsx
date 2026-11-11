@@ -62,7 +62,13 @@ function ScorerScoringPage() {
   const content = needsSetup ? (
     <InningsSetup data={data} busy={scoring.busy} onStart={scoring.start} onUndo={scoring.undo} />
   ) : matchOver ? (
-    <MatchResultCard data={data} busy={scoring.busy} onUndo={scoring.undo} onBack={() => navigate(backTo)} />
+    <MatchResultCard
+      data={data}
+      busy={scoring.busy}
+      onUndo={scoring.undo}
+      onConclude={scoring.conclude}
+      onBack={() => navigate(backTo)}
+    />
   ) : (
     <ScoringScreen scoring={scoring} />
   )

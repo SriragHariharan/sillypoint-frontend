@@ -5,6 +5,7 @@ import { handleScorerError } from '../lib/scorerErrors'
 import {
   chooseBatter,
   chooseBowler,
+  concludeMatch,
   endInnings,
   fetchScoring,
   recordBall,
@@ -125,6 +126,8 @@ export function useScoring() {
       const { number, version } = currentOf()
       return run(() => endInnings(number, version))
     },
+
+    conclude: () => run(() => concludeMatch()),
   }
 
   return {
