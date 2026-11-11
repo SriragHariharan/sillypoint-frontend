@@ -24,7 +24,7 @@ function MyTournamentsPage() {
               My <span className="text-red-600">tournaments</span>
             </>
           }
-          subtitle="Every tournament you created, including past and cancelled ones."
+          subtitle="Every tournament you created, including past ones."
           action={
             <Link to="/tournaments/new" className={`inline-flex items-center gap-2 px-5 ${primaryButtonClass}`}>
               <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />

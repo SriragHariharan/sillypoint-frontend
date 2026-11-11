@@ -78,9 +78,8 @@ function TournamentDetailsPage() {
   }
 
   const isOrganizer = Boolean(user) && user.id === tournament.organizer.id
-  const canManage = tournament.status === 'upcoming' || tournament.status === 'live'
-  const canAddMatch = isOrganizer && canManage
-  const acceptsTeams = tournament.status !== 'cancelled' && tournament.status !== 'completed'
+  const acceptsTeams = tournament.status !== 'completed'
+  const canAddMatch = isOrganizer && acceptsTeams
   const showAddTeam = !isOrganizer && authStatus !== 'loading' && acceptsTeams && !tournament.registrationClosed
   const showClosedNote = !isOrganizer && acceptsTeams && tournament.registrationClosed
 
@@ -94,8 +93,8 @@ function TournamentDetailsPage() {
 
         <TournamentTabs tab={tab} onChange={setTab} teamCount={teams.teams.length} />
 
-        <div className="mt-5 grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        <div className={`mt-5 grid gap-6 ${showAddTeam ? 'lg:grid-cols-3' : ''}`}>
+          <div className={showAddTeam ? 'lg:col-span-2' : 'max-w-3xl'}>
             <div role="tabpanel">
               {tab === 'overview' && <TournamentOverviewTab tournament={tournament} />}
               {tab === 'teams' && (
@@ -121,14 +120,9 @@ function TournamentDetailsPage() {
             </div>
           </div>
 
-          <TournamentSidebar
-            tournament={tournament}
-            canManage={isOrganizer && canManage}
-            showAddTeam={showAddTeam}
-            onAddTeam={addTeam.onAddTeam}
-            addTeamDisabled={addTeam.busy}
-            onChanged={details.patchTournament}
-          />
+          {showAddTeam && (
+            <TournamentSidebar tournament={tournament} onAddTeam={addTeam.onAddTeam} addTeamDisabled={addTeam.busy} />
+          )}
         </div>
       </main>
 

@@ -14,7 +14,6 @@ const STATUS_OPTIONS = [
   { value: 'live', label: 'Live' },
   { value: 'upcoming', label: 'Upcoming' },
   { value: 'completed', label: 'Completed' },
-  { value: 'cancelled', label: 'Cancelled' },
 ]
 
 function TournamentList({ list, emptyTitle, emptyText, emptyAction }) {

@@ -18,7 +18,6 @@ const STATUS_OPTIONS = [
   { value: 'upcoming', label: 'Upcoming' },
   { value: 'live', label: 'Live' },
   { value: 'completed', label: 'Completed' },
-  { value: 'cancelled', label: 'Cancelled' },
 ]
 
 function TeamDetailsPage() {

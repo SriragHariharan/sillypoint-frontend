@@ -147,15 +147,6 @@ export const lastRegistrationDateValidation = (getStartDate) => ({
   },
 })
 
-export const rescheduleStartValidation = (lastRegistrationDate) => ({
-  required: startDateValidation.required,
-  validate: (value) => {
-    if (value < todayISO()) return 'Start date cannot be in the past'
-    return value >= lastRegistrationDate || 'Start date cannot be before the last date of registration'
-  },
-  deps: ['endDate'],
-})
-
 export const endDateValidation = (getStartDate) => ({
   required: 'Select the end date',
   validate: (value) => {

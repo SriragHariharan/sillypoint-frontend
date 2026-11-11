@@ -29,14 +29,10 @@ export function useTournamentDetails(id) {
 
   const retry = () => setReloadKey((value) => value + 1)
 
-  const patchTournament = (summary) =>
-    setLoaded((current) => ({ ...current, tournament: { ...current.tournament, ...summary } }))
-
   return {
     tournament: loaded.tournament,
     loading: loaded.key !== key,
     failed: loaded.failed,
     retry,
-    patchTournament,
   }
 }

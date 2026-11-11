@@ -42,11 +42,3 @@ export const addTournamentTeams = (id, teamIds) =>
   api.post(`/tournaments/${id}/teams`, { team_ids: teamIds }).then((response) => response.data.teams)
 
 export const removeTournamentTeam = (id, teamId) => api.delete(`/tournaments/${id}/teams/${teamId}`)
-
-export const cancelTournament = (id) => api.post(`/tournaments/${id}/cancel`).then((response) => response.data.tournament)
-
-export const rescheduleTournament = (id, { startDate, endDate }) =>
-  api.patch(`/tournaments/${id}/reschedule`, { startDate, endDate }).then((response) => response.data.tournament)
-
-export const updateTournamentPrizeMoney = (id, prizeMoney) =>
-  api.patch(`/tournaments/${id}`, { prizeMoney }).then((response) => response.data.tournament)

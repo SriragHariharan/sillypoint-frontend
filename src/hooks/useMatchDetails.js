@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { getErrorMessage } from '../lib/api'
-import { fetchMatchDetails, rescheduleMatch } from '../lib/matchApi'
-import { notifyError, notifyInfo } from '../lib/notify'
+import { fetchMatchDetails } from '../lib/matchApi'
+import { notifyError } from '../lib/notify'
 
 export function useMatchDetails(id) {
   const [reloadKey, setReloadKey] = useState(0)
   const [loaded, setLoaded] = useState({ key: null, match: null, failed: false })
-  const [saving, setSaving] = useState(false)
 
   const key = `${id}|${reloadKey}`
 
@@ -28,27 +27,10 @@ export function useMatchDetails(id) {
     return () => controller.abort()
   }, [id, key])
 
-  const save = async (request, message) => {
-    setSaving(true)
-    try {
-      const updated = await request()
-      setLoaded((current) => ({ ...current, match: updated }))
-      notifyInfo(message)
-      return true
-    } catch (error) {
-      notifyError(getErrorMessage(error))
-      return false
-    } finally {
-      setSaving(false)
-    }
-  }
-
   return {
     match: loaded.match,
     loading: loaded.key !== key,
     failed: loaded.failed,
-    saving,
     retry: () => setReloadKey((value) => value + 1),
-    reschedule: (values) => save(() => rescheduleMatch(id, values), 'Match rescheduled.'),
   }
 }
