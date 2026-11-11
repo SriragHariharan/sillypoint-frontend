@@ -10,12 +10,12 @@ import RetryPanel from '../components/RetryPanel'
 import Skeleton from '../components/Skeleton'
 import TeamMatchCard from '../components/TeamMatchCard'
 import TeamSummary from '../components/TeamSummary'
+import TeamUpcomingSection from '../components/TeamUpcomingSection'
 import { useTeamMatches } from '../hooks/useTeamMatches'
 import { cardClass, compactSecondaryButtonClass, headingClass, secondaryButtonClass } from '../lib/premiumStyles'
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
-  { value: 'upcoming', label: 'Upcoming' },
   { value: 'live', label: 'Live' },
   { value: 'completed', label: 'Completed' },
 ]
@@ -83,6 +83,8 @@ function TeamDetailsPage() {
 
         <TeamSummary summary={history.summary} />
 
+        <TeamUpcomingSection teamId={teamId} />
+
         <h2 className="mt-8 text-lg font-black tracking-tight">Match history</h2>
         <div className="mt-3">
           <FilterChips label="Filter matches" options={STATUS_OPTIONS} value={history.status} onChange={history.setStatus} />
@@ -103,10 +105,10 @@ function TeamDetailsPage() {
           <div className="mt-6">
             <EmptyState
               icon={CalendarX}
-              title={history.status === 'all' ? 'No matches yet' : 'No matches match this filter'}
+              title={history.status === 'all' ? 'No matches played yet' : 'No matches match this filter'}
             >
               {history.status === 'all'
-                ? 'Matches show up here once an organizer schedules them for this team.'
+                ? 'Live and completed matches show up here.'
                 : 'Try a different filter.'}
             </EmptyState>
           </div>

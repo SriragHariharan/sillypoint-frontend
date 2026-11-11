@@ -8,11 +8,15 @@ const PAGE_SIZE = 10
 
 const isCanceled = (error) => error?.code === 'ERR_CANCELED'
 
-const queryFor = (page, status) => (status === 'all' ? { page, limit: PAGE_SIZE } : { page, limit: PAGE_SIZE, status })
+// The history holds matches that have started: "all" is live and completed (upcoming ones have their own section)
+const HISTORY_STATUSES = ['all', 'live', 'completed']
+
+const queryFor = (page, status) => ({ page, limit: PAGE_SIZE, status: status === 'all' ? 'played' : status })
 
 export function useTeamMatches(teamId) {
   const [params, setParams] = useSearchParams()
-  const status = params.get('status') ?? 'all'
+  const requested = params.get('status')
+  const status = HISTORY_STATUSES.includes(requested) ? requested : 'all'
 
   const [reloadKey, setReloadKey] = useState(0)
   const [loadingMore, setLoadingMore] = useState(false)

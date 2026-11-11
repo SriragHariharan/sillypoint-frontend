@@ -13,3 +13,14 @@ export const formatTime =(totalSeconds) => {
   const seconds = totalSeconds % 60
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
+
+// How long until a match starts, roughly: "2d 4h", "3h 20m", "12m" or "<1m"
+export const formatStartsIn = (ms) => {
+  const minutes = Math.floor(ms / 60000)
+  if (minutes < 1) return '<1m'
+  const days = Math.floor(minutes / 1440)
+  const hours = Math.floor((minutes % 1440) / 60)
+  if (days > 0) return `${days}d ${hours}h`
+  if (hours > 0) return `${hours}h ${minutes % 60}m`
+  return `${minutes}m`
+}
