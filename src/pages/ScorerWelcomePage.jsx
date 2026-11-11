@@ -1,6 +1,8 @@
 import { Calendar } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout'
+import MatchTeamSide from '../components/MatchTeamSide'
+import RingsBackdrop from '../components/RingsBackdrop'
 import ScorerMatchActions from '../components/ScorerMatchActions'
 import ScorerWaitingScreen from '../components/ScorerWaitingScreen'
 import { formatMatchDateTime } from '../lib/formatDate'
@@ -33,19 +35,22 @@ function ScorerWelcomePage() {
       title="Welcome, scorer"
       subtitle="You are the scorer for this match. Set up the players, toss and overs, then start scoring."
     >
-      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-center shadow-sm">
-        <p className="text-sm font-bold text-gray-900">
-          {match.teamA.name}{' '}
-          <span className="mx-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-black tracking-wider text-white">
-            VS
-          </span>{' '}
-          {match.teamB.name}
-        </p>
-        <p className="mt-2 flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-600">
-          <Calendar className="h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
-          {formatMatchDateTime(match.scheduledAt)}
-        </p>
-        <p className="mt-1 text-xs text-gray-600">{match.tournament.name}</p>
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-red-700 to-red-900 px-4 py-5 text-center text-white shadow-lg shadow-red-600/25 ring-1 ring-white/15">
+        <RingsBackdrop className="h-[26rem] w-[26rem]" />
+        <div className="relative">
+          <div className="flex items-start gap-3">
+            <MatchTeamSide team={match.teamA} onDark />
+            <span className="mt-6 shrink-0 rounded-full bg-white px-3 py-1 text-xs font-black tracking-wider text-red-700">
+              VS
+            </span>
+            <MatchTeamSide team={match.teamB} onDark />
+          </div>
+          <p className="mt-4 flex items-center justify-center gap-1.5 text-xs font-semibold text-white">
+            <Calendar className="h-4 w-4 shrink-0 text-red-100" aria-hidden="true" />
+            {formatMatchDateTime(match.scheduledAt)}
+          </p>
+          <p className="mt-1 text-xs text-red-100">{match.tournament.name}</p>
+        </div>
       </div>
 
       <ScorerMatchActions match={match} />

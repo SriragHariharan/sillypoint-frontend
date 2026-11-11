@@ -13,6 +13,7 @@ import OversModal from './OversModal'
 import TossModal from './TossModal'
 
 const actionClass = `flex w-full items-center justify-center gap-2 px-5 ${primaryButtonClass}`
+const halfClass = `flex w-full items-center justify-center gap-1.5 px-2 text-center leading-tight ${primaryButtonClass}`
 
 function ScorerMatchActions({ match }) {
   const { token } = useParams()
@@ -87,17 +88,23 @@ function ScorerMatchActions({ match }) {
         </Link>
       )}
 
-      <button type="button" disabled={locked} onClick={() => setTossOpen(true)} className={actionClass}>
-        <Coins className="h-4 w-4 shrink-0" aria-hidden="true" />
-        Toss
-      </button>
-      {toss && <p className="text-center text-xs font-semibold text-gray-700">{toss}</p>}
+      <div className="grid grid-cols-2 items-start gap-3">
+        <div className="space-y-3">
+          <button type="button" disabled={locked} onClick={() => setTossOpen(true)} className={halfClass}>
+            <Coins className="h-4 w-4 shrink-0" aria-hidden="true" />
+            Toss
+          </button>
+          {toss && <p className="text-center text-xs font-semibold text-gray-700">{toss}</p>}
+        </div>
 
-      <button type="button" disabled={locked} onClick={() => setOversOpen(true)} className={actionClass}>
-        <Timer className="h-4 w-4 shrink-0" aria-hidden="true" />
-        Overs per side
-      </button>
-      {overs && <p className="text-center text-xs font-semibold text-gray-700">{overs}</p>}
+        <div className="space-y-3">
+          <button type="button" disabled={locked} onClick={() => setOversOpen(true)} className={halfClass}>
+            <Timer className="h-4 w-4 shrink-0" aria-hidden="true" />
+            Overs per side
+          </button>
+          {overs && <p className="text-center text-xs font-semibold text-gray-700">{overs}</p>}
+        </div>
+      </div>
 
       <button type="button" onClick={startScoring} className={actionClass}>
         <Play className="h-4 w-4 shrink-0" aria-hidden="true" />
