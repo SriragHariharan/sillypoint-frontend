@@ -1,5 +1,13 @@
 const MAX_COMPACT_CHIPS = 10
 
+// The over-by-over view reads like a TV graphic: wickets in black, sixes solid red, fours red-tinted with a ring
+const largeChipClass = (label) => {
+  if (label.includes('W')) return 'bg-gray-900 text-white'
+  if (label === '6') return 'bg-red-600 text-white shadow-sm shadow-red-600/30'
+  if (label === '4') return 'bg-red-100 text-red-700 ring-1 ring-red-300'
+  return chipClass(label)
+}
+
 const chipClass = (label) => {
   if (label.includes('W')) return 'bg-red-600 text-white'
   if (label === '4' || label === '6') return 'bg-red-100 text-red-700'
@@ -37,7 +45,7 @@ function BallChips({ balls, title, compact = false }) {
         {balls.map((label, index) => (
           <span
             key={index}
-            className={`flex h-9 min-w-9 items-center justify-center rounded-full px-2 text-xs font-bold ${chipClass(label)}`}
+            className={`flex h-9 min-w-9 items-center justify-center rounded-full px-2 text-sm font-black tabular-nums ${largeChipClass(label)}`}
           >
             {label}
           </span>
