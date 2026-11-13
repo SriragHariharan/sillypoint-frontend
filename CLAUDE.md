@@ -48,6 +48,10 @@ working on this app:
 - Backend API base URL comes from `VITE_API_URL` (see `.env.example`; defaults to
   `http://localhost:3000/api`). The backend only allows the origin `http://localhost:5173`, so keep
   the dev server on port 5173.
+- **Deployment**: Vercel, with `VITE_API_URL=/api`. `vercel.json` proxies `/api/*` to the Render
+  backend (`https://sillypoint-backend.onrender.com`), so the browser sees one origin and the
+  `SameSite=Strict` refresh cookie works, and rewrites every other path to `index.html` for client
+  routing. The backend's `CLIENT_ORIGIN` must equal the Vercel URL.
 
 ## Structure
 
