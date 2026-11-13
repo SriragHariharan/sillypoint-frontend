@@ -169,6 +169,8 @@ for the full recipe). The essentials:
 
 ## Auth
 
+**Demo accounts**: `/login` (`MobileEntryPage`) shows `DemoLoginPanel` (Tournament organizer / Team manager cards) in a second card below the mobile-number card, via `AuthLayout`'s optional `footer` prop; `useDemoLogin` calls `demoLogin(role)` (`POST /auth/demo-login`, in `AUTH_PATHS`), then `setSessionFlag` + `setSession` and goes to `/home`, like `VerifyOtpPage`. SMS is not wired up, so the OTP form carries a note that OTP delivery is off and points to the demo accounts below.
+
 Login and signup are the **same flow**, matching the backend: **mobile number + OTP only** — no
 email, no password, no PIN, ever.
 

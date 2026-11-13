@@ -1,13 +1,14 @@
-import { MessageCircle } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import AuthLayout from '../components/AuthLayout'
+import DemoLoginPanel from '../components/DemoLoginPanel'
 import { getErrorMessage } from '../lib/api'
 import { requestOtp } from '../lib/authApi'
 import { fieldAddonClass, fieldGroupClass, labelClass } from '../lib/formStyles'
 import { notifyError } from '../lib/notify'
-import { primaryButtonClass } from '../lib/premiumStyles'
+import { infoNoteClass, primaryButtonClass } from '../lib/premiumStyles'
 import { useAuthStore } from '../store/authStore'
 import { mobileValidation } from '../lib/validators'
 
@@ -41,6 +42,7 @@ function MobileEntryPage() {
       eyebrow="Welcome to Sillypoint"
       title="Log in or sign up"
       subtitle="Enter your mobile number and we'll send you an OTP."
+      footer={<DemoLoginPanel />}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <div>
@@ -64,12 +66,12 @@ function MobileEntryPage() {
           )}
         </div>
 
-        <div className="flex items-start gap-3 rounded-2xl border border-red-100 bg-red-50/60 px-4 py-3">
+        <div className={`flex items-start gap-3 ${infoNoteClass}`}>
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-red-600 shadow-sm">
-            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            <Info className="h-4 w-4" aria-hidden="true" />
           </span>
           <p className="pt-1 text-xs font-medium text-gray-700">
-            Your OTP and tournament notifications will be sent to this mobile number on WhatsApp.
+            OTP delivery by SMS is turned off in this demo. Use a demo account below to look around.
           </p>
         </div>
 

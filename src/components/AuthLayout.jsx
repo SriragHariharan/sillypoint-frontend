@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 import logo from '../assets/app_logo.png'
 import { eyebrowClass, headingClass } from '../lib/premiumStyles'
 
-function AuthLayout({ eyebrow, title, subtitle, children }) {
+const cardShellClass =
+  'relative w-full max-w-sm overflow-hidden rounded-3xl border border-gray-200 bg-white/90 shadow-xl shadow-red-600/10 backdrop-blur sm:max-w-md'
+
+function AuthLayout({ eyebrow, title, subtitle, children, footer }) {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white px-5 py-10 sm:px-6">
       <svg
@@ -22,7 +25,7 @@ function AuthLayout({ eyebrow, title, subtitle, children }) {
         <span className="text-lg font-bold tracking-tight text-gray-900">Sillypoint</span>
       </Link>
 
-      <div className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-gray-200 bg-white/90 shadow-xl shadow-red-600/10 backdrop-blur sm:max-w-md">
+      <div className={cardShellClass}>
         <div className="h-1 bg-gradient-to-r from-red-700 via-red-500 to-red-700" />
         <div className="p-6 sm:p-8">
           {eyebrow && <span className={eyebrowClass}>{eyebrow}</span>}
@@ -31,6 +34,8 @@ function AuthLayout({ eyebrow, title, subtitle, children }) {
           <div className="mt-6">{children}</div>
         </div>
       </div>
+
+      {footer && <div className={`${cardShellClass} mt-4 p-6 sm:p-8`}>{footer}</div>}
 
       <Link
         to="/"

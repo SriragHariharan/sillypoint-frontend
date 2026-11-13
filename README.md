@@ -11,6 +11,7 @@ Organizers create tournaments and schedule matches, scorers record every ball fr
 - **Ball-by-ball scoring**: a one-screen run pad with wides, no balls, byes, leg byes, overthrows, wickets, free hits, retirements, undo and Super Overs
 - **Live scorecards**: broadcast-style batting and bowling cards, fall of wickets and over-by-over charts that update while the match is played
 - **Points table**: standings calculated automatically with points, net run rate and recent form
+- **Demo accounts**: one-click Tournament organizer and Team manager logins, with no mobile number or OTP
 - **Passwordless login**: sign in with a mobile number and OTP
 
 ## Tech stack
@@ -43,6 +44,6 @@ npm run dev            # http://localhost:5173
 | --- | --- |
 | <img src="docs/screenshots/scoring.png" alt="Scoring screen" width="300" /> | ![Dashboard](docs/screenshots/dashboard.png) |
 
-| Create tournament | OTP login |
+| Create tournament | Login with demo accounts |
 | --- | --- |
-| ![Create tournament](docs/screenshots/create-tournament.png) | ![OTP login](docs/screenshots/login.png) |
+| ![Create tournament](docs/screenshots/create-tournament.png) | ![Login with demo accounts](docs/screenshots/login.png) |

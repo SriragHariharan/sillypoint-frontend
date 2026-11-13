@@ -14,3 +14,6 @@ export const refreshSession = refreshAccessToken
 export const fetchMe = () => api.get('/auth/me').then((response) => response.data)
 
 export const logoutRequest = () => api.post('/auth/logout').then((response) => response.data)
+
+export const demoLogin = (role) =>
+  api.post('/auth/demo-login', { role }).then((response) => response.data)
